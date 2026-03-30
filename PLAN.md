@@ -1,18 +1,43 @@
-# Plan: RunningNL — HTML/CSS/JS Site (Phase 1)
+# Plan: runningnederland.nl — HTML/CSS/JS Site (Phase 1)
 
 ## Context
 Starting from an empty repo (only CLAUDE.md). Building a self-contained, browser-openable multi-page site in plain HTML/CSS/JS — no framework, no build tools, no server needed. Primary goal: a beautiful, functional demo that can be extended into Webflow later. Dutch primary language with EN toggle.
 
+Site name: **runningnederland.nl** (logo placeholder in nav)
+Organizing body: **Golanzo**
+
 ---
 
 ## Pages
+
 1. `index.html` — Homepage
 2. `agenda.html` — Full agenda with calendar + filters
 3. `evenement.html` — Event detail page (reads `?id=XX` from URL, renders from shared data)
+4. `trainingsschemas.html` — Pre-made training schedules
+5. `mijnruns.html` — Personal run log (login required)
+6. `fotos.html` — Per-event public photo gallery
+7. `kids.html` — Kids runs page (up to 15 years)
+8. `overons.html` — About us (simple text)
+9. `contact.html` — Contact page (intro text + contact form)
+
+---
+
+## Navigation
+
+Agenda | Trainingsschema's | Kids Runs | Foto's | Mijn Runs | Over ons | Contact
+
+- Logo placeholder + "runningnederland.nl" in nav
+- Language toggle (NL/EN)
+- "Mijn Runs" links to login if not authenticated
 
 ---
 
 ## Layout & UX
+
+### Homepage (`index.html`)
+- **Hero section**: full-width photo of forest ground with muddy calves and different kinds of walking/running shoes. Site name overlaid on top.
+- **Featured events row**: 4 soonest upcoming events
+- **About Golanzo section**: short intro text about the organizing organization
 
 ### Agenda page — two-view calendar
 - **Monthly calendar view** (like Google Calendar): 7-column grid (Mon–Sun), colored dots on days that have events
@@ -21,7 +46,7 @@ Starting from an empty repo (only CLAUDE.md). Building a self-contained, browser
 - Active filters shown as dismissible chips above the calendar
 
 ### Event cards (shown in day panel + homepage featured row)
-Each card shows: event image, name, city, distances, type badge, category icons, free/paid badge, "Meer info →" button linking to event detail page
+Each card shows: event image (placeholder running photo), event name, city, distances, type badge, category icons, free/paid badge, organizer name, "Meer info →" button linking to event detail page
 
 ### Event detail page
 - Full-width hero image
@@ -30,10 +55,50 @@ Each card shows: event image, name, city, distances, type badge, category icons,
 - Distance options, capacity
 - Atletiekunie badge if applicable
 - Free/paid + price
+- Organizer name (e.g. "Georganiseerd door: Golanzo")
 - Description (NL/EN)
 - Registration button (links to `registration_url`)
 - Embedded YouTube video if available
+- Per-event photo gallery (publicly uploaded, admin-approved)
 - Back to agenda link
+
+### Training schedules page (`trainingsschemas.html`)
+- Pre-made weekly plan tables for: 2.5km, 5km, 7.5km, 10km, 15km, 20km, 24km, Marathon
+- Each schedule includes:
+  - Weekly plan table (e.g. Week 1: run 3×10 min)
+  - Warm-up tips
+  - Stretch tips
+
+### Mijn Runs page (`mijnruns.html`)
+- Requires login
+- Features:
+  - Log a run (date, distance, time, notes)
+  - View run history
+  - Save favourite events
+  - Upload photos from events
+
+### Photo gallery page (`fotos.html`)
+- Organised per event
+- Anyone can upload photos (no login required)
+- Photos must be approved by admin (Ester) before going public
+
+### Kids runs page (`kids.html`)
+- Bright, happy colours and fun design
+- Content sections:
+  - Shoes advice for kids
+  - Clothing advice
+  - How to make running fun
+  - Perks of running for kids
+  - Kids' physiology — what to do and not to do
+- For kids up to 15 years (no age group splits)
+- Kids events from the main agenda also displayed here
+
+### About us page (`overons.html`)
+- Simple text page about runningnederland.nl / Golanzo
+
+### Contact page (`contact.html`)
+- Short intro text
+- Contact form
 
 ---
 
@@ -54,6 +119,7 @@ Each card shows: event image, name, city, distances, type badge, category icons,
 | Grootte evenement | Pills | Alle / Klein (<500) / Middel (500–2.000) / Groot (>2.000) |
 
 All filters update the calendar in real time. "Filters wissen" button resets all.
+On mobile: filters stack vertically.
 
 ---
 
@@ -68,6 +134,7 @@ All filters update the calendar in real time. "Filters wissen" button resets all
 - Dark: `#111827` (near-black for text/nav)
 - Surface: `#F9FAFB` (off-white)
 - White: `#FFFFFF`
+- Kids page: bright, happy colours (distinct palette)
 
 **Typography:**
 - `Barlow Condensed 800` — headings (sporty, tight)
@@ -91,6 +158,11 @@ All filters update the calendar in real time. "Filters wissen" button resets all
 - inclusieve runs: pink `#EC4899`
 - gecertificeerd parcours: amber-dark `#B45309`
 
+**Key images:**
+- Hero (homepage): forest ground, muddy calves, various running/walking shoes
+- Footer: road with one pair of runner feet in bright coloured running shoes
+- Event cards: placeholder running photos from Unsplash
+
 ---
 
 ## Language Toggle (NL/EN)
@@ -108,9 +180,16 @@ All filters update the calendar in real time. "Filters wissen" button resets all
 index.html
 agenda.html
 evenement.html
+trainingsschemas.html
+mijnruns.html
+fotos.html
+kids.html
+overons.html
+contact.html
 style.css
-data.js       ← events + postal code lookup table
-i18n.js       ← all UI strings in NL + EN
+kids.css          ← separate bright stylesheet for kids page
+data.js           ← events + postal code lookup table
+i18n.js           ← all UI strings in NL + EN
 ```
 
 ---
@@ -118,6 +197,7 @@ i18n.js       ← all UI strings in NL + EN
 ## Sample Data — 19 Fictional Dutch Events
 
 All dates in 2026 (March–June). Mix of small/large events, all provinces covered.
+Each event includes an `organizer` field (e.g. "Golanzo").
 
 | # | Name | Date | Type | City | Province | Distances | Paid | Atletiekunie | Capacity |
 |---|------|------|------|------|----------|-----------|------|--------------|----------|
@@ -156,18 +236,28 @@ All dates in 2026 (March–June). Mix of small/large events, all provinces cover
 - `EVENTS` and `I18N` are global variables from `data.js` and `i18n.js`
 - Postal code filter: 4-digit prefix lookup → Haversine distance calculation
 - Calendar: pure JS DOM rendering, no library
+- Photo upload: form submission stored locally for demo; admin approval flow simulated
+- Login/auth: simulated for Phase 1 demo (no real backend)
 
 ---
 
 ## Verification Checklist
 
 1. Open `index.html` in browser — no server needed
-2. Featured events row shows 4 soonest upcoming events
-3. Click "Bekijk alle evenementen" → `agenda.html` loads
-4. Calendar shows current month with colored dots on event days
-5. Click a day with events → day panel slides open with cards
-6. Apply each filter → calendar updates in real time
-7. Active filter chips appear; clicking × removes individual filters
-8. Click "Meer info" → `evenement.html?id=X` loads correct event
-9. Toggle NL/EN button → all UI text and event content switches
-10. Resize to mobile → layout adapts, filters collapse
+2. Hero image visible, site name overlaid
+3. Featured events row shows 4 soonest upcoming events
+4. About Golanzo section visible below featured events
+5. Click "Bekijk alle evenementen" → `agenda.html` loads
+6. Calendar shows current month with colored dots on event days
+7. Click a day with events → day panel slides open with cards
+8. Apply each filter → calendar updates in real time
+9. Active filter chips appear; clicking × removes individual filters
+10. Click "Meer info" → `evenement.html?id=X` loads correct event
+11. Event detail shows organizer name
+12. Per-event photo gallery visible on event detail page
+13. Toggle NL/EN button → all UI text and event content switches
+14. Resize to mobile → layout adapts, filters stack vertically
+15. `trainingsschemas.html` shows all 8 distance plans with warm-up & stretch tips
+16. `kids.html` loads with bright colours, tips sections, and kids events
+17. `fotos.html` shows per-event galleries
+18. `contact.html` shows intro text and working contact form
