@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evenement — runningnederland.nl</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ── NAV ─────────────────────────────────────────────────── -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__logo">
+      <div class="nav__logo-box">RNL</div>
+      <span class="nav__logo-name">runningnederland.nl</span>
+    </a>
+    <div class="nav__links">
+      <a href="agenda.html" class="active" data-i18n="nav_agenda">Agenda</a>
+      <a href="trainingsschemas.html" data-i18n="nav_trainingsschemas">Trainingsschema's</a>
+      <a href="kids.html" data-i18n="nav_kids">Kids Runs</a>
+      <a href="fotos.html" data-i18n="nav_photos">Foto's</a>
+      <a href="mijnruns.html" data-i18n="nav_mijnruns">Mijn Runs</a>
+      <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+      <a href="contact.html" data-i18n="nav_contact">Contact</a>
+      <button class="nav__lang" id="lang-toggle" onclick="toggleLang()">EN</button>
+    </div>
+    <button class="nav__hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav__mobile" id="mobile-nav">
+    <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+    <a href="trainingsschemas.html" data-i18n="nav_trainingsschemas">Trainingsschema's</a>
+    <a href="kids.html" data-i18n="nav_kids">Kids Runs</a>
+    <a href="fotos.html" data-i18n="nav_photos">Foto's</a>
+    <a href="mijnruns.html" data-i18n="nav_mijnruns">Mijn Runs</a>
+    <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+    <a href="contact.html" data-i18n="nav_contact">Contact</a>
+    <div class="nav__mobile-lang">
+      <button class="btn btn--ghost btn--sm" onclick="toggleLang()" id="lang-toggle-mobile">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── EVENT DETAIL ────────────────────────────────────────── -->
+<div id="event-detail-root"></div>
+
+<!-- ── FOOTER ──────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__logo">
+      <div class="footer__logo-box">RNL</div>
+      <span class="footer__name">runningnederland.nl</span>
+    </div>
+    <p class="footer__tagline" data-i18n="footer_tagline">Het complete platform voor hardlopers in Nederland</p>
+    <div class="footer__links">
+      <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+      <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+      <a href="contact.html" data-i18n="nav_contact">Contact</a>
+    </div>
+    <p class="footer__copy" data-i18n="footer_copyright">© 2026 runningnederland.nl — een initiatief van Golanzo</p>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="i18n.js"></script>
+<script>
+function getBadgeClass(type) { return 'badge-' + type.toLowerCase().replace(/\s+/g, '-'); }
+function getTypeName(type, lang) {
+  var names = {
+    nl: { 'marathon':'Marathon','trail':'Trail','cross':'Cross','wegevenement':'Wegevenement','parkloop':'Parkloop','funrun':'Fun Run','survivalrun':'Survival Run','ultrarun':'Ultrarun','virtuele run':'Virtuele Run','estafette':'Estafette','coopertest':'Coopertest','studentenevenement':'Studentenevenement','sportief wandelen':'Sportief Wandelen','inclusieve runs':'Inclusieve Run','gecertificeerd parcours':'Gecert. Parcours' },
+    en: { 'marathon':'Marathon','trail':'Trail','cross':'Cross Country','wegevenement':'Road Race','parkloop':'Park Run','funrun':'Fun Run','survivalrun':'Survival Run','ultrarun':'Ultra Run','virtuele run':'Virtual Run','estafette':'Relay','coopertest':'Cooper Test','studentenevenement':'Student Event','sportief wandelen':'Sports Walking','inclusieve runs':'Inclusive Run','gecertificeerd parcours':'Certified Course' }
+  };
+  return (names[lang]||names.nl)[type]||type;
+}
+
+// Static gallery placeholder images
+var GALLERY_IMGS = [
+  'https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=600&q=70',
+  'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=600&q=70',
+  'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=600&q=70'
+];
+
+function renderEvent(ev, lang) {
+  var name = lang==='en' ? ev.name_en : ev.name_nl;
+  var desc = lang==='en' ? ev.description_en : ev.description_nl;
+  var dateStr = formatDate(ev.date, lang);
+  var badgeClass = getBadgeClass(ev.type);
+  var typeName = getTypeName(ev.type, lang);
+  var distList = ev.distances.join(' · ');
+  var catList = ev.categories.join(', ');
+  var favKey = 'fav_'+ev.id;
+  var isFav = localStorage.getItem(favKey) === '1';
+
+  // Check favorites
+  var favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+  var alreadyFav = favorites.indexOf(ev.id) !== -1;
+
+  var atletiekHtml = ev.atletiekunie ?
+    '<div class="atletiekunie-badge">🏅 <span data-i18n="atletiekunie_badge">'+t('atletiekunie_badge')+'</span></div>' : '';
+
+  var ytHtml = '';
+  if (ev.youtube_url) {
+    var ytId = ev.youtube_url.split('v=')[1];
+    if (ytId) {
+      ytHtml = '<div class="detail-youtube">'+
+        '<h3>'+t('youtube_title')+'</h3>'+
+        '<iframe src="https://www.youtube.com/embed/'+ytId+'" allowfullscreen></iframe>'+
+      '</div>';
+    }
+  }
+
+  var shareUrl = encodeURIComponent(window.location.href);
+  var shareTitle = encodeURIComponent(name);
+
+  return '<div class="event-detail">'+
+    '<a href="agenda.html" class="event-detail__back" data-i18n="back_to_agenda">'+t('back_to_agenda')+'</a>'+
+    '<div class="event-detail__hero">'+
+      '<img src="'+ev.image+'" alt="'+name+'">'+
+      '<div class="event-detail__hero-overlay">'+
+        '<span class="event-card__badge '+badgeClass+'" style="position:static;display:inline-block;margin-bottom:0.5rem;font-size:0.82rem;padding:4px 12px;">'+typeName+'</span>'+
+        '<h1 class="event-detail__title">'+name+'</h1>'+
+      '</div>'+
+    '</div>'+
+    '<div class="event-detail__content">'+
+      '<div>'+
+        '<p class="event-detail__desc">'+desc+'</p>'+
+        atletiekHtml+
+        '<div style="margin-top:1.5rem;display:flex;gap:0.75rem;flex-wrap:wrap">'+
+          '<button class="btn btn--ghost btn--sm" onclick="toggleFavorite('+ev.id+')" id="fav-btn">'+
+            (alreadyFav ? '❤️ Opgeslagen' : '🤍 Opslaan')+
+          '</button>'+
+          '<a href="https://twitter.com/intent/tweet?url='+shareUrl+'&text='+shareTitle+'" target="_blank" class="btn btn--ghost btn--sm">𝕏 Delen</a>'+
+        '</div>'+
+        '<div class="detail-gallery" style="margin-top:2rem;">'+
+          '<h3>'+t('gallery_title')+'</h3>'+
+          '<div class="detail-gallery__grid">'+
+            GALLERY_IMGS.map(function(src){ return '<img src="'+src+'" alt="Evenement foto" loading="lazy">'; }).join('')+
+          '</div>'+
+        '</div>'+
+        ytHtml+
+      '</div>'+
+      '<aside class="event-detail__sidebar">'+
+        '<div class="detail-info-row"><span class="detail-info-icon">📅</span><div><div class="detail-info-label">'+t('date_label')+'</div><div class="detail-info-value">'+dateStr+'</div></div></div>'+
+        '<div class="detail-info-row"><span class="detail-info-icon">📍</span><div><div class="detail-info-label">'+t('location_label')+'</div><div class="detail-info-value">'+ev.city+'</div></div></div>'+
+        '<div class="detail-info-row"><span class="detail-info-icon">🗺️</span><div><div class="detail-info-label">'+t('province_label')+'</div><div class="detail-info-value">'+ev.province+'</div></div></div>'+
+        '<div class="detail-info-row"><span class="detail-info-icon">🏃</span><div><div class="detail-info-label">'+t('distances_label')+'</div><div class="detail-info-value">'+distList+'</div></div></div>'+
+        '<div class="detail-info-row"><span class="detail-info-icon">💶</span><div><div class="detail-info-label">'+t('price_label')+'</div><div class="detail-info-value">'+(ev.paid?ev.price:t('free'))+'</div></div></div>'+
+        '<div class="detail-info-row"><span class="detail-info-icon">👥</span><div><div class="detail-info-label">'+t('capacity_label')+'</div><div class="detail-info-value">'+ev.capacity.toLocaleString()+'</div></div></div>'+
+        '<div class="detail-info-row"><span class="detail-info-icon">🏷️</span><div><div class="detail-info-label">'+t('categories_label')+'</div><div class="detail-info-value">'+catList+'</div></div></div>'+
+        '<div class="detail-info-row"><span class="detail-info-icon">🏢</span><div><div class="detail-info-label">'+t('organizer_label')+'</div><div class="detail-info-value">'+ev.organizer+'</div></div></div>'+
+        '<a href="'+ev.registration_url+'" class="event-detail__register" data-i18n="register_btn">'+t('register_btn')+'</a>'+
+      '</aside>'+
+    '</div>'+
+  '</div>';
+}
+
+function toggleFavorite(id) {
+  var favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+  var idx = favorites.indexOf(id);
+  if (idx === -1) {
+    favorites.push(id);
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    var btn = document.getElementById('fav-btn');
+    if (btn) btn.textContent = '❤️ Opgeslagen';
+  } else {
+    favorites.splice(idx, 1);
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    var btn = document.getElementById('fav-btn');
+    if (btn) btn.textContent = '🤍 Opslaan';
+  }
+}
+
+function renderNotFound() {
+  return '<div class="event-detail"><a href="agenda.html" class="event-detail__back">← Terug naar agenda</a>'+
+    '<div class="no-events-msg"><div class="no-events-msg__icon">🏃</div><h3>Evenement niet gevonden</h3><p>Dit evenement bestaat niet of is verwijderd.</p></div></div>';
+}
+
+function toggleLang() {
+  var cur = getLang();
+  setLang(cur==='nl'?'en':'nl');
+  var lang = getLang();
+  var btnM = document.getElementById('lang-toggle-mobile');
+  if (btnM) btnM.textContent = I18N[lang].nav_language;
+  init();
+}
+function toggleMobileNav() { document.getElementById('mobile-nav').classList.toggle('open'); }
+
+function init() {
+  var lang = getLang();
+  applyI18n(lang);
+  var btn = document.getElementById('lang-toggle');
+  if (btn) btn.textContent = I18N[lang].nav_language;
+  var btnM = document.getElementById('lang-toggle-mobile');
+  if (btnM) btnM.textContent = I18N[lang].nav_language;
+
+  var params = new URLSearchParams(window.location.search);
+  var id = parseInt(params.get('id'));
+  var ev = EVENTS.find(function(e){ return e.id === id; });
+  var root = document.getElementById('event-detail-root');
+  if (ev) {
+    root.innerHTML = renderEvent(ev, lang);
+    document.title = (lang==='en' ? ev.name_en : ev.name_nl) + ' — runningnederland.nl';
+  } else {
+    root.innerHTML = renderNotFound();
+  }
+}
+
+init();
+</script>
+</body>
+</html>

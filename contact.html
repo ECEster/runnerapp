@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — runningnederland.nl</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ── NAV ─────────────────────────────────────────────────── -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__logo">
+      <div class="nav__logo-box">RNL</div>
+      <span class="nav__logo-name">runningnederland.nl</span>
+    </a>
+    <div class="nav__links">
+      <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+      <a href="trainingsschemas.html" data-i18n="nav_trainingsschemas">Trainingsschema's</a>
+      <a href="kids.html" data-i18n="nav_kids">Kids Runs</a>
+      <a href="fotos.html" data-i18n="nav_photos">Foto's</a>
+      <a href="mijnruns.html" data-i18n="nav_mijnruns">Mijn Runs</a>
+      <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+      <a href="contact.html" class="active" data-i18n="nav_contact">Contact</a>
+      <button class="nav__lang" id="lang-toggle" onclick="toggleLang()">EN</button>
+    </div>
+    <button class="nav__hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav__mobile" id="mobile-nav">
+    <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+    <a href="trainingsschemas.html" data-i18n="nav_trainingsschemas">Trainingsschema's</a>
+    <a href="kids.html" data-i18n="nav_kids">Kids Runs</a>
+    <a href="fotos.html" data-i18n="nav_photos">Foto's</a>
+    <a href="mijnruns.html" data-i18n="nav_mijnruns">Mijn Runs</a>
+    <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+    <a href="contact.html" data-i18n="nav_contact">Contact</a>
+    <div class="nav__mobile-lang">
+      <button class="btn btn--ghost btn--sm" onclick="toggleLang()" id="lang-toggle-mobile">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── PAGE HEADER ─────────────────────────────────────────── -->
+<div class="page-header">
+  <h1 data-i18n="contact_title">Contact</h1>
+  <p data-i18n="contact_subtitle">Heb je een vraag? We helpen je graag.</p>
+</div>
+
+<!-- ── CONTENT ─────────────────────────────────────────────── -->
+<div class="contact-layout">
+  <!-- Info column -->
+  <div class="contact-info">
+    <h3>Neem contact op</h3>
+    <p>Heb je een vraag over een evenement, wil je een nieuw evenement aanmelden, of loop je tegen een technisch probleem aan? We helpen je snel en vriendelijk verder.</p>
+    <div class="contact-info__items">
+      <div class="contact-info__item">
+        <span class="contact-info__icon">📧</span>
+        <div>
+          <strong>E-mail</strong><br>
+          <span style="color:var(--mid);">info@runningnederland.nl</span>
+        </div>
+      </div>
+      <div class="contact-info__item">
+        <span class="contact-info__icon">📍</span>
+        <div>
+          <strong>Adres</strong><br>
+          <span style="color:var(--mid);">Golanzo HQ<br>Hardloopstraat 42<br>1234 AB Amsterdam</span>
+        </div>
+      </div>
+      <div class="contact-info__item">
+        <span class="contact-info__icon">⏰</span>
+        <div>
+          <strong>Openingstijden</strong><br>
+          <span style="color:var(--mid);">Maandag t/m vrijdag<br>9:00 – 17:00 uur</span>
+        </div>
+      </div>
+      <div class="contact-info__item">
+        <span class="contact-info__icon">🌐</span>
+        <div>
+          <strong>Social media</strong><br>
+          <span style="color:var(--mid);">@runningnederland</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Map placeholder -->
+    <div style="margin-top:1.5rem;border-radius:var(--radius-lg);overflow:hidden;background:var(--surface2);height:200px;display:flex;align-items:center;justify-content:center;color:var(--mid);font-size:0.9rem;border:2px dashed var(--light);">
+      <div style="text-align:center;">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">🗺️</div>
+        Amsterdam, Nederland
+      </div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <div class="contact-form-card">
+    <h3 data-i18n="contact_title">Contact</h3>
+    <form id="contact-form" onsubmit="submitContact(event)" novalidate>
+      <div class="form-group">
+        <label for="c-name" data-i18n="name_label">Naam</label>
+        <input type="text" id="c-name" required placeholder="Jouw naam">
+      </div>
+      <div class="form-group">
+        <label for="c-email" data-i18n="email_label">E-mailadres</label>
+        <input type="email" id="c-email" required placeholder="jouw@email.nl">
+      </div>
+      <div class="form-group">
+        <label for="c-subject" data-i18n="subject_label">Onderwerp</label>
+        <select id="c-subject" required>
+          <option value="">— Kies een onderwerp —</option>
+          <option value="vraag" data-i18n="subject_vraag">Vraag</option>
+          <option value="event" data-i18n="subject_event">Evenement aanmelden</option>
+          <option value="tech" data-i18n="subject_tech">Technisch probleem</option>
+          <option value="other" data-i18n="subject_other">Overig</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="c-message" data-i18n="message_label">Bericht</label>
+        <textarea id="c-message" rows="5" required placeholder="Schrijf hier je bericht..."></textarea>
+      </div>
+
+      <!-- Validation error -->
+      <div id="form-error" style="display:none;background:#FEE2E2;color:#991B1B;padding:0.6rem 0.9rem;border-radius:var(--radius);font-size:0.88rem;margin-bottom:1rem;">
+        Vul alle verplichte velden in.
+      </div>
+
+      <button type="submit" class="btn btn--primary" style="width:100%;font-size:1rem;padding:0.85rem;" data-i18n="send_btn">Verstuur bericht</button>
+    </form>
+
+    <div class="contact-success" id="contact-success">
+      ✅ <span data-i18n="success_msg">Bedankt voor je bericht! We nemen zo snel mogelijk contact met je op.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── FAQ ─────────────────────────────────────────────────── -->
+<div class="container section--sm">
+  <div style="max-width:700px;margin:0 auto;">
+    <h2 style="margin-bottom:1.5rem;text-align:center;">Veelgestelde vragen</h2>
+
+    <div id="faq-list">
+      <div class="faq-item" style="border:1.5px solid var(--light);border-radius:var(--radius);margin-bottom:0.75rem;overflow:hidden;">
+        <button onclick="toggleFaq(this)" style="width:100%;background:var(--white);border:none;padding:1rem 1.25rem;text-align:left;font-weight:600;font-size:0.95rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+          Hoe schrijf ik me in voor een evenement?
+          <span style="font-size:1.2rem;transition:transform 0.2s;">+</span>
+        </button>
+        <div style="display:none;padding:0 1.25rem 1rem;font-size:0.9rem;color:var(--dark3);line-height:1.7;">
+          Klik op het gewenste evenement in de agenda. Op de evenementpagina vind je een "Inschrijven" knop die je doorlinkt naar het inschrijfformulier van de organisator.
+        </div>
+      </div>
+
+      <div class="faq-item" style="border:1.5px solid var(--light);border-radius:var(--radius);margin-bottom:0.75rem;overflow:hidden;">
+        <button onclick="toggleFaq(this)" style="width:100%;background:var(--white);border:none;padding:1rem 1.25rem;text-align:left;font-weight:600;font-size:0.95rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+          Kan ik een evenement aanmelden?
+          <span style="font-size:1.2rem;transition:transform 0.2s;">+</span>
+        </button>
+        <div style="display:none;padding:0 1.25rem 1rem;font-size:0.9rem;color:var(--dark3);line-height:1.7;">
+          Ja! Gebruik het contactformulier en kies als onderwerp "Evenement aanmelden". Stuur ons de details en we nemen contact met je op.
+        </div>
+      </div>
+
+      <div class="faq-item" style="border:1.5px solid var(--light);border-radius:var(--radius);margin-bottom:0.75rem;overflow:hidden;">
+        <button onclick="toggleFaq(this)" style="width:100%;background:var(--white);border:none;padding:1rem 1.25rem;text-align:left;font-weight:600;font-size:0.95rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+          Is runningnederland.nl gratis te gebruiken?
+          <span style="font-size:1.2rem;transition:transform 0.2s;">+</span>
+        </button>
+        <div style="display:none;padding:0 1.25rem 1rem;font-size:0.9rem;color:var(--dark3);line-height:1.7;">
+          Ja, het platform is volledig gratis te gebruiken voor lopers. Voor het organiseren van evenementen zijn er plannen beschikbaar.
+        </div>
+      </div>
+
+      <div class="faq-item" style="border:1.5px solid var(--light);border-radius:var(--radius);margin-bottom:0.75rem;overflow:hidden;">
+        <button onclick="toggleFaq(this)" style="width:100%;background:var(--white);border:none;padding:1rem 1.25rem;text-align:left;font-weight:600;font-size:0.95rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+          Hoe werken de trainingsschema's?
+          <span style="font-size:1.2rem;transition:transform 0.2s;">+</span>
+        </button>
+        <div style="display:none;padding:0 1.25rem 1rem;font-size:0.9rem;color:var(--dark3);line-height:1.7;">
+          Onze trainingsschema's zijn opgebouwd over 8 weken en bevatten 4 trainingsdagen per week. Ze zijn geschikt voor alle niveaus en worden gratis aangeboden.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ──────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__logo">
+      <div class="footer__logo-box">RNL</div>
+      <span class="footer__name">runningnederland.nl</span>
+    </div>
+    <p class="footer__tagline" data-i18n="footer_tagline">Het complete platform voor hardlopers in Nederland</p>
+    <div class="footer__links">
+      <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+      <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+      <a href="contact.html" data-i18n="nav_contact">Contact</a>
+    </div>
+    <p class="footer__copy" data-i18n="footer_copyright">© 2026 runningnederland.nl — een initiatief van Golanzo</p>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="i18n.js"></script>
+<script>
+function submitContact(e) {
+  e.preventDefault();
+  var name = document.getElementById('c-name').value.trim();
+  var email = document.getElementById('c-email').value.trim();
+  var subject = document.getElementById('c-subject').value;
+  var message = document.getElementById('c-message').value.trim();
+  var errEl = document.getElementById('form-error');
+
+  if (!name || !email || !subject || !message) {
+    errEl.style.display = 'block';
+    return;
+  }
+  if (!email.includes('@')) {
+    errEl.style.display = 'block';
+    errEl.textContent = 'Voer een geldig e-mailadres in.';
+    return;
+  }
+  errEl.style.display = 'none';
+
+  // Simulate submit
+  document.getElementById('contact-form').style.display = 'none';
+  var success = document.getElementById('contact-success');
+  success.style.display = 'block';
+  success.style.padding = '1.5rem';
+  success.style.fontSize = '1rem';
+}
+
+function toggleFaq(btn) {
+  var content = btn.nextElementSibling;
+  var icon = btn.querySelector('span');
+  if (content.style.display === 'none' || !content.style.display) {
+    content.style.display = 'block';
+    icon.textContent = '−';
+    icon.style.transform = 'rotate(0deg)';
+  } else {
+    content.style.display = 'none';
+    icon.textContent = '+';
+  }
+}
+
+function toggleLang() {
+  var cur = getLang();
+  setLang(cur==='nl'?'en':'nl');
+  var lang = getLang();
+  var btnM = document.getElementById('lang-toggle-mobile');
+  if (btnM) btnM.textContent = I18N[lang].nav_language;
+}
+function toggleMobileNav() { document.getElementById('mobile-nav').classList.toggle('open'); }
+
+(function() {
+  var lang = getLang();
+  applyI18n(lang);
+  var btn = document.getElementById('lang-toggle');
+  if (btn) btn.textContent = I18N[lang].nav_language;
+  var btnM = document.getElementById('lang-toggle-mobile');
+  if (btnM) btnM.textContent = I18N[lang].nav_language;
+})();
+</script>
+</body>
+</html>

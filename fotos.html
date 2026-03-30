@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Foto's — runningnederland.nl</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ── NAV ─────────────────────────────────────────────────── -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__logo">
+      <div class="nav__logo-box">RNL</div>
+      <span class="nav__logo-name">runningnederland.nl</span>
+    </a>
+    <div class="nav__links">
+      <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+      <a href="trainingsschemas.html" data-i18n="nav_trainingsschemas">Trainingsschema's</a>
+      <a href="kids.html" data-i18n="nav_kids">Kids Runs</a>
+      <a href="fotos.html" class="active" data-i18n="nav_photos">Foto's</a>
+      <a href="mijnruns.html" data-i18n="nav_mijnruns">Mijn Runs</a>
+      <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+      <a href="contact.html" data-i18n="nav_contact">Contact</a>
+      <button class="nav__lang" id="lang-toggle" onclick="toggleLang()">EN</button>
+    </div>
+    <button class="nav__hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav__mobile" id="mobile-nav">
+    <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+    <a href="trainingsschemas.html" data-i18n="nav_trainingsschemas">Trainingsschema's</a>
+    <a href="kids.html" data-i18n="nav_kids">Kids Runs</a>
+    <a href="fotos.html" data-i18n="nav_photos">Foto's</a>
+    <a href="mijnruns.html" data-i18n="nav_mijnruns">Mijn Runs</a>
+    <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+    <a href="contact.html" data-i18n="nav_contact">Contact</a>
+    <div class="nav__mobile-lang">
+      <button class="btn btn--ghost btn--sm" onclick="toggleLang()" id="lang-toggle-mobile">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── PAGE HEADER ─────────────────────────────────────────── -->
+<div class="page-header">
+  <h1 data-i18n="photos_title">Foto's</h1>
+  <p data-i18n="photos_subtitle">Foto's van alle evenementen — gedeeld door de community</p>
+</div>
+
+<!-- ── CONTENT ─────────────────────────────────────────────── -->
+<div class="container section">
+  <div id="photos-root"></div>
+</div>
+
+<!-- ── FOOTER ──────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__logo">
+      <div class="footer__logo-box">RNL</div>
+      <span class="footer__name">runningnederland.nl</span>
+    </div>
+    <p class="footer__tagline" data-i18n="footer_tagline">Het complete platform voor hardlopers in Nederland</p>
+    <div class="footer__links">
+      <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+      <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+      <a href="contact.html" data-i18n="nav_contact">Contact</a>
+    </div>
+    <p class="footer__copy" data-i18n="footer_copyright">© 2026 runningnederland.nl — een initiatief van Golanzo</p>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="i18n.js"></script>
+<script>
+// Pools of gallery images per event (varied Unsplash running photos)
+var GALLERY_POOL = [
+  ['https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=400&q=70',
+   'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=400&q=70',
+   'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=400&q=70'],
+  ['https://images.unsplash.com/photo-1544899489-a083461b088c?w=400&q=70',
+   'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=400&q=70',
+   'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=400&q=70'],
+  ['https://images.unsplash.com/photo-1530143584546-02191bc84eb5?w=400&q=70',
+   'https://images.unsplash.com/photo-1502904550040-7534597429ae?w=400&q=70',
+   'https://images.unsplash.com/photo-1560073743-0a45abee4e02?w=400&q=70'],
+  ['https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400&q=70',
+   'https://images.unsplash.com/photo-1434682881908-b43d0467b798?w=400&q=70',
+   'https://images.unsplash.com/photo-1596727362302-b8d891c42ab8?w=400&q=70'],
+  ['https://images.unsplash.com/photo-1533560904424-a0c61dc306fc?w=400&q=70',
+   'https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=400&q=70',
+   'https://images.unsplash.com/photo-1504025468847-0e438279542c?w=400&q=70'],
+  ['https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=400&q=70',
+   'https://images.unsplash.com/photo-1486218119243-13883505764c?w=400&q=70',
+   'https://images.unsplash.com/photo-1513593771513-7b58b6c4af38?w=400&q=70']
+];
+
+function getGalleryImgs(idx) {
+  return GALLERY_POOL[idx % GALLERY_POOL.length];
+}
+
+function renderPhotos(lang) {
+  var root = document.getElementById('photos-root');
+  var html = '';
+  EVENTS.forEach(function(ev, i) {
+    var name = lang==='en' ? ev.name_en : ev.name_nl;
+    var dateStr = formatDate(ev.date, lang);
+    var imgs = getGalleryImgs(i);
+    html += '<div class="photo-event-section" id="ev-photos-'+ev.id+'">'+
+      '<div class="photo-event-header">'+
+        '<div>'+
+          '<h3>'+name+'</h3>'+
+          '<span class="photo-event-date">📅 '+dateStr+' &nbsp;📍 '+ev.city+'</span>'+
+        '</div>'+
+        '<a href="evenement.html?id='+ev.id+'" class="btn btn--ghost btn--sm">'+t('meer_info')+'</a>'+
+      '</div>'+
+      '<div class="photo-gallery-grid">'+
+        imgs.map(function(src){ return '<img src="'+src+'" alt="'+name+' foto" loading="lazy">'; }).join('')+
+      '</div>'+
+      '<div class="photo-upload-form" id="upload-form-'+ev.id+'">'+
+        '<input type="text" placeholder="'+t('your_name')+'" id="upload-name-'+ev.id+'">'+
+        '<input type="file" accept="image/*" id="upload-file-'+ev.id+'">'+
+        '<button class="btn btn--dark btn--sm" onclick="submitPhoto('+ev.id+')">'+t('upload_btn')+'</button>'+
+        '<span class="upload-success" id="upload-success-'+ev.id+'">✅ '+t('pending_approval')+'</span>'+
+      '</div>'+
+    '</div>';
+  });
+  root.innerHTML = html;
+}
+
+function submitPhoto(id) {
+  var successEl = document.getElementById('upload-success-'+id);
+  if (successEl) {
+    successEl.style.display = 'inline-flex';
+    setTimeout(function(){ successEl.style.display='none'; }, 4000);
+  }
+  // Reset fields
+  var nameEl = document.getElementById('upload-name-'+id);
+  var fileEl = document.getElementById('upload-file-'+id);
+  if (nameEl) nameEl.value = '';
+  if (fileEl) fileEl.value = '';
+}
+
+function toggleLang() {
+  var cur = getLang();
+  setLang(cur==='nl'?'en':'nl');
+  var lang = getLang();
+  var btnM = document.getElementById('lang-toggle-mobile');
+  if (btnM) btnM.textContent = I18N[lang].nav_language;
+  renderPhotos(lang);
+}
+function toggleMobileNav() { document.getElementById('mobile-nav').classList.toggle('open'); }
+
+(function() {
+  var lang = getLang();
+  applyI18n(lang);
+  var btn = document.getElementById('lang-toggle');
+  if (btn) btn.textContent = I18N[lang].nav_language;
+  var btnM = document.getElementById('lang-toggle-mobile');
+  if (btnM) btnM.textContent = I18N[lang].nav_language;
+  renderPhotos(lang);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Over ons — runningnederland.nl</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ── NAV ─────────────────────────────────────────────────── -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__logo">
+      <div class="nav__logo-box">RNL</div>
+      <span class="nav__logo-name">runningnederland.nl</span>
+    </a>
+    <div class="nav__links">
+      <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+      <a href="trainingsschemas.html" data-i18n="nav_trainingsschemas">Trainingsschema's</a>
+      <a href="kids.html" data-i18n="nav_kids">Kids Runs</a>
+      <a href="fotos.html" data-i18n="nav_photos">Foto's</a>
+      <a href="mijnruns.html" data-i18n="nav_mijnruns">Mijn Runs</a>
+      <a href="overons.html" class="active" data-i18n="nav_overons">Over ons</a>
+      <a href="contact.html" data-i18n="nav_contact">Contact</a>
+      <button class="nav__lang" id="lang-toggle" onclick="toggleLang()">EN</button>
+    </div>
+    <button class="nav__hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav__mobile" id="mobile-nav">
+    <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+    <a href="trainingsschemas.html" data-i18n="nav_trainingsschemas">Trainingsschema's</a>
+    <a href="kids.html" data-i18n="nav_kids">Kids Runs</a>
+    <a href="fotos.html" data-i18n="nav_photos">Foto's</a>
+    <a href="mijnruns.html" data-i18n="nav_mijnruns">Mijn Runs</a>
+    <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+    <a href="contact.html" data-i18n="nav_contact">Contact</a>
+    <div class="nav__mobile-lang">
+      <button class="btn btn--ghost btn--sm" onclick="toggleLang()" id="lang-toggle-mobile">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── PAGE HEADER ─────────────────────────────────────────── -->
+<div class="page-header">
+  <h1 data-i18n="overons_title">Over ons</h1>
+  <p data-i18n="overons_sub">Wij zijn runningnederland.nl</p>
+</div>
+
+<!-- ── CONTENT ─────────────────────────────────────────────── -->
+<div class="overons-content">
+  <div class="overons-logo">
+    <div class="overons-logo-box">RNL</div>
+    <p style="color:var(--mid);font-size:0.9rem;">runningnederland.nl — een initiatief van Golanzo</p>
+  </div>
+
+  <h2 style="margin-bottom:1.5rem;" data-i18n="about_title">Over Golanzo &amp; runningnederland.nl</h2>
+
+  <p data-i18n="overons_p1">Runningnederland.nl is het toonaangevende platform voor hardloopevenementen in Nederland. Opgericht door Golanzo, een organisatie die al meer dan tien jaar hardloopevenementen organiseert door heel het land.</p>
+  <p data-i18n="overons_p2">Ons platform biedt een compleet overzicht van alle hardloopevenementen — van spontane parklopen tot gecertificeerde marathons. We geloven dat hardlopen voor iedereen toegankelijk moet zijn, ongeacht leeftijd, niveau of achtergrond.</p>
+  <p data-i18n="overons_p3">Met duizenden deelnemers per jaar en tientallen evenementen verspreid over het hele jaar, zijn wij de grootste en meest betrouwbare bron voor hardloopevenementen in Nederland. Onze missie: meer mensen aan het lopen krijgen en ze te helpen hun doelen te bereiken.</p>
+
+  <!-- Stats -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin:2.5rem 0;text-align:center;">
+    <div style="background:var(--surface2);border-radius:var(--radius-lg);padding:1.5rem;">
+      <div style="font-family:var(--font-head);font-size:2.5rem;font-weight:800;color:var(--accent);">10+</div>
+      <div style="font-size:0.85rem;color:var(--mid);margin-top:0.3rem;">Jaar ervaring</div>
+    </div>
+    <div style="background:var(--surface2);border-radius:var(--radius-lg);padding:1.5rem;">
+      <div style="font-family:var(--font-head);font-size:2.5rem;font-weight:800;color:var(--accent);">50k+</div>
+      <div style="font-size:0.85rem;color:var(--mid);margin-top:0.3rem;">Lopers bereikt</div>
+    </div>
+    <div style="background:var(--surface2);border-radius:var(--radius-lg);padding:1.5rem;">
+      <div style="font-family:var(--font-head);font-size:2.5rem;font-weight:800;color:var(--accent);">100+</div>
+      <div style="font-size:0.85rem;color:var(--mid);margin-top:0.3rem;">Evenementen georganiseerd</div>
+    </div>
+  </div>
+
+  <!-- Team -->
+  <h3 style="margin-bottom:1.25rem;">Het team</h3>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.25rem;margin-bottom:2rem;">
+    <div style="background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:1.25rem;text-align:center;">
+      <div style="width:64px;height:64px;background:linear-gradient(135deg,#E8400C,#C03008);border-radius:50%;margin:0 auto 0.75rem;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">👤</div>
+      <div style="font-weight:700;margin-bottom:0.2rem;">Sophie Vermeer</div>
+      <div style="font-size:0.8rem;color:var(--mid);">Oprichter &amp; Directeur</div>
+    </div>
+    <div style="background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:1.25rem;text-align:center;">
+      <div style="width:64px;height:64px;background:linear-gradient(135deg,#1D4ED8,#1E40AF);border-radius:50%;margin:0 auto 0.75rem;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">👤</div>
+      <div style="font-weight:700;margin-bottom:0.2rem;">Lars de Vries</div>
+      <div style="font-size:0.8rem;color:var(--mid);">Evenementencoördinator</div>
+    </div>
+    <div style="background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:1.25rem;text-align:center;">
+      <div style="width:64px;height:64px;background:linear-gradient(135deg,#059669,#047857);border-radius:50%;margin:0 auto 0.75rem;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">👤</div>
+      <div style="font-weight:700;margin-bottom:0.2rem;">Emma Janssen</div>
+      <div style="font-size:0.8rem;color:var(--mid);">Marketing &amp; Community</div>
+    </div>
+    <div style="background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:1.25rem;text-align:center;">
+      <div style="width:64px;height:64px;background:linear-gradient(135deg,#7C3AED,#6D28D9);border-radius:50%;margin:0 auto 0.75rem;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">👤</div>
+      <div style="font-weight:700;margin-bottom:0.2rem;">Tom Bakker</div>
+      <div style="font-size:0.8rem;color:var(--mid);">Techniek &amp; Website</div>
+    </div>
+  </div>
+
+  <!-- Mission box -->
+  <div class="mission-box">
+    <h3 data-i18n="mission_title">Onze missie</h3>
+    <p data-i18n="mission_text">Meer mensen bewegen, inspireren en verbinden door middel van hardlopen.</p>
+  </div>
+
+  <!-- CTA -->
+  <div style="text-align:center;margin-top:2.5rem;">
+    <a href="agenda.html" class="btn btn--primary" style="margin-right:1rem;">Bekijk evenementen</a>
+    <a href="contact.html" class="btn btn--dark">Neem contact op</a>
+  </div>
+</div>
+
+<!-- ── FOOTER ──────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__logo">
+      <div class="footer__logo-box">RNL</div>
+      <span class="footer__name">runningnederland.nl</span>
+    </div>
+    <p class="footer__tagline" data-i18n="footer_tagline">Het complete platform voor hardlopers in Nederland</p>
+    <div class="footer__links">
+      <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+      <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+      <a href="contact.html" data-i18n="nav_contact">Contact</a>
+    </div>
+    <p class="footer__copy" data-i18n="footer_copyright">© 2026 runningnederland.nl — een initiatief van Golanzo</p>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="i18n.js"></script>
+<script>
+function toggleLang() {
+  var cur = getLang();
+  setLang(cur==='nl'?'en':'nl');
+  var lang = getLang();
+  var btnM = document.getElementById('lang-toggle-mobile');
+  if (btnM) btnM.textContent = I18N[lang].nav_language;
+}
+function toggleMobileNav() { document.getElementById('mobile-nav').classList.toggle('open'); }
+
+(function() {
+  var lang = getLang();
+  applyI18n(lang);
+  var btn = document.getElementById('lang-toggle');
+  if (btn) btn.textContent = I18N[lang].nav_language;
+  var btnM = document.getElementById('lang-toggle-mobile');
+  if (btnM) btnM.textContent = I18N[lang].nav_language;
+})();
+</script>
+</body>
+</html>

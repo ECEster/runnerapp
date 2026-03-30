@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kids Runs — runningnederland.nl</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="kids.css">
+</head>
+<body>
+
+<!-- ── NAV ─────────────────────────────────────────────────── -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__logo">
+      <div class="nav__logo-box">RNL</div>
+      <span class="nav__logo-name">runningnederland.nl</span>
+    </a>
+    <div class="nav__links">
+      <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+      <a href="trainingsschemas.html" data-i18n="nav_trainingsschemas">Trainingsschema's</a>
+      <a href="kids.html" class="active" data-i18n="nav_kids">Kids Runs</a>
+      <a href="fotos.html" data-i18n="nav_photos">Foto's</a>
+      <a href="mijnruns.html" data-i18n="nav_mijnruns">Mijn Runs</a>
+      <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+      <a href="contact.html" data-i18n="nav_contact">Contact</a>
+      <button class="nav__lang" id="lang-toggle" onclick="toggleLang()">EN</button>
+    </div>
+    <button class="nav__hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav__mobile" id="mobile-nav">
+    <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+    <a href="trainingsschemas.html" data-i18n="nav_trainingsschemas">Trainingsschema's</a>
+    <a href="kids.html" data-i18n="nav_kids">Kids Runs</a>
+    <a href="fotos.html" data-i18n="nav_photos">Foto's</a>
+    <a href="mijnruns.html" data-i18n="nav_mijnruns">Mijn Runs</a>
+    <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+    <a href="contact.html" data-i18n="nav_contact">Contact</a>
+    <div class="nav__mobile-lang">
+      <button class="btn btn--ghost btn--sm" onclick="toggleLang()" id="lang-toggle-mobile">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── KIDS HERO ────────────────────────────────────────────── -->
+<div class="kids-hero">
+  <h1 data-i18n="kids_title">Kids Runs</h1>
+  <p data-i18n="kids_subtitle">Hardlopen is voor iedereen — ook voor de kleintjes!</p>
+  <a href="#kids-events" class="btn">Bekijk evenementen ↓</a>
+</div>
+<hr class="kids-divider">
+
+<!-- ── SCHOENEN ─────────────────────────────────────────────── -->
+<section class="kids-section kids-section--shoes">
+  <div class="container">
+    <div class="kids-section-header">
+      <span class="kids-section-icon">👟</span>
+      <h2 data-i18n="shoes_title">De juiste schoenen</h2>
+    </div>
+    <div class="kids-cards-grid">
+      <div class="kids-card">
+        <div class="kids-card__icon">📏</div>
+        <h4>De juiste maat</h4>
+        <ul>
+          <li>Meet de voet aan het einde van de dag — voeten zwellen een beetje</li>
+          <li>Laat 1 cm ruimte aan het uiteinde van de schoen</li>
+          <li>Koop niet te groot vooruit — dat geeft schaafwonden</li>
+          <li>Meet beide voeten: de grotere bepaalt de maat</li>
+        </ul>
+      </div>
+      <div class="kids-card">
+        <div class="kids-card__icon">🔬</div>
+        <h4>Wat te zoeken</h4>
+        <ul>
+          <li>Flexibele zool die meebuigt met de voet</li>
+          <li>Goede demping voor betonnen ondergrond</li>
+          <li>Klittenband of elastische veters voor jonge kinderen</li>
+          <li>Lichte materialen — minder gewicht = minder vermoeidheid</li>
+        </ul>
+      </div>
+      <div class="kids-card">
+        <div class="kids-card__icon">💰</div>
+        <h4>Budget tips</h4>
+        <ul>
+          <li>Geef niet te veel uit — kinderen groeien snel</li>
+          <li>Speciaalzaak biedt gratis voetmeting aan</li>
+          <li>Reserveschoen mee voor lange evenementen</li>
+          <li>Sokken altijd meenemen bij het passen</li>
+        </ul>
+      </div>
+      <div class="kids-card">
+        <div class="kids-card__icon">⚠️</div>
+        <h4>Let op!</h4>
+        <ul>
+          <li>Geen platte zool op harde ondergrond</li>
+          <li>Controleer regelmatig of schoen nog past</li>
+          <li>Nieuwe schoenen eerst even inlopen thuis</li>
+          <li>Natte schoenen goed laten drogen voor gebruik</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="kids-divider">
+
+<!-- ── KLEDING ──────────────────────────────────────────────── -->
+<section class="kids-section kids-section--clothing">
+  <div class="container">
+    <div class="kids-section-header">
+      <span class="kids-section-icon">👕</span>
+      <h2 data-i18n="clothing_title">Kleding &amp; uitrusting</h2>
+    </div>
+    <div class="kids-cards-grid">
+      <div class="kids-card">
+        <div class="kids-card__icon">🌡️</div>
+        <h4>Kleding per seizoen</h4>
+        <ul>
+          <li>Zomer: licht, ademend materiaal en zonnecapje</li>
+          <li>Herfst: dunne fleece en windbreaker</li>
+          <li>Winter: thermisch ondergoed en handschoentjes</li>
+          <li>Lente: aanpasbare lagen — het weer is onbestendig</li>
+        </ul>
+      </div>
+      <div class="kids-card">
+        <div class="kids-card__icon">🧴</div>
+        <h4>Veiligheid</h4>
+        <ul>
+          <li>Zonnebrand SPF 50+ bij buiten evenementen</li>
+          <li>Reflecterende elementen bij donkere omstandigheden</li>
+          <li>Bidon of camelback voor langere afstanden</li>
+          <li>ID-armbandje met naam en telefoonnummer ouder</li>
+        </ul>
+      </div>
+      <div class="kids-card">
+        <div class="kids-card__icon">🎒</div>
+        <h4>Wat meenemen</h4>
+        <ul>
+          <li>Reservekleding na de finish</li>
+          <li>Handdoek voor regen of zweet</li>
+          <li>Snacks: banaan, koek, sportdrank</li>
+          <li>Pleisters en kleine EHBO in de tas</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="kids-divider">
+
+<!-- ── MAAK HET LEUK ─────────────────────────────────────────── -->
+<section class="kids-section kids-section--fun">
+  <div class="container">
+    <div class="kids-section-header">
+      <span class="kids-section-icon">🎉</span>
+      <h2 data-i18n="fun_title">Maak het leuk</h2>
+    </div>
+    <div class="kids-cards-grid">
+      <div class="kids-card">
+        <div class="kids-card__icon">🎯</div>
+        <h4>Motivatie tips</h4>
+        <ul>
+          <li>Stel kleine, haalbare doelen — "tot de volgende boom!"</li>
+          <li>Laat het kind zelf het tempo bepalen</li>
+          <li>Maak er een familieavontuur van</li>
+          <li>Beloon deelname, niet alleen prestatie</li>
+          <li>Zorg voor muziek of een podcast onderweg</li>
+        </ul>
+      </div>
+      <div class="kids-card">
+        <div class="kids-card__icon">🏅</div>
+        <h4>Evenementen die passen</h4>
+        <ul>
+          <li>Kies kindvriendelijke afstanden (1-3 km)</li>
+          <li>Fun runs met kleur of obstakels zijn geweldig</li>
+          <li>Loop mee als ouder — gezelligheid voorop</li>
+          <li>Verjaardagsrun met vrienden extra leuk</li>
+        </ul>
+      </div>
+      <div class="kids-card">
+        <div class="kids-card__icon">🗺️</div>
+        <h4>Route ideeën</h4>
+        <ul>
+          <li>Oriëntatieparcours in het bos</li>
+          <li>Rondje om het park met stopplaatsen</li>
+          <li>Schatzoektocht terwijl je loopt</li>
+          <li>Verhalenparcours langs interessante punten</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="kids-divider">
+
+<!-- ── VOORDELEN ────────────────────────────────────────────── -->
+<section class="kids-section kids-section--perks">
+  <div class="container">
+    <div class="kids-section-header">
+      <span class="kids-section-icon">⭐</span>
+      <h2 data-i18n="perks_title">Voordelen van jonge lopers</h2>
+    </div>
+    <div class="kids-cards-grid">
+      <div class="kids-card">
+        <div class="kids-card__icon">🧠</div>
+        <h4>Mentaal</h4>
+        <ul>
+          <li>Beter concentratievermogen op school</li>
+          <li>Meer zelfvertrouwen en doorzettingsvermogen</li>
+          <li>Stressvermindering en betere slaap</li>
+          <li>Ontwikkeling van discipline en doelgerichtheid</li>
+          <li>Positief gevoel door endorfine-afgifte</li>
+        </ul>
+      </div>
+      <div class="kids-card">
+        <div class="kids-card__icon">💪</div>
+        <h4>Fysiek</h4>
+        <ul>
+          <li>Sterker hart en longen</li>
+          <li>Gezondere botten en spieren</li>
+          <li>Betere coördinatie en balans</li>
+          <li>Gezond gewicht en energieniveau</li>
+          <li>Goede conditie voor andere sporten</li>
+        </ul>
+      </div>
+      <div class="kids-card">
+        <div class="kids-card__icon">🤝</div>
+        <h4>Sociaal</h4>
+        <ul>
+          <li>Nieuwe vrienden maken bij evenementen</li>
+          <li>Teamgeest bij estafettes</li>
+          <li>Gemeenschapsgevoel in loopclubs</li>
+          <li>Gedeelde ervaringen met ouders</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="kids-divider">
+
+<!-- ── LICHAAM & BEWEGING ────────────────────────────────────── -->
+<section class="kids-section kids-section--physio">
+  <div class="container">
+    <div class="kids-section-header">
+      <span class="kids-section-icon">🧘</span>
+      <h2 data-i18n="physio_title">Lichaam &amp; beweging</h2>
+    </div>
+    <div class="kids-cards-grid">
+      <div class="kids-card">
+        <div class="kids-card__icon">🔄</div>
+        <h4>Warming-up voor kids</h4>
+        <ul>
+          <li>5 minuten rustig stappen of dansen</li>
+          <li>Knie-naar-borst oefening: 10x per been</li>
+          <li>Arm-cirkels vooruit en achteruit</li>
+          <li>Kleine sprongetjes op de plek</li>
+          <li>Nooit stilstaand strekken voor het lopen</li>
+        </ul>
+      </div>
+      <div class="kids-card">
+        <div class="kids-card__icon">🛑</div>
+        <h4>Cooling-down</h4>
+        <ul>
+          <li>Rustig uitlopen na de finish</li>
+          <li>Kuit-stretch: 20 seconden per been</li>
+          <li>Quadriceps rek: voet naar bil trekken</li>
+          <li>Rustig ademen: in door neus, uit door mond</li>
+          <li>Drinken en kleine snack na afloop</li>
+        </ul>
+      </div>
+      <div class="kids-card">
+        <div class="kids-card__icon">💧</div>
+        <h4>Hydratatie</h4>
+        <ul>
+          <li>1-2 uur van tevoren goed drinken</li>
+          <li>Elke 20 min een paar slokjes water</li>
+          <li>Sportisotonisch drinken bij runs langer dan 45 min</li>
+          <li>Na de finish direct 200-300 ml drinken</li>
+        </ul>
+      </div>
+      <div class="kids-card">
+        <div class="kids-card__icon">🩺</div>
+        <h4>Let op blessures</h4>
+        <ul>
+          <li>Luister naar je kind — pijn is een signaal</li>
+          <li>Groeiende botten vragen extra aandacht</li>
+          <li>Rust bij kniepijn (Osgood-Schlatter)</li>
+          <li>Fysiotherapeut voor chronische klachten</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="kids-divider">
+
+<!-- ── KIDS EVENEMENTEN ─────────────────────────────────────── -->
+<section class="kids-section kids-section--events" id="kids-events">
+  <div class="container">
+    <div class="kids-section-header">
+      <span class="kids-section-icon">🏁</span>
+      <h2 data-i18n="events_title">Kids evenementen</h2>
+    </div>
+    <div class="kids-events-grid" id="kids-events-grid"></div>
+  </div>
+</section>
+
+<!-- ── FOOTER ──────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__logo">
+      <div class="footer__logo-box">RNL</div>
+      <span class="footer__name">runningnederland.nl</span>
+    </div>
+    <p class="footer__tagline" data-i18n="footer_tagline">Het complete platform voor hardlopers in Nederland</p>
+    <div class="footer__links">
+      <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+      <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+      <a href="contact.html" data-i18n="nav_contact">Contact</a>
+    </div>
+    <p class="footer__copy" data-i18n="footer_copyright">© 2026 runningnederland.nl — een initiatief van Golanzo</p>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="i18n.js"></script>
+<script>
+var KIDS_TYPES = ['funrun', 'parkloop', 'studentenevenement', 'coopertest', 'inclusieve runs'];
+
+function renderKidsEvents(lang) {
+  var kidsEvents = EVENTS.filter(function(ev) {
+    return ev.categories.indexOf('Jeugd') !== -1 || KIDS_TYPES.indexOf(ev.type) !== -1;
+  });
+  var el = document.getElementById('kids-events-grid');
+  if (!kidsEvents.length) {
+    el.innerHTML = '<p style="text-align:center;color:#666;">Geen kids evenementen gevonden.</p>';
+    return;
+  }
+  el.innerHTML = kidsEvents.map(function(ev) {
+    var name = lang==='en' ? ev.name_en : ev.name_nl;
+    var dateStr = formatDate(ev.date, lang);
+    var price = ev.paid ? ev.price : (lang==='en' ? 'Free' : 'Gratis');
+    return '<div class="kids-event-card">'+
+      '<div class="kids-event-card__img">'+
+        '<img src="'+ev.image+'" alt="'+name+'" loading="lazy">'+
+      '</div>'+
+      '<div class="kids-event-card__body">'+
+        '<div class="kids-event-card__date">📅 '+dateStr+'</div>'+
+        '<h4>'+name+'</h4>'+
+        '<p>📍 '+ev.city+' &nbsp;|&nbsp; '+ev.distances.join(', ')+'&nbsp;|&nbsp; '+price+'</p>'+
+        '<a href="evenement.html?id='+ev.id+'" class="btn">'+t('meer_info')+' →</a>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+function toggleLang() {
+  var cur = getLang();
+  setLang(cur==='nl'?'en':'nl');
+  var lang = getLang();
+  var btnM = document.getElementById('lang-toggle-mobile');
+  if (btnM) btnM.textContent = I18N[lang].nav_language;
+  applyI18n(lang);
+  renderKidsEvents(lang);
+}
+function toggleMobileNav() { document.getElementById('mobile-nav').classList.toggle('open'); }
+
+(function() {
+  var lang = getLang();
+  applyI18n(lang);
+  var btn = document.getElementById('lang-toggle');
+  if (btn) btn.textContent = I18N[lang].nav_language;
+  var btnM = document.getElementById('lang-toggle-mobile');
+  if (btnM) btnM.textContent = I18N[lang].nav_language;
+  renderKidsEvents(lang);
+})();
+</script>
+</body>
+</html>

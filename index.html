@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>runningnederland.nl — Hardlopen in Nederland</title>
+  <meta name="description" content="Het complete overzicht van hardloopevenementen in Nederland. Van parkloop tot marathon.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ── NAVIGATION ──────────────────────────────────────────── -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__logo">
+      <div class="nav__logo-box">RNL</div>
+      <span class="nav__logo-name">runningnederland.nl</span>
+    </a>
+    <div class="nav__links">
+      <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+      <a href="trainingsschemas.html" data-i18n="nav_trainingsschemas">Trainingsschema's</a>
+      <a href="kids.html" data-i18n="nav_kids">Kids Runs</a>
+      <a href="fotos.html" data-i18n="nav_photos">Foto's</a>
+      <a href="mijnruns.html" data-i18n="nav_mijnruns">Mijn Runs</a>
+      <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+      <a href="contact.html" data-i18n="nav_contact">Contact</a>
+      <button class="nav__lang" id="lang-toggle" onclick="toggleLang()">EN</button>
+    </div>
+    <button class="nav__hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav__mobile" id="mobile-nav">
+    <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+    <a href="trainingsschemas.html" data-i18n="nav_trainingsschemas">Trainingsschema's</a>
+    <a href="kids.html" data-i18n="nav_kids">Kids Runs</a>
+    <a href="fotos.html" data-i18n="nav_photos">Foto's</a>
+    <a href="mijnruns.html" data-i18n="nav_mijnruns">Mijn Runs</a>
+    <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+    <a href="contact.html" data-i18n="nav_contact">Contact</a>
+    <div class="nav__mobile-lang">
+      <button class="btn btn--ghost btn--sm" onclick="toggleLang()" id="lang-toggle-mobile">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero__content">
+    <h1><span data-i18n="hero_title">Vind jouw<br>volgende</span> <span class="text-accent">loop</span></h1>
+    <p class="hero__subtitle" data-i18n="hero_subtitle">Het complete overzicht van hardloopevenementen in Nederland — van parkloop tot marathon</p>
+    <div class="hero__cta-wrap">
+      <a href="agenda.html" class="btn btn--primary" data-i18n="hero_cta">Bekijk alle evenementen</a>
+      <a href="trainingsschemas.html" class="btn btn--outline">Trainingsschema's</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURED EVENTS ─────────────────────────────────────── -->
+<section class="section" style="background: var(--surface);">
+  <div class="container">
+    <div class="section-header section-header--center">
+      <span class="eyebrow">Aankomende evenementen</span>
+      <h2 data-i18n="featured_title">Uitgelichte evenementen</h2>
+      <p data-i18n="featured_subtitle">De komende hardloopevenementen in jouw buurt</p>
+    </div>
+    <div class="events-grid" id="featured-events"></div>
+    <div style="text-align:center; margin-top:2.5rem;">
+      <a href="agenda.html" class="btn btn--dark" data-i18n="hero_cta">Bekijk alle evenementen</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ───────────────────────────────────────────────── -->
+<section class="section about-section">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-grid__text">
+        <div class="section-header">
+          <span class="eyebrow" style="color: #E8400C;">Over ons</span>
+          <h2 data-i18n="about_title">Over Golanzo &amp; runningnederland.nl</h2>
+        </div>
+        <p data-i18n="about_text1">Golanzo is een toonaangevende Nederlandse organisatie op het gebied van hardloopevenementen. Al meer dan tien jaar organiseren wij evenementen door heel Nederland, van gezellige parklopen tot uitdagende marathons en ultratrails.</p>
+        <p data-i18n="about_text2">Runningnederland.nl is het centrale platform waar alle hardloopevenementen worden gebundeld. Of je nu een beginner bent die zijn eerste 5km wil lopen, of een doorgewinterde loper die toe is aan een ultralooputdaging — hier vind je jouw volgende evenement.</p>
+        <p data-i18n="about_text3">Ons team van enthousiaste hardlopers en ervaren eventorganisatoren zorgt ervoor dat elk evenement een onvergetelijke ervaring wordt. Veiligheid, gezelligheid en sportiviteit staan altijd voorop.</p>
+        <div class="about-stats">
+          <div class="about-stat">
+            <div class="about-stat__num">19+</div>
+            <div class="about-stat__label">Evenementen 2026</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat__num">12k+</div>
+            <div class="about-stat__label">Deelnemers</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat__num">10+</div>
+            <div class="about-stat__label">Jaar ervaring</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-grid__img">
+        <img src="https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=800&q=80" alt="Hardlopers in Nederland">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ──────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__logo">
+      <div class="footer__logo-box">RNL</div>
+      <span class="footer__name">runningnederland.nl</span>
+    </div>
+    <p class="footer__tagline" data-i18n="footer_tagline">Het complete platform voor hardlopers in Nederland</p>
+    <div class="footer__links">
+      <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+      <a href="trainingsschemas.html" data-i18n="nav_trainingsschemas">Trainingsschema's</a>
+      <a href="kids.html" data-i18n="nav_kids">Kids Runs</a>
+      <a href="fotos.html" data-i18n="nav_photos">Foto's</a>
+      <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+      <a href="contact.html" data-i18n="nav_contact">Contact</a>
+    </div>
+    <p class="footer__copy" data-i18n="footer_copyright">© 2026 runningnederland.nl — een initiatief van Golanzo</p>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="i18n.js"></script>
+<script>
+// ── Helpers ──────────────────────────────────────────────────
+function getBadgeClass(type) {
+  return 'badge-' + type.toLowerCase().replace(/\s+/g, '-');
+}
+
+function getTypeName(type, lang) {
+  var names = {
+    nl: {
+      'marathon': 'Marathon', 'trail': 'Trail', 'cross': 'Cross',
+      'wegevenement': 'Wegevenement', 'parkloop': 'Parkloop',
+      'funrun': 'Fun Run', 'survivalrun': 'Survival Run', 'ultrarun': 'Ultrarun',
+      'virtuele run': 'Virtuele Run', 'estafette': 'Estafette', 'coopertest': 'Coopertest',
+      'studentenevenement': 'Studentenevenement', 'sportief wandelen': 'Sportief Wandelen',
+      'inclusieve runs': 'Inclusieve Run', 'gecertificeerd parcours': 'Gecert. Parcours'
+    },
+    en: {
+      'marathon': 'Marathon', 'trail': 'Trail', 'cross': 'Cross Country',
+      'wegevenement': 'Road Race', 'parkloop': 'Park Run',
+      'funrun': 'Fun Run', 'survivalrun': 'Survival Run', 'ultrarun': 'Ultra Run',
+      'virtuele run': 'Virtual Run', 'estafette': 'Relay', 'coopertest': 'Cooper Test',
+      'studentenevenement': 'Student Event', 'sportief wandelen': 'Sports Walking',
+      'inclusieve runs': 'Inclusive Run', 'gecertificeerd parcours': 'Certified Course'
+    }
+  };
+  return (names[lang] || names.nl)[type] || type;
+}
+
+function renderEventCard(ev, lang) {
+  var name = lang === 'en' ? ev.name_en : ev.name_nl;
+  var dateStr = formatDate(ev.date, lang);
+  var badgeClass = getBadgeClass(ev.type);
+  var typeName = getTypeName(ev.type, lang);
+  var priceHtml = ev.paid
+    ? '<span class="event-card__price">' + ev.price + '</span>'
+    : '<span class="event-card__price free">' + t('free') + '</span>';
+  var freeBadge = !ev.paid ? '<span class="event-card__free-badge">' + t('free') + '</span>' : '';
+  var distChips = ev.distances.map(function(d) {
+    return '<span class="event-card__dist-chip">' + d + '</span>';
+  }).join('');
+  return '<div class="event-card">' +
+    '<div class="event-card__img">' +
+      '<img src="' + ev.image + '" alt="' + name + '" loading="lazy">' +
+      '<span class="event-card__badge ' + badgeClass + '">' + typeName + '</span>' +
+      freeBadge +
+    '</div>' +
+    '<div class="event-card__body">' +
+      '<div class="event-card__date">📅 ' + dateStr + '</div>' +
+      '<div class="event-card__title">' + name + '</div>' +
+      '<div class="event-card__meta"><span>📍 ' + ev.city + '</span></div>' +
+      '<div class="event-card__distances">' + distChips + '</div>' +
+      '<div class="event-card__footer">' +
+        priceHtml +
+        '<a href="evenement.html?id=' + ev.id + '" class="btn btn--ghost btn--sm" data-i18n="meer_info">' + t('meer_info') + '</a>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+// ── Init ─────────────────────────────────────────────────────
+(function() {
+  var lang = getLang();
+  applyI18n(lang);
+
+  // Update lang toggle
+  var btn = document.getElementById('lang-toggle');
+  if (btn) btn.textContent = I18N[lang].nav_language;
+  var btnM = document.getElementById('lang-toggle-mobile');
+  if (btnM) btnM.textContent = I18N[lang].nav_language;
+
+  // Render 4 soonest events
+  var today = new Date();
+  today.setHours(0,0,0,0);
+  var sorted = EVENTS.slice().sort(function(a, b) {
+    return new Date(a.date) - new Date(b.date);
+  });
+  var featured = sorted.filter(function(ev) {
+    return new Date(ev.date) >= today;
+  }).slice(0, 4);
+  if (!featured.length) featured = sorted.slice(0, 4);
+
+  var grid = document.getElementById('featured-events');
+  if (grid) {
+    grid.innerHTML = featured.map(function(ev) {
+      return renderEventCard(ev, lang);
+    }).join('');
+  }
+})();
+
+function toggleLang() {
+  var cur = getLang();
+  var next = cur === 'nl' ? 'en' : 'nl';
+  setLang(next);
+  // Re-render featured events
+  var lang = next;
+  var today = new Date(); today.setHours(0,0,0,0);
+  var sorted = EVENTS.slice().sort(function(a,b){ return new Date(a.date)-new Date(b.date); });
+  var featured = sorted.filter(function(ev){ return new Date(ev.date) >= today; }).slice(0,4);
+  if (!featured.length) featured = sorted.slice(0,4);
+  var grid = document.getElementById('featured-events');
+  if (grid) grid.innerHTML = featured.map(function(ev){ return renderEventCard(ev, lang); }).join('');
+  var btnM = document.getElementById('lang-toggle-mobile');
+  if (btnM) btnM.textContent = I18N[lang].nav_language;
+}
+
+function toggleMobileNav() {
+  var nav = document.getElementById('mobile-nav');
+  nav.classList.toggle('open');
+}
+</script>
+</body>
+</html>

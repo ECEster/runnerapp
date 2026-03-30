@@ -1,0 +1,260 @@
+/* ============================================================
+   kids.css — bright, fun styles for kids.html
+   ============================================================ */
+
+:root {
+  --kids-yellow:  #FFD600;
+  --kids-green:   #4CAF50;
+  --kids-pink:    #FF4081;
+  --kids-blue:    #2196F3;
+  --kids-orange:  #FF6D00;
+  --kids-purple:  #9C27B0;
+  --kids-teal:    #00BCD4;
+  --kids-red:     #F44336;
+}
+
+/* ── Kids hero ──────────────────────────────────────────────── */
+.kids-hero {
+  background: linear-gradient(135deg, #FFD600 0%, #FF6D00 40%, #FF4081 70%, #9C27B0 100%);
+  padding: 5rem 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.kids-hero::before {
+  content: '👟🏃‍♀️⭐🏅🌟';
+  font-size: 3rem;
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  letter-spacing: 2rem;
+  opacity: 0.18;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.kids-hero h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-weight: 800;
+  color: #fff;
+  text-transform: uppercase;
+  text-shadow: 3px 4px 0 rgba(0,0,0,0.18);
+  margin-bottom: 1rem;
+  letter-spacing: 0.04em;
+}
+.kids-hero p {
+  font-size: 1.25rem;
+  color: rgba(255,255,255,0.95);
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  font-weight: 500;
+}
+.kids-hero .btn {
+  background: #fff;
+  color: var(--kids-orange);
+  font-size: 1.05rem;
+  padding: 0.8rem 2rem;
+  border-radius: 50px;
+  font-weight: 800;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.kids-hero .btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 28px rgba(0,0,0,0.25); }
+
+/* ── Section divider ────────────────────────────────────────── */
+.kids-divider {
+  height: 6px;
+  background: linear-gradient(to right, var(--kids-yellow), var(--kids-green), var(--kids-blue), var(--kids-pink), var(--kids-purple));
+  border: none;
+  margin: 0;
+}
+
+/* ── Kids section ───────────────────────────────────────────── */
+.kids-section {
+  padding: 3.5rem 0;
+  position: relative;
+}
+.kids-section:nth-child(odd) {
+  background: #FFFDE7;
+}
+.kids-section:nth-child(even) {
+  background: #F3E5F5;
+}
+
+/* ── Kids section headers ───────────────────────────────────── */
+.kids-section-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+.kids-section-icon {
+  font-size: 3.5rem;
+  display: block;
+  margin-bottom: 0.5rem;
+  filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.12));
+}
+.kids-section-header h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: inline-block;
+  padding: 0.2rem 1rem;
+  border-radius: 12px;
+}
+
+/* Color variations per section */
+.kids-section--shoes .kids-section-header h2 {
+  background: var(--kids-blue);
+  color: #fff;
+}
+.kids-section--clothing .kids-section-header h2 {
+  background: var(--kids-pink);
+  color: #fff;
+}
+.kids-section--fun .kids-section-header h2 {
+  background: var(--kids-orange);
+  color: #fff;
+}
+.kids-section--perks .kids-section-header h2 {
+  background: var(--kids-green);
+  color: #fff;
+}
+.kids-section--physio .kids-section-header h2 {
+  background: var(--kids-purple);
+  color: #fff;
+}
+.kids-section--events .kids-section-header h2 {
+  background: var(--kids-teal);
+  color: #fff;
+}
+
+/* ── Kids cards grid ────────────────────────────────────────── */
+.kids-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.kids-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 1.75rem 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.09);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-bottom: 5px solid transparent;
+}
+.kids-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 32px rgba(0,0,0,0.14);
+}
+.kids-section--shoes .kids-card     { border-bottom-color: var(--kids-blue); }
+.kids-section--clothing .kids-card  { border-bottom-color: var(--kids-pink); }
+.kids-section--fun .kids-card       { border-bottom-color: var(--kids-orange); }
+.kids-section--perks .kids-card     { border-bottom-color: var(--kids-green); }
+.kids-section--physio .kids-card    { border-bottom-color: var(--kids-purple); }
+.kids-card__icon { font-size: 2.2rem; margin-bottom: 0.75rem; }
+.kids-card h4 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 0.6rem;
+  color: #1a1a2e;
+}
+.kids-card p, .kids-card li {
+  font-size: 0.93rem;
+  color: #444;
+  line-height: 1.6;
+}
+.kids-card ul { padding-left: 0; }
+.kids-card ul li {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+  list-style: none;
+}
+.kids-card ul li::before {
+  content: '✓';
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.kids-section--shoes .kids-card ul li::before     { color: var(--kids-blue); }
+.kids-section--clothing .kids-card ul li::before  { color: var(--kids-pink); }
+.kids-section--fun .kids-card ul li::before       { color: var(--kids-orange); }
+.kids-section--perks .kids-card ul li::before     { color: var(--kids-green); }
+.kids-section--physio .kids-card ul li::before    { color: var(--kids-purple); }
+
+/* ── Kids events section ────────────────────────────────────── */
+.kids-section--events {
+  background: linear-gradient(135deg, #E0F7FA 0%, #E8F5E9 100%);
+}
+.kids-events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.kids-event-card {
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.10);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-top: 5px solid var(--kids-teal);
+}
+.kids-event-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 32px rgba(0,0,0,0.15);
+}
+.kids-event-card__img {
+  height: 150px;
+  overflow: hidden;
+}
+.kids-event-card__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+.kids-event-card:hover .kids-event-card__img img { transform: scale(1.06); }
+.kids-event-card__body { padding: 1.1rem; }
+.kids-event-card__date {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--kids-teal);
+  margin-bottom: 0.3rem;
+}
+.kids-event-card h4 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-bottom: 0.4rem;
+  color: #1a1a2e;
+}
+.kids-event-card p { font-size: 0.85rem; color: #666; margin-bottom: 0.75rem; }
+.kids-event-card .btn {
+  display: inline-block;
+  background: var(--kids-teal);
+  color: #fff;
+  padding: 0.4rem 1rem;
+  border-radius: 50px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  transition: background 0.2s, transform 0.2s;
+}
+.kids-event-card .btn:hover { background: #0097A7; transform: translateY(-1px); }
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .kids-cards-grid { grid-template-columns: repeat(2, 1fr); }
+  .kids-events-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .kids-cards-grid { grid-template-columns: 1fr; }
+  .kids-hero { padding: 3.5rem 1rem; }
+}

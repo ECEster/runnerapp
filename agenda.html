@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agenda — runningnederland.nl</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ── NAV ─────────────────────────────────────────────────── -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__logo">
+      <div class="nav__logo-box">RNL</div>
+      <span class="nav__logo-name">runningnederland.nl</span>
+    </a>
+    <div class="nav__links">
+      <a href="agenda.html" class="active" data-i18n="nav_agenda">Agenda</a>
+      <a href="trainingsschemas.html" data-i18n="nav_trainingsschemas">Trainingsschema's</a>
+      <a href="kids.html" data-i18n="nav_kids">Kids Runs</a>
+      <a href="fotos.html" data-i18n="nav_photos">Foto's</a>
+      <a href="mijnruns.html" data-i18n="nav_mijnruns">Mijn Runs</a>
+      <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+      <a href="contact.html" data-i18n="nav_contact">Contact</a>
+      <button class="nav__lang" id="lang-toggle" onclick="toggleLang()">EN</button>
+    </div>
+    <button class="nav__hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav__mobile" id="mobile-nav">
+    <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+    <a href="trainingsschemas.html" data-i18n="nav_trainingsschemas">Trainingsschema's</a>
+    <a href="kids.html" data-i18n="nav_kids">Kids Runs</a>
+    <a href="fotos.html" data-i18n="nav_photos">Foto's</a>
+    <a href="mijnruns.html" data-i18n="nav_mijnruns">Mijn Runs</a>
+    <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+    <a href="contact.html" data-i18n="nav_contact">Contact</a>
+    <div class="nav__mobile-lang">
+      <button class="btn btn--ghost btn--sm" onclick="toggleLang()" id="lang-toggle-mobile">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── PAGE HEADER ─────────────────────────────────────────── -->
+<div class="page-header">
+  <h1 data-i18n="agenda_title">Evenementenagenda</h1>
+  <p data-i18n="agenda_subtitle">Ontdek alle hardloopevenementen in Nederland</p>
+</div>
+
+<!-- ── MAIN CONTENT ────────────────────────────────────────── -->
+<div class="container">
+  <div class="agenda-layout">
+
+    <!-- FILTER PANEL -->
+    <aside class="filter-panel">
+      <div class="filter-panel__title">
+        <span data-i18n="filter_title">Filteren</span>
+        <button onclick="clearFilters()" data-i18n="clear_filters">Filters wissen</button>
+      </div>
+
+      <!-- Type -->
+      <div class="filter-group">
+        <label data-i18n="filter_type">Soort evenement</label>
+        <select id="f-type" onchange="applyFilters()">
+          <option value="">— Alle types —</option>
+          <option value="marathon">Marathon</option>
+          <option value="trail">Trail</option>
+          <option value="cross">Cross</option>
+          <option value="wegevenement">Wegevenement</option>
+          <option value="parkloop">Parkloop</option>
+          <option value="funrun">Fun Run</option>
+          <option value="survivalrun">Survival Run</option>
+          <option value="ultrarun">Ultrarun</option>
+          <option value="virtuele run">Virtuele Run</option>
+          <option value="estafette">Estafette</option>
+          <option value="coopertest">Coopertest</option>
+          <option value="studentenevenement">Studentenevenement</option>
+          <option value="sportief wandelen">Sportief Wandelen</option>
+          <option value="inclusieve runs">Inclusieve Run</option>
+          <option value="gecertificeerd parcours">Gecertificeerd Parcours</option>
+        </select>
+      </div>
+
+      <!-- Province -->
+      <div class="filter-group">
+        <label data-i18n="filter_province">Provincie</label>
+        <select id="f-province" onchange="applyFilters()">
+          <option value="">— Alle provincies —</option>
+          <option value="Groningen">Groningen</option>
+          <option value="Friesland">Friesland</option>
+          <option value="Drenthe">Drenthe</option>
+          <option value="Overijssel">Overijssel</option>
+          <option value="Flevoland">Flevoland</option>
+          <option value="Gelderland">Gelderland</option>
+          <option value="Utrecht">Utrecht</option>
+          <option value="Noord-Holland">Noord-Holland</option>
+          <option value="Zuid-Holland">Zuid-Holland</option>
+          <option value="Zeeland">Zeeland</option>
+          <option value="Noord-Brabant">Noord-Brabant</option>
+          <option value="Limburg">Limburg</option>
+        </select>
+      </div>
+
+      <!-- Distance -->
+      <div class="filter-group">
+        <label data-i18n="filter_distance">Afstand</label>
+        <select id="f-distance" onchange="applyFilters()">
+          <option value="">— Alle afstanden —</option>
+          <option value="5km">5 km</option>
+          <option value="10km">10 km</option>
+          <option value="15km">15 km</option>
+          <option value="21km">Halve marathon</option>
+          <option value="42km">Marathon</option>
+          <option value="50km">50 km</option>
+          <option value="100km">100 km</option>
+        </select>
+      </div>
+
+      <!-- Date range -->
+      <div class="filter-group filter-group--row">
+        <div>
+          <label data-i18n="filter_date_from">Datum vanaf</label>
+          <input type="date" id="f-date-from" onchange="applyFilters()">
+        </div>
+        <div>
+          <label data-i18n="filter_date_to">Datum t/m</label>
+          <input type="date" id="f-date-to" onchange="applyFilters()">
+        </div>
+      </div>
+
+      <!-- Free only -->
+      <div class="filter-group">
+        <label class="filter-checkbox">
+          <input type="checkbox" id="f-free" onchange="applyFilters()">
+          <span data-i18n="filter_free_only">Alleen gratis</span>
+        </label>
+      </div>
+
+      <!-- Atletiekunie -->
+      <div class="filter-group">
+        <label class="filter-checkbox">
+          <input type="checkbox" id="f-atletiekunie" onchange="applyFilters()">
+          <span data-i18n="filter_atletiekunie">Atletiekunie gecertificeerd</span>
+        </label>
+      </div>
+
+      <!-- Postal code + radius -->
+      <div class="filter-group">
+        <label data-i18n="filter_postal">Postcode</label>
+        <input type="text" id="f-postal" maxlength="4" placeholder="bijv. 1000" oninput="applyFilters()">
+      </div>
+      <div class="filter-group">
+        <label data-i18n="filter_radius">Straal (km)</label>
+        <select id="f-radius" onchange="applyFilters()">
+          <option value="">— Geen limiet —</option>
+          <option value="25">25 km</option>
+          <option value="50">50 km</option>
+          <option value="100">100 km</option>
+          <option value="150">150 km</option>
+        </select>
+      </div>
+
+      <!-- Search -->
+      <div class="filter-group">
+        <label data-i18n="filter_search">Zoeken</label>
+        <input type="text" id="f-search" placeholder="Naam of stad..." oninput="applyFilters()">
+      </div>
+    </aside>
+
+    <!-- RESULTS -->
+    <div class="agenda-results">
+      <!-- Active filter chips -->
+      <div class="filter-chips" id="filter-chips"></div>
+
+      <!-- Calendar -->
+      <div class="calendar-wrapper">
+        <div class="calendar-nav">
+          <button id="cal-prev" onclick="calPrev()" data-i18n="calendar_prev">‹ Vorige</button>
+          <h3 id="cal-title"></h3>
+          <button id="cal-next" onclick="calNext()" data-i18n="calendar_next">Volgende ›</button>
+        </div>
+        <div class="calendar-grid" id="calendar-grid"></div>
+      </div>
+
+      <!-- Day panel -->
+      <div class="day-panel hidden" id="day-panel">
+        <div class="day-panel__header">
+          <h3 id="day-panel-title"></h3>
+          <button class="day-panel__close" onclick="closeDayPanel()" data-i18n="day_panel_close">✕</button>
+        </div>
+        <div class="day-panel__list" id="day-panel-list"></div>
+      </div>
+
+      <!-- Results header -->
+      <div class="results-header">
+        <span id="results-count"></span>
+        <div class="results-sort">
+          <select onchange="applyFilters()" id="sort-select">
+            <option value="date">Sorteer op datum</option>
+            <option value="name">Sorteer op naam</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Events list -->
+      <div class="events-grid" id="events-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ──────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__logo">
+      <div class="footer__logo-box">RNL</div>
+      <span class="footer__name">runningnederland.nl</span>
+    </div>
+    <p class="footer__tagline" data-i18n="footer_tagline">Het complete platform voor hardlopers in Nederland</p>
+    <div class="footer__links">
+      <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+      <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+      <a href="contact.html" data-i18n="nav_contact">Contact</a>
+    </div>
+    <p class="footer__copy" data-i18n="footer_copyright">© 2026 runningnederland.nl — een initiatief van Golanzo</p>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="i18n.js"></script>
+<script>
+var calYear, calMonth;
+var filteredEvents = [];
+
+var MONTHS_NL = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+var MONTHS_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+var DAYS_NL = ['Ma','Di','Wo','Do','Vr','Za','Zo'];
+var DAYS_EN = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+
+function getBadgeClass(type) { return 'badge-' + type.toLowerCase().replace(/\s+/g, '-'); }
+function getTypeName(type, lang) {
+  var names = {
+    nl: { 'marathon':'Marathon','trail':'Trail','cross':'Cross','wegevenement':'Wegevenement','parkloop':'Parkloop','funrun':'Fun Run','survivalrun':'Survival Run','ultrarun':'Ultrarun','virtuele run':'Virtuele Run','estafette':'Estafette','coopertest':'Coopertest','studentenevenement':'Studentenevenement','sportief wandelen':'Sportief Wandelen','inclusieve runs':'Inclusieve Run','gecertificeerd parcours':'Gecert. Parcours' },
+    en: { 'marathon':'Marathon','trail':'Trail','cross':'Cross Country','wegevenement':'Road Race','parkloop':'Park Run','funrun':'Fun Run','survivalrun':'Survival Run','ultrarun':'Ultra Run','virtuele run':'Virtual Run','estafette':'Relay','coopertest':'Cooper Test','studentenevenement':'Student Event','sportief wandelen':'Sports Walking','inclusieve runs':'Inclusive Run','gecertificeerd parcours':'Certified Course' }
+  };
+  return (names[lang]||names.nl)[type]||type;
+}
+
+function getFilters() {
+  return {
+    type: document.getElementById('f-type').value,
+    province: document.getElementById('f-province').value,
+    distance: document.getElementById('f-distance').value,
+    dateFrom: document.getElementById('f-date-from').value,
+    dateTo: document.getElementById('f-date-to').value,
+    freeOnly: document.getElementById('f-free').checked,
+    atletiekunie: document.getElementById('f-atletiekunie').checked,
+    postal: document.getElementById('f-postal').value.trim(),
+    radius: document.getElementById('f-radius').value,
+    search: document.getElementById('f-search').value.trim().toLowerCase()
+  };
+}
+
+function getPostalCoords(postal4) {
+  var key = postal4;
+  if (POSTAL_CODES[key]) return POSTAL_CODES[key];
+  // try rounding down to nearest known prefix
+  for (var k in POSTAL_CODES) {
+    if (Math.abs(parseInt(k) - parseInt(key)) < 100) return POSTAL_CODES[k];
+  }
+  return null;
+}
+
+function cityCoords(city) {
+  var map = {
+    'Groningen': {lat:53.2194,lng:6.5665}, 'Utrecht': {lat:52.0907,lng:5.1214},
+    'Rotterdam': {lat:51.9225,lng:4.4792}, 'Leiden': {lat:52.1601,lng:4.4970},
+    '(online)': null, 'Delft': {lat:52.0116,lng:4.3571}, 'Arnhem': {lat:51.9851,lng:5.8987},
+    'Haarlem': {lat:52.3874,lng:4.6462}, 'Eindhoven': {lat:51.4416,lng:5.4697},
+    'Zwolle': {lat:52.5168,lng:6.0830}, 'Amsterdam': {lat:52.3676,lng:4.9041},
+    'Middelburg': {lat:51.4988,lng:3.6136}, 'Maastricht': {lat:50.8514,lng:5.6910},
+    'Den Haag': {lat:52.0705,lng:4.3007}, 'Assen': {lat:52.9926,lng:6.5611},
+    'Nijmegen': {lat:51.8126,lng:5.8372}, 'Leeuwarden': {lat:53.2012,lng:5.7999},
+    'Almere': {lat:52.3508,lng:5.2647}
+  };
+  return map[city] || null;
+}
+
+function filterEvents() {
+  var f = getFilters();
+  var postalCoords = f.postal.length === 4 ? getPostalCoords(f.postal) : null;
+
+  return EVENTS.filter(function(ev) {
+    if (f.type && ev.type !== f.type) return false;
+    if (f.province && ev.province !== f.province) return false;
+    if (f.distance && !ev.distances.includes(f.distance)) return false;
+    if (f.dateFrom && ev.date < f.dateFrom) return false;
+    if (f.dateTo && ev.date > f.dateTo) return false;
+    if (f.freeOnly && ev.paid) return false;
+    if (f.atletiekunie && !ev.atletiekunie) return false;
+    if (f.search && !(ev.name_nl.toLowerCase().includes(f.search) || ev.name_en.toLowerCase().includes(f.search) || ev.city.toLowerCase().includes(f.search))) return false;
+    if (postalCoords && f.radius) {
+      var ec = cityCoords(ev.city);
+      if (ec) {
+        var dist = haversineKm(postalCoords.lat, postalCoords.lng, ec.lat, ec.lng);
+        if (dist > parseFloat(f.radius)) return false;
+      }
+    }
+    return true;
+  });
+}
+
+function applyFilters() {
+  var lang = getLang();
+  var f = getFilters();
+  var sort = document.getElementById('sort-select').value;
+  filteredEvents = filterEvents();
+
+  if (sort === 'name') {
+    filteredEvents.sort(function(a,b){ return (lang==='en'?a.name_en:a.name_nl).localeCompare(lang==='en'?b.name_en:b.name_nl); });
+  } else {
+    filteredEvents.sort(function(a,b){ return new Date(a.date)-new Date(b.date); });
+  }
+
+  renderList(lang);
+  renderCalendar();
+  renderFilterChips(f, lang);
+  saveFiltersToHash(f);
+
+  var countEl = document.getElementById('results-count');
+  if (countEl) countEl.textContent = filteredEvents.length + ' ' + t('results_count');
+}
+
+function renderList(lang) {
+  var el = document.getElementById('events-list');
+  if (!filteredEvents.length) {
+    el.innerHTML = '<div class="no-events-msg" style="grid-column:1/-1"><div class="no-events-msg__icon">🏃</div><h3 data-i18n="no_events">' + t('no_events') + '</h3><p>' + t('no_events_sub') + '</p></div>';
+    return;
+  }
+  el.innerHTML = filteredEvents.map(function(ev) {
+    var name = lang==='en'?ev.name_en:ev.name_nl;
+    var dateStr = formatDate(ev.date, lang);
+    var badgeClass = getBadgeClass(ev.type);
+    var typeName = getTypeName(ev.type, lang);
+    var priceHtml = ev.paid ? '<span class="event-card__price">'+ev.price+'</span>' : '<span class="event-card__price free">'+t('free')+'</span>';
+    var freeBadge = !ev.paid ? '<span class="event-card__free-badge">'+t('free')+'</span>' : '';
+    var distChips = ev.distances.map(function(d){ return '<span class="event-card__dist-chip">'+d+'</span>'; }).join('');
+    return '<div class="event-card">'+
+      '<div class="event-card__img">'+
+        '<img src="'+ev.image+'" alt="'+name+'" loading="lazy">'+
+        '<span class="event-card__badge '+badgeClass+'">'+typeName+'</span>'+freeBadge+
+      '</div>'+
+      '<div class="event-card__body">'+
+        '<div class="event-card__date">📅 '+dateStr+'</div>'+
+        '<div class="event-card__title">'+name+'</div>'+
+        '<div class="event-card__meta"><span>📍 '+ev.city+'</span><span>'+ev.province+'</span></div>'+
+        '<div class="event-card__distances">'+distChips+'</div>'+
+        '<div class="event-card__footer">'+priceHtml+'<a href="evenement.html?id='+ev.id+'" class="btn btn--ghost btn--sm">'+t('meer_info')+'</a>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+function renderCalendar() {
+  var lang = getLang();
+  var months = lang==='en' ? MONTHS_EN : MONTHS_NL;
+  var days   = lang==='en' ? DAYS_EN : DAYS_NL;
+  var title = months[calMonth].charAt(0).toUpperCase()+months[calMonth].slice(1)+' '+calYear;
+  document.getElementById('cal-title').textContent = title;
+
+  var grid = document.getElementById('calendar-grid');
+  // Day headers
+  var html = days.map(function(d){ return '<div class="calendar-dow">'+d+'</div>'; }).join('');
+
+  var firstDay = new Date(calYear, calMonth, 1).getDay(); // 0=Sun
+  // Convert to Mon-first
+  var startOffset = (firstDay + 6) % 7;
+  var daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  var daysInPrev  = new Date(calYear, calMonth, 0).getDate();
+  var today = new Date(); today.setHours(0,0,0,0);
+
+  // Map events to days
+  var evByDay = {};
+  filteredEvents.forEach(function(ev) {
+    var d = new Date(ev.date);
+    if (d.getFullYear()===calYear && d.getMonth()===calMonth) {
+      var day = d.getDate();
+      if (!evByDay[day]) evByDay[day] = [];
+      evByDay[day].push(ev);
+    }
+  });
+
+  var totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
+  for (var i=0; i<totalCells; i++) {
+    var dayNum, isOther=false;
+    if (i < startOffset) { dayNum = daysInPrev - startOffset + i + 1; isOther=true; }
+    else if (i >= startOffset + daysInMonth) { dayNum = i - startOffset - daysInMonth + 1; isOther=true; }
+    else { dayNum = i - startOffset + 1; }
+
+    var cellDate = isOther ? null : new Date(calYear, calMonth, dayNum);
+    var isToday = cellDate && cellDate.getTime()===today.getTime();
+    var evs = (!isOther && evByDay[dayNum]) ? evByDay[dayNum] : [];
+    var cls = 'calendar-day';
+    if (isOther) cls += ' other-month';
+    if (isToday) cls += ' today';
+    if (evs.length) cls += ' has-events';
+
+    var dots = evs.slice(0,5).map(function(ev){ return '<div class="cal-dot '+getBadgeClass(ev.type)+'" title="'+(lang==='en'?ev.name_en:ev.name_nl)+'"></div>'; }).join('');
+    var clickAttr = evs.length && !isOther ? ' onclick="openDayPanel('+calYear+','+(calMonth)+','+dayNum+')"' : '';
+    html += '<div class="'+cls+'"'+clickAttr+'>'+
+      '<div class="cal-day-num">'+dayNum+'</div>'+
+      '<div class="cal-dots">'+dots+'</div>'+
+    '</div>';
+  }
+  grid.innerHTML = html;
+}
+
+function openDayPanel(year, month, day) {
+  var lang = getLang();
+  var months = lang==='en' ? MONTHS_EN : MONTHS_NL;
+  var evs = filteredEvents.filter(function(ev){
+    var d = new Date(ev.date);
+    return d.getFullYear()===year && d.getMonth()===month && d.getDate()===day;
+  });
+  var panel = document.getElementById('day-panel');
+  var list = document.getElementById('day-panel-list');
+  document.getElementById('day-panel-title').textContent = day+' '+months[month]+' '+year;
+  if (!evs.length) { panel.classList.add('hidden'); return; }
+  list.innerHTML = evs.map(function(ev){
+    var name = lang==='en'?ev.name_en:ev.name_nl;
+    var badgeClass = getBadgeClass(ev.type);
+    var typeName = getTypeName(ev.type, lang);
+    return '<div style="display:flex;align-items:center;gap:1rem;padding:0.6rem 0;border-bottom:1px solid var(--surface2)">'+
+      '<span class="event-card__badge '+badgeClass+'" style="position:static;font-size:0.72rem;padding:3px 10px;">'+typeName+'</span>'+
+      '<span style="font-weight:600;flex:1">'+name+'</span>'+
+      '<span style="color:var(--mid);font-size:0.82rem">'+ev.city+'</span>'+
+      '<a href="evenement.html?id='+ev.id+'" class="btn btn--ghost btn--sm">'+t('meer_info')+'</a>'+
+    '</div>';
+  }).join('');
+  // Mark selected day
+  document.querySelectorAll('.calendar-day.selected').forEach(function(el){ el.classList.remove('selected'); });
+  panel.classList.remove('hidden');
+  panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function closeDayPanel() { document.getElementById('day-panel').classList.add('hidden'); }
+
+function calPrev() {
+  calMonth--;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+function calNext() {
+  calMonth++;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+}
+
+function renderFilterChips(f, lang) {
+  var chips = [];
+  if (f.type) chips.push({key:'type', label: getTypeName(f.type, lang)});
+  if (f.province) chips.push({key:'province', label: f.province});
+  if (f.distance) chips.push({key:'distance', label: f.distance});
+  if (f.dateFrom) chips.push({key:'dateFrom', label: t('filter_date_from')+': '+f.dateFrom});
+  if (f.dateTo) chips.push({key:'dateTo', label: t('filter_date_to')+': '+f.dateTo});
+  if (f.freeOnly) chips.push({key:'freeOnly', label: t('filter_free_only')});
+  if (f.atletiekunie) chips.push({key:'atletiekunie', label: 'Atletiekunie'});
+  if (f.postal) chips.push({key:'postal', label: f.postal + (f.radius ? ' +'+f.radius+'km' : '')});
+  if (f.search) chips.push({key:'search', label: '"'+f.search+'"'});
+  var el = document.getElementById('filter-chips');
+  el.innerHTML = chips.map(function(c){
+    return '<span class="filter-chip">'+c.label+'<button class="filter-chip__remove" onclick="removeFilter(\''+c.key+'\')">✕</button></span>';
+  }).join('');
+}
+
+function removeFilter(key) {
+  if (key==='type') document.getElementById('f-type').value='';
+  else if (key==='province') document.getElementById('f-province').value='';
+  else if (key==='distance') document.getElementById('f-distance').value='';
+  else if (key==='dateFrom') document.getElementById('f-date-from').value='';
+  else if (key==='dateTo') document.getElementById('f-date-to').value='';
+  else if (key==='freeOnly') document.getElementById('f-free').checked=false;
+  else if (key==='atletiekunie') document.getElementById('f-atletiekunie').checked=false;
+  else if (key==='postal') { document.getElementById('f-postal').value=''; document.getElementById('f-radius').value=''; }
+  else if (key==='search') document.getElementById('f-search').value='';
+  applyFilters();
+}
+
+function clearFilters() {
+  document.getElementById('f-type').value='';
+  document.getElementById('f-province').value='';
+  document.getElementById('f-distance').value='';
+  document.getElementById('f-date-from').value='';
+  document.getElementById('f-date-to').value='';
+  document.getElementById('f-free').checked=false;
+  document.getElementById('f-atletiekunie').checked=false;
+  document.getElementById('f-postal').value='';
+  document.getElementById('f-radius').value='';
+  document.getElementById('f-search').value='';
+  applyFilters();
+}
+
+function saveFiltersToHash(f) {
+  var parts = [];
+  if (f.type) parts.push('type='+encodeURIComponent(f.type));
+  if (f.province) parts.push('prov='+encodeURIComponent(f.province));
+  if (f.distance) parts.push('dist='+encodeURIComponent(f.distance));
+  if (f.dateFrom) parts.push('from='+f.dateFrom);
+  if (f.dateTo) parts.push('to='+f.dateTo);
+  if (f.freeOnly) parts.push('free=1');
+  if (f.atletiekunie) parts.push('au=1');
+  if (f.postal) parts.push('postal='+f.postal);
+  if (f.radius) parts.push('radius='+f.radius);
+  if (f.search) parts.push('q='+encodeURIComponent(f.search));
+  history.replaceState(null, '', '#' + parts.join('&'));
+}
+
+function loadFiltersFromHash() {
+  var hash = location.hash.slice(1);
+  if (!hash) return;
+  var params = {};
+  hash.split('&').forEach(function(p) { var kv=p.split('='); if(kv[1]) params[kv[0]]=decodeURIComponent(kv[1]); });
+  if (params.type) document.getElementById('f-type').value=params.type;
+  if (params.prov) document.getElementById('f-province').value=params.prov;
+  if (params.dist) document.getElementById('f-distance').value=params.dist;
+  if (params.from) document.getElementById('f-date-from').value=params.from;
+  if (params.to) document.getElementById('f-date-to').value=params.to;
+  if (params.free) document.getElementById('f-free').checked=true;
+  if (params.au) document.getElementById('f-atletiekunie').checked=true;
+  if (params.postal) document.getElementById('f-postal').value=params.postal;
+  if (params.radius) document.getElementById('f-radius').value=params.radius;
+  if (params.q) document.getElementById('f-search').value=params.q;
+}
+
+function toggleLang() {
+  var cur = getLang();
+  setLang(cur==='nl'?'en':'nl');
+  var lang = getLang();
+  var btnM = document.getElementById('lang-toggle-mobile');
+  if (btnM) btnM.textContent = I18N[lang].nav_language;
+  applyFilters();
+}
+function toggleMobileNav() { document.getElementById('mobile-nav').classList.toggle('open'); }
+
+// Init
+(function() {
+  var now = new Date();
+  calYear  = now.getFullYear();
+  calMonth = now.getMonth();
+  var lang = getLang();
+  applyI18n(lang);
+  var btn = document.getElementById('lang-toggle');
+  if (btn) btn.textContent = I18N[lang].nav_language;
+  var btnM = document.getElementById('lang-toggle-mobile');
+  if (btnM) btnM.textContent = I18N[lang].nav_language;
+  loadFiltersFromHash();
+  applyFilters();
+})();
+</script>
+</body>
+</html>
