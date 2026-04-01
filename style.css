@@ -1001,9 +1001,11 @@ p:last-child { margin-bottom: 0; }
 .training-table td {
   padding: 0.7rem 1rem;
   border-bottom: 1px solid var(--light);
+  border-right: 1px solid var(--light);
   color: var(--dark3);
   vertical-align: top;
 }
+.training-table td:last-child { border-right: none; }
 .training-table tr:nth-child(even) td { background: var(--surface2); }
 .training-table tr:hover td { background: #FFF7ED; }
 .training-table .week-cell {
