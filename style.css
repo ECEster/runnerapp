@@ -206,7 +206,7 @@ p:last-child { margin-bottom: 0; }
 }
 .nav__links a {
   color: rgba(255,255,255,0.8);
-  font-size: 0.88rem;
+  font-size: 1.18rem;
   font-weight: 500;
   padding: 0.5rem 0.65rem;
   border-radius: 5px;
