@@ -170,14 +170,12 @@ p:last-child { margin-bottom: 0; }
   height: 33px;
   width: auto;
   display: block;
-  filter: brightness(0) saturate(100%) invert(93%) sepia(80%) saturate(2000%) hue-rotate(48deg) brightness(1.05);
 }
 .footer__logo-img {
   height: 33px;
   width: auto;
   display: block;
   margin: 0 auto 0.5rem;
-  filter: brightness(0) saturate(100%) invert(93%) sepia(80%) saturate(2000%) hue-rotate(48deg) brightness(1.05);
   opacity: 0.85;
 }
 .nav__logo-box {
