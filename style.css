@@ -114,6 +114,27 @@ p:last-child { margin-bottom: 0; }
 }
 .btn--ghost:hover { background: var(--accent); color: var(--white); }
 .btn--sm { padding: 0.4rem 0.9rem; font-size: 0.82rem; }
+.btn--share {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.82rem;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-weight: 600;
+  border: 2px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.btn--share svg { width: 15px; height: 15px; flex-shrink: 0; }
+.btn--share:hover { opacity: 0.85; }
+.btn--share-wa  { background: #25D366; color: #fff; }
+.btn--share-fb  { background: #1877F2; color: #fff; }
+.btn--share-ig  { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); color: #fff; }
+.btn--share-x   { background: #000; color: #fff; font-weight: 700; }
+.btn--share-mail { background: var(--surface2); color: var(--text); border-color: var(--border); }
 
 /* ── Navigation ─────────────────────────────────────────────── */
 .nav {
