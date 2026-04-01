@@ -149,14 +149,14 @@ p:last-child { margin-bottom: 0; }
   height: 28px;
   width: auto;
   display: block;
-  filter: brightness(0) invert(1);
+  filter: brightness(0) saturate(100%) invert(90%) sepia(60%) saturate(900%) hue-rotate(52deg) brightness(1.0);
 }
 .footer__logo-img {
   height: 24px;
   width: auto;
   display: block;
   margin: 0 auto 0.5rem;
-  filter: brightness(0) invert(1);
+  filter: brightness(0) saturate(100%) invert(90%) sepia(60%) saturate(900%) hue-rotate(52deg) brightness(1.0);
   opacity: 0.85;
 }
 .nav__logo-box {
@@ -177,7 +177,7 @@ p:last-child { margin-bottom: 0; }
   font-family: var(--font-head);
   font-weight: 800;
   font-size: 1.1rem;
-  color: var(--white);
+  color: #dbf578;
   letter-spacing: 0.03em;
 }
 .nav__links {
