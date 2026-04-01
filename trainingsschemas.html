@@ -264,6 +264,63 @@ var STRETCH_TIPS = {
   ]
 };
 
+function buildPrintHTML(id) {
+  var lang = getLang();
+  var plan = PLANS[id];
+  var label = lang==='en' ? plan.label_en : plan.label_nl;
+  var intro = lang==='en' ? plan.intro_en : plan.intro_nl;
+  var weeks = plan.weeks;
+  var days = weeks[0];
+  var tableRows = '';
+  for (var w=1; w<weeks.length; w++) {
+    var row = weeks[w];
+    tableRows += '<tr><td><strong>Week '+w+'</strong></td>'+
+      row.map(function(cell){ return '<td>'+cell+'</td>'; }).join('')+'</tr>';
+  }
+  var warmup = (WARMUP_TIPS[lang]||WARMUP_TIPS.nl).map(function(t){ return '<li>'+t+'</li>'; }).join('');
+  var stretch = (STRETCH_TIPS[lang]||STRETCH_TIPS.nl).map(function(t){ return '<li>'+t+'</li>'; }).join('');
+  return '<!DOCTYPE html><html><head><meta charset="UTF-8">'+
+    '<title>Trainingsschema '+label+' — runningnederland.nl</title>'+
+    '<style>'+
+      'body{font-family:Arial,sans-serif;font-size:11pt;margin:2cm;color:#111;}'+
+      'h1{font-size:18pt;margin-bottom:4px;}'+
+      'p.intro{color:#555;margin-bottom:16px;}'+
+      'table{width:100%;border-collapse:collapse;margin-bottom:24px;}'+
+      'th{background:#111;color:#fff;padding:6px 8px;text-align:left;font-size:10pt;}'+
+      'td{padding:6px 8px;border:1px solid #ddd;font-size:9.5pt;vertical-align:top;}'+
+      'tr:nth-child(even) td{background:#f9f9f9;}'+
+      'h3{margin-top:20px;font-size:12pt;}'+
+      'ul{margin:4px 0;padding-left:20px;}'+
+      'li{margin-bottom:4px;font-size:9.5pt;}'+
+      '.footer{margin-top:24px;font-size:8pt;color:#aaa;border-top:1px solid #eee;padding-top:8px;}'+
+    '</style></head><body>'+
+    '<h1>Trainingsschema '+label+'</h1>'+
+    '<p class="intro">'+intro+'</p>'+
+    '<table><thead><tr><th>Week</th>'+
+      days.map(function(d){ return '<th>'+d+'</th>'; }).join('')+
+    '</tr></thead><tbody>'+tableRows+'</tbody></table>'+
+    '<h3>🔥 Warming-up tips</h3><ul>'+warmup+'</ul>'+
+    '<h3>🧘 Stretch tips</h3><ul>'+stretch+'</ul>'+
+    '<p class="footer">runningnederland.nl — trainingsschema '+label+'</p>'+
+    '</body></html>';
+}
+
+function printSchema(id) {
+  var w = window.open('', '_blank');
+  w.document.write(buildPrintHTML(id));
+  w.document.close();
+  w.focus();
+  w.print();
+}
+
+function downloadSchema(id) {
+  var w = window.open('', '_blank');
+  w.document.write(buildPrintHTML(id));
+  w.document.close();
+  w.focus();
+  setTimeout(function(){ w.print(); }, 500);
+}
+
 function showTab(id) {
   document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
@@ -290,7 +347,13 @@ function renderTabContent(id, lang) {
   var warmup = WARMUP_TIPS[lang] || WARMUP_TIPS.nl;
   var stretch = STRETCH_TIPS[lang] || STRETCH_TIPS.nl;
 
-  return '<div style="margin-bottom:1rem;"><p style="color:var(--mid);font-size:1rem;">'+intro+'</p></div>'+
+  return '<div style="margin-bottom:1rem;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;">'+
+      '<p style="color:var(--mid);font-size:1rem;margin:0;">'+intro+'</p>'+
+      '<div style="display:flex;gap:0.5rem;flex-shrink:0;">'+
+        '<button class="btn btn--ghost btn--sm" onclick="printSchema(\''+id+'\')">🖨️ Printen</button>'+
+        '<button class="btn btn--ghost btn--sm" onclick="downloadSchema(\''+id+'\')">⬇️ Download PDF</button>'+
+      '</div>'+
+    '</div>'+
     '<div class="training-table-wrap">'+
     '<table class="training-table">'+
       '<thead><tr>'+
