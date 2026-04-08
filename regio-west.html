@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regio West — runningnederland.nl</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ── NAV ─────────────────────────────────────────────────── -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__logo">
+      <a href="index.html" class="nav__logo-link"><img src="images/logo.svg" alt="RunningNederland" class="nav__logo-img"></a>
+    </a>
+    <div class="nav__links">
+      <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+      <a href="trainingsschemas.html" data-i18n="nav_trainingsschemas">Trainingsschema's</a>
+      <a href="kids.html" data-i18n="nav_kids">Kids Runs</a>
+      <a href="fotos.html" data-i18n="nav_photos">Foto's</a>
+      <a href="mijnruns.html" data-i18n="nav_mijnruns">Mijn Runs</a>
+      <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+      <a href="contact.html" data-i18n="nav_contact">Contact</a>
+      <button class="nav__lang" id="lang-toggle" onclick="toggleLang()">EN</button>
+    </div>
+    <button class="nav__hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav__mobile" id="mobile-nav">
+    <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+    <a href="trainingsschemas.html" data-i18n="nav_trainingsschemas">Trainingsschema's</a>
+    <a href="kids.html" data-i18n="nav_kids">Kids Runs</a>
+    <a href="fotos.html" data-i18n="nav_photos">Foto's</a>
+    <a href="mijnruns.html" data-i18n="nav_mijnruns">Mijn Runs</a>
+    <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+    <a href="contact.html" data-i18n="nav_contact">Contact</a>
+    <div class="nav__mobile-lang">
+      <button class="btn btn--ghost btn--sm" onclick="toggleLang()" id="lang-toggle-mobile">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── PAGE HEADER ─────────────────────────────────────────── -->
+<div class="page-header">
+  <h1>Regio West</h1>
+  <p>Hardloopevenementen in Noord-Holland, Zuid-Holland, Utrecht &amp; Zeeland</p>
+</div>
+
+<!-- ── REGIO NAV ───────────────────────────────────────────── -->
+<div class="container" style="padding-top:1.5rem;padding-bottom:0;">
+  <div class="regio-nav">
+    <a href="regio-noord.html" class="regio-nav__btn">🧭 Noord</a>
+    <a href="regio-oost.html" class="regio-nav__btn">🌲 Oost</a>
+    <a href="regio-west.html" class="regio-nav__btn active">🌊 West</a>
+    <a href="regio-zuid.html" class="regio-nav__btn">☀️ Zuid</a>
+  </div>
+</div>
+
+<!-- ── MAIN CONTENT ────────────────────────────────────────── -->
+<div class="container section">
+  <div class="agenda-layout">
+    <aside class="filter-panel">
+      <div class="filter-panel__title">
+        <span>Filteren</span>
+        <button onclick="clearFilters()">Filters wissen</button>
+      </div>
+      <div class="filter-group">
+        <label>Soort evenement</label>
+        <select id="f-type" onchange="applyFilters()">
+          <option value="">— Alle types —</option>
+          <option value="marathon">Marathon</option>
+          <option value="trail">Trail</option>
+          <option value="cross">Cross</option>
+          <option value="wegevenement">Wegevenement</option>
+          <option value="parkloop">Parkloop</option>
+          <option value="funrun">Fun Run</option>
+          <option value="survivalrun">Survival Run</option>
+          <option value="ultrarun">Ultrarun</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Provincie</label>
+        <select id="f-province" onchange="applyFilters()">
+          <option value="">— Alle provincies —</option>
+          <option value="Noord-Holland">Noord-Holland</option>
+          <option value="Zuid-Holland">Zuid-Holland</option>
+          <option value="Utrecht">Utrecht</option>
+          <option value="Zeeland">Zeeland</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Afstand</label>
+        <select id="f-distance" onchange="applyFilters()">
+          <option value="">— Alle afstanden —</option>
+          <option value="5km">5 km</option>
+          <option value="10km">10 km</option>
+          <option value="21km">Halve marathon</option>
+          <option value="42km">Marathon</option>
+        </select>
+      </div>
+      <div class="filter-group filter-group--row">
+        <div>
+          <label>Datum vanaf</label>
+          <input type="date" id="f-date-from" onchange="applyFilters()">
+        </div>
+        <div>
+          <label>Datum t/m</label>
+          <input type="date" id="f-date-to" onchange="applyFilters()">
+        </div>
+      </div>
+      <div class="filter-group">
+        <label>Zoeken</label>
+        <input type="text" id="f-search" placeholder="Naam of stad..." oninput="applyFilters()">
+      </div>
+    </aside>
+
+    <div class="agenda-results">
+      <div class="calendar-wrapper">
+        <div class="calendar-nav">
+          <button id="cal-prev" onclick="calPrev()">‹ Vorige</button>
+          <h3 id="cal-title"></h3>
+          <button id="cal-next" onclick="calNext()">Volgende ›</button>
+        </div>
+        <div class="calendar-grid" id="calendar-grid"></div>
+      </div>
+      <div class="day-panel hidden" id="day-panel">
+        <div class="day-panel__header">
+          <h3 id="day-panel-title"></h3>
+          <button class="day-panel__close" onclick="closeDayPanel()">✕</button>
+        </div>
+        <div class="day-panel__list" id="day-panel-list"></div>
+      </div>
+      <div class="results-header">
+        <span id="results-count"></span>
+        <div class="results-sort">
+          <select onchange="applyFilters()" id="sort-select">
+            <option value="date">Sorteer op datum</option>
+            <option value="name">Sorteer op naam</option>
+          </select>
+        </div>
+      </div>
+      <div class="events-grid" id="events-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ──────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__logo">
+      <img src="images/logo.svg" alt="RunningNederland" class="footer__logo-img">
+      <span class="footer__name">runningnederland.nl</span>
+    </div>
+    <p class="footer__tagline" data-i18n="footer_tagline">Het complete platform voor hardlopers in Nederland</p>
+    <div class="footer__links">
+      <a href="agenda.html" data-i18n="nav_agenda">Agenda</a>
+      <a href="overons.html" data-i18n="nav_overons">Over ons</a>
+      <a href="contact.html" data-i18n="nav_contact">Contact</a>
+    </div>
+    <p class="footer__copy" data-i18n="footer_copyright">© 2026 runningnederland.nl</p>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="i18n.js"></script>
+<script>
+var REGIO_PROVINCES = ['Noord-Holland','Zuid-Holland','Utrecht','Zeeland'];
+</script>
+<script src="regio.js"></script>
+</body>
+</html>
