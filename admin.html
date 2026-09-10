@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Loopjes beheren</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Inter, sans-serif; background: #f5f5f5; color: #222; }
+    header { background: #1a1a2e; color: #fff; padding: 16px 24px; display: flex; align-items: center; gap: 12px; }
+    header h1 { font-size: 1.2rem; }
+    .container { max-width: 960px; margin: 32px auto; padding: 0 16px; }
+
+    /* Formulier */
+    .card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,.08); margin-bottom: 32px; }
+    .card h2 { font-size: 1rem; margin-bottom: 20px; color: #333; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-full { grid-column: 1 / -1; }
+    label { display: block; font-size: 0.78rem; font-weight: 600; color: #555; margin-bottom: 4px; }
+    input, select, textarea {
+      width: 100%; padding: 8px 10px; border: 1.5px solid #ddd; border-radius: 8px;
+      font-size: 0.88rem; font-family: inherit; color: #222;
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: #4f7cff; }
+    textarea { resize: vertical; min-height: 80px; }
+    .checkbox-row { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; }
+    .checkbox-row input { width: auto; }
+
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 0.88rem; font-weight: 600; cursor: pointer; }
+    .btn-primary { background: #4f7cff; color: #fff; }
+    .btn-primary:hover { background: #3a63e0; }
+    .btn-danger  { background: #ff4f4f; color: #fff; padding: 4px 10px; font-size: 0.78rem; border-radius: 6px; border: none; cursor: pointer; }
+    .btn-publish { background: #2ecc71; color: #fff; padding: 4px 10px; font-size: 0.78rem; border-radius: 6px; border: none; cursor: pointer; }
+
+    .msg { padding: 10px 14px; border-radius: 8px; margin-top: 12px; font-size: 0.85rem; display: none; }
+    .msg.ok  { background: #d4edda; color: #155724; }
+    .msg.err { background: #f8d7da; color: #721c24; }
+
+    /* Tabel */
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    th { background: #f0f0f0; text-align: left; padding: 8px 10px; font-weight: 600; }
+    td { padding: 8px 10px; border-bottom: 1px solid #eee; vertical-align: middle; }
+    tr:hover td { background: #fafafa; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 0.72rem; font-weight: 600; }
+    .badge-green { background: #d4edda; color: #155724; }
+    .badge-gray  { background: #e9ecef; color: #555; }
+    .actions { display: flex; gap: 6px; }
+
+    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <span style="font-size:1.4rem">🏃</span>
+  <h1>Admin — Loopjes beheren</h1>
+</header>
+
+<div class="container">
+
+  <!-- ── Formulier ──────────────────────────── -->
+  <div class="card">
+    <h2>➕ Nieuw loopje toevoegen</h2>
+    <form id="event-form">
+      <div class="form-grid">
+
+        <div>
+          <label>Naam (NL)</label>
+          <input type="text" id="f-name-nl" required placeholder="bijv. Egmond Halve Marathon">
+        </div>
+        <div>
+          <label>Naam (EN)</label>
+          <input type="text" id="f-name-en" placeholder="bijv. Egmond Half Marathon">
+        </div>
+
+        <div>
+          <label>Datum</label>
+          <input type="date" id="f-date" required>
+        </div>
+        <div>
+          <label>Type</label>
+          <select id="f-type">
+            <option value="wegevenement">Wegevenement</option>
+            <option value="marathon">Marathon</option>
+            <option value="trail">Trail</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Stad</label>
+          <input type="text" id="f-city" required placeholder="bijv. Amsterdam">
+        </div>
+        <div>
+          <label>Provincie</label>
+          <select id="f-province">
+            <option>Noord-Holland</option>
+            <option>Zuid-Holland</option>
+            <option>Utrecht</option>
+            <option>Gelderland</option>
+            <option>Noord-Brabant</option>
+            <option>Limburg</option>
+            <option>Overijssel</option>
+            <option>Friesland</option>
+            <option>Groningen</option>
+            <option>Drenthe</option>
+            <option>Zeeland</option>
+            <option>Flevoland</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Afstanden (komma-gescheiden)</label>
+          <input type="text" id="f-distances" placeholder="bijv. 5km, 10km, 21km">
+        </div>
+        <div>
+          <label>Prijs</label>
+          <input type="text" id="f-price" placeholder="bijv. €20–€45">
+        </div>
+
+        <div>
+          <label>Organisator</label>
+          <input type="text" id="f-organizer" placeholder="bijv. Le Champion">
+        </div>
+        <div>
+          <label>Inschrijf-URL</label>
+          <input type="url" id="f-url" placeholder="https://...">
+        </div>
+
+        <div class="form-full">
+          <label>Afbeelding URL</label>
+          <input type="url" id="f-image" placeholder="https://images.unsplash.com/...">
+        </div>
+
+        <div class="form-full">
+          <label>Beschrijving (NL)</label>
+          <textarea id="f-desc-nl" placeholder="Nederlandse beschrijving van het evenement..."></textarea>
+        </div>
+        <div class="form-full">
+          <label>Beschrijving (EN)</label>
+          <textarea id="f-desc-en" placeholder="English description of the event..."></textarea>
+        </div>
+
+        <div class="form-full" style="display:flex; gap:24px; margin-top:4px;">
+          <label class="checkbox-row"><input type="checkbox" id="f-kidsrun"> Kids Run aanwezig</label>
+          <label class="checkbox-row"><input type="checkbox" id="f-published"> Direct publiceren</label>
+        </div>
+
+      </div>
+
+      <div style="margin-top:20px;">
+        <button type="submit" class="btn btn-primary">Opslaan in database</button>
+      </div>
+      <div class="msg ok"  id="msg-ok">✅ Evenement opgeslagen!</div>
+      <div class="msg err" id="msg-err">❌ <span id="err-text">Fout bij opslaan.</span></div>
+    </form>
+  </div>
+
+  <!-- ── Overzicht ─────────────────────────── -->
+  <div class="card">
+    <h2>📋 Alle loopjes in de database</h2>
+    <div id="table-wrap">
+      <p style="color:#999;font-size:.85rem;">Laden...</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Supabase CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="db.js"></script>
+<script>
+// ── Formulier opslaan ─────────────────────────────────
+document.getElementById('event-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = e.target.querySelector('button[type=submit]');
+  btn.textContent = 'Opslaan...';
+  btn.disabled = true;
+
+  const event = {
+    name_nl:          document.getElementById('f-name-nl').value.trim(),
+    name_en:          document.getElementById('f-name-en').value.trim(),
+    date:             document.getElementById('f-date').value,
+    type:             document.getElementById('f-type').value,
+    city:             document.getElementById('f-city').value.trim(),
+    province:         document.getElementById('f-province').value,
+    distances:        document.getElementById('f-distances').value.trim(),
+    price:            document.getElementById('f-price').value.trim(),
+    organizer:        document.getElementById('f-organizer').value.trim(),
+    registration_url: document.getElementById('f-url').value.trim(),
+    image:            document.getElementById('f-image').value.trim(),
+    description_nl:   document.getElementById('f-desc-nl').value.trim(),
+    description_en:   document.getElementById('f-desc-en').value.trim(),
+    kidsrun:          document.getElementById('f-kidsrun').checked,
+    published:        document.getElementById('f-published').checked,
+  };
+
+  try {
+    await addEvent(event);
+    document.getElementById('msg-ok').style.display = 'block';
+    document.getElementById('msg-err').style.display = 'none';
+    e.target.reset();
+    loadTable();
+  } catch (err) {
+    document.getElementById('err-text').textContent = err.message;
+    document.getElementById('msg-err').style.display = 'block';
+    document.getElementById('msg-ok').style.display = 'none';
+  }
+
+  btn.textContent = 'Opslaan in database';
+  btn.disabled = false;
+});
+
+// ── Tabel laden ───────────────────────────────────────
+async function loadTable() {
+  const wrap = document.getElementById('table-wrap');
+  try {
+    const events = await loadAllEventsAdmin();
+    if (!events.length) {
+      wrap.innerHTML = '<p style="color:#999;font-size:.85rem;">Nog geen evenementen in de database.</p>';
+      return;
+    }
+    wrap.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>Naam</th><th>Datum</th><th>Stad</th><th>Type</th><th>Status</th><th>Acties</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${events.map(ev => `
+            <tr>
+              <td><strong>${ev.name_nl}</strong></td>
+              <td>${ev.date}</td>
+              <td>${ev.city}</td>
+              <td>${ev.type}</td>
+              <td>
+                <span class="badge ${ev.published ? 'badge-green' : 'badge-gray'}">
+                  ${ev.published ? 'Gepubliceerd' : 'Concept'}
+                </span>
+              </td>
+              <td>
+                <div class="actions">
+                  ${!ev.published ? `<button class="btn-publish" onclick="publish(${ev.id})">Publiceer</button>` : ''}
+                  <button class="btn-danger" onclick="remove(${ev.id})">Verwijder</button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+  } catch (err) {
+    wrap.innerHTML = `<p style="color:red;">Fout: ${err.message}</p>`;
+  }
+}
+
+async function publish(id) {
+  if (!confirm('Dit evenement publiceren?')) return;
+  await updateEvent(id, { published: true });
+  loadTable();
+}
+
+async function remove(id) {
+  if (!confirm('Weet je zeker dat je dit evenement wilt verwijderen?')) return;
+  await deleteEvent(id);
+  loadTable();
+}
+
+loadTable();
+</script>
+</body>
+</html>
