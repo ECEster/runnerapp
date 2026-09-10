@@ -1,6 +1,6 @@
 // db.js — Supabase verbinding voor runningnederland.nl
 
-const SUPABASE_URL  = 'https://tcitvbeodddwanyljpcuo.supabase.co';
+const SUPABASE_URL  = 'https://tcitvbeoddwanyljpcuo.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjaXR2YmVvZGR3YW55bGpwY3VvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMjYxODksImV4cCI6MjEwNDYwMjE4OX0.3HodNlQSFXVhXSpNB_be_CtY5vvU9qbfO7Xq_Yxus0E';
 
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
