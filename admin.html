@@ -8,7 +8,20 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: Inter, sans-serif; background: #f5f5f5; color: #222; }
     header { background: #1a1a2e; color: #fff; padding: 16px 24px; display: flex; align-items: center; gap: 12px; }
-    header h1 { font-size: 1.2rem; }
+    header h1 { font-size: 1.2rem; flex: 1; }
+    .btn-logout { background: rgba(255,255,255,.15); color: #fff; border: 1px solid rgba(255,255,255,.3); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: .82rem; }
+    .btn-logout:hover { background: rgba(255,255,255,.25); }
+
+    /* Login scherm */
+    #login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .login-box { background: #fff; border-radius: 16px; padding: 40px; width: 100%; max-width: 380px; box-shadow: 0 4px 24px rgba(0,0,0,.10); text-align: center; }
+    .login-box h2 { font-size: 1.3rem; margin-bottom: 8px; }
+    .login-box p { color: #888; font-size: .85rem; margin-bottom: 24px; }
+    .login-box input { width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1.5px solid #ddd; border-radius: 8px; font-size: .9rem; }
+    .login-box input:focus { outline: none; border-color: #4f7cff; }
+    .btn-login { width: 100%; padding: 11px; background: #4f7cff; color: #fff; border: none; border-radius: 8px; font-size: .95rem; font-weight: 600; cursor: pointer; }
+    .btn-login:hover { background: #3a63e0; }
+    .login-err { color: #c0392b; font-size: .82rem; margin-top: 10px; display: none; }
     .container { max-width: 960px; margin: 32px auto; padding: 0 16px; }
 
     /* Formulier */
@@ -51,9 +64,27 @@
 </head>
 <body>
 
+<!-- ── Login scherm ───────────────────────────────── -->
+<div id="login-screen">
+  <div class="login-box">
+    <div style="font-size:2.5rem;margin-bottom:12px">🏃</div>
+    <h2>Admin inloggen</h2>
+    <p>Alleen voor beheerders van runningnederland.nl</p>
+    <input type="email" id="login-email" placeholder="E-mailadres" autocomplete="email">
+    <input type="password" id="login-pw" placeholder="Wachtwoord" autocomplete="current-password">
+    <button class="btn-login" id="btn-login">Inloggen</button>
+    <div class="login-err" id="login-err">Onjuist e-mailadres of wachtwoord.</div>
+  </div>
+</div>
+
+<!-- ── Admin paneel (verborgen tot ingelogd) ─────── -->
+<div id="admin-panel" hidden>
+
 <header>
   <span style="font-size:1.4rem">🏃</span>
   <h1>Admin — Loopjes beheren</h1>
+  <span id="header-email" style="font-size:.8rem;opacity:.7"></span>
+  <button class="btn-logout" id="btn-logout">Uitloggen</button>
 </header>
 
 <div class="container">
@@ -165,10 +196,49 @@
 
 </div>
 
+</div><!-- /admin-panel -->
+
 <!-- Supabase CDN -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="db.js"></script>
 <script>
+// ── Auth ──────────────────────────────────────────────
+function showPanel(user) {
+  document.getElementById('login-screen').hidden  = true;
+  document.getElementById('admin-panel').hidden   = false;
+  document.getElementById('header-email').textContent = user.email;
+  loadTable();
+}
+
+// Check of al ingelogd
+db.auth.getSession().then(({ data }) => {
+  if (data.session) showPanel(data.session.user);
+});
+
+document.getElementById('btn-login').addEventListener('click', async () => {
+  const email = document.getElementById('login-email').value.trim();
+  const pw    = document.getElementById('login-pw').value;
+  const err   = document.getElementById('login-err');
+  err.style.display = 'none';
+
+  const { data, error } = await db.auth.signInWithPassword({ email, password: pw });
+  if (error) { err.style.display = 'block'; return; }
+  showPanel(data.user);
+});
+
+// Inloggen met Enter-toets
+document.getElementById('login-pw').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('btn-login').click();
+});
+
+document.getElementById('btn-logout').addEventListener('click', async () => {
+  await db.auth.signOut();
+  document.getElementById('login-screen').hidden = false;
+  document.getElementById('admin-panel').hidden  = true;
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-pw').value = '';
+});
+
 // ── Formulier opslaan ─────────────────────────────────
 document.getElementById('event-form').addEventListener('submit', async e => {
   e.preventDefault();
@@ -265,7 +335,6 @@ async function remove(id) {
   loadTable();
 }
 
-loadTable();
 </script>
 </body>
 </html>
