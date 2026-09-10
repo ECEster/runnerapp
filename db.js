@@ -71,12 +71,12 @@ async function uploadImage(file) {
     const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
     const { error } = await db.storage
-        .from('event-images')
+        .from('RunningNederland')
         .upload(filename, file, { contentType: file.type });
 
     if (error) throw error;
 
-    const { data } = db.storage.from('event-images').getPublicUrl(filename);
+    const { data } = db.storage.from('RunningNederland').getPublicUrl(filename);
     return data.publicUrl;
 }
 
