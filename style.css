@@ -233,6 +233,8 @@ p:last-child { margin-bottom: 0; }
   transition: all var(--transition);
 }
 .nav__lang:hover { background: rgba(255,255,255,0.22); }
+.nav__admin { font-size: 0.72rem !important; opacity: 0.5; letter-spacing: 0.02em; }
+.nav__admin:hover { opacity: 0.85 !important; }
 .nav__hamburger {
   display: none;
   flex-direction: column;

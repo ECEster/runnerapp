@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s \"https://www.runningholland.nl/kalender/\" --max-time 30 -A \"Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36\")",
+      "WebSearch",
+      "WebFetch(domain:www.loopjeloopje.nl)",
+      "WebFetch(domain:hardloopkalender.nl)",
+      "WebFetch(domain:hardloopnetwerk.nl)",
+      "WebFetch(domain:www.hardlopen.nl)",
+      "WebFetch(domain:nextrace.nl)",
+      "WebFetch(domain:www.runners.nl)",
+      "WebFetch(domain:www.prorun.nl)",
+      "WebFetch(domain:www.loopkalender.com)",
+      "WebFetch(domain:nnmarathonrotterdam.nl)",
+      "WebFetch(domain:enschedemarathon.nl)",
+      "WebFetch(domain:marathon.nl)",
+      "WebFetch(domain:marathongroningen.nl)",
+      "WebFetch(domain:www.bonifatiusloop.nl)",
+      "WebFetch(domain:www.halvemarathonzwolle.nl)",
+      "WebFetch(domain:www.woldbergtrail.nl)",
+      "WebFetch(domain:www.damloop.nl)",
+      "WebFetch(domain:www.dekolonieloop.nl)",
+      "WebFetch(domain:www.nndamloop.nl)",
+      "WebFetch(domain:www.amsterdammarathon.nl)",
+      "WebFetch(domain:www.blaauwbekmarathon.com)",
+      "WebFetch(domain:www.tcsamsterdammarathon.nl)",
+      "WebFetch(domain:www.drentheloopfestijn.nl)",
+      "WebFetch(domain:www.meppelcityrun.nl)",
+      "WebFetch(domain:www.loopleeuwarden.frl)",
+      "WebFetch(domain:bearsports.nl)",
+      "WebFetch(domain:www.marathonsneek.nl)",
+      "WebFetch(domain:www.ttcityrun.nl)",
+      "WebFetch(domain:www.hunebedloop.nl)"
+    ]
+  }
+}

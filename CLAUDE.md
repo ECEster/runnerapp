@@ -46,3 +46,4 @@ Fields per event: Name, Date, Location, Distance(s), Type (Race/Recreational/Tra
 ## Languages
 
 Dutch is the primary language; English is secondary. All user-facing copy and CMS fields should support both.
+    
