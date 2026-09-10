@@ -22,6 +22,9 @@
     .btn-login { width: 100%; padding: 11px; background: #4f7cff; color: #fff; border: none; border-radius: 8px; font-size: .95rem; font-weight: 600; cursor: pointer; }
     .btn-login:hover { background: #3a63e0; }
     .login-err { color: #c0392b; font-size: .82rem; margin-top: 10px; display: none; }
+    .btn-translate { background: #f0f4ff; color: #4f7cff; border: 1.5px solid #c5d3ff; border-radius: 6px; padding: 4px 10px; font-size: .78rem; font-weight: 600; cursor: pointer; }
+    .btn-translate:hover { background: #e0e8ff; }
+    .btn-translate:disabled { opacity: .5; cursor: default; }
     .container { max-width: 960px; margin: 32px auto; padding: 0 16px; }
 
     /* Formulier */
@@ -170,7 +173,11 @@
           <textarea id="f-desc-nl" placeholder="Nederlandse beschrijving van het evenement..."></textarea>
         </div>
         <div class="form-full">
-          <label>Beschrijving (EN)</label>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+            <label style="margin:0">Beschrijving (EN)</label>
+            <button type="button" id="btn-translate" class="btn-translate">🌐 Vertaal NL → EN</button>
+          </div>
+          <div id="translate-status" style="font-size:.75rem;color:#888;margin-bottom:4px;display:none;"></div>
           <textarea id="f-desc-en" placeholder="English description of the event..."></textarea>
         </div>
 
@@ -240,6 +247,44 @@ document.getElementById('btn-logout').addEventListener('click', async () => {
   document.getElementById('admin-panel').hidden  = true;
   document.getElementById('login-email').value = '';
   document.getElementById('login-pw').value = '';
+});
+
+// ── Vertaling NL → EN ────────────────────────────────
+document.getElementById('btn-translate').addEventListener('click', async () => {
+  const nlText = document.getElementById('f-desc-nl').value.trim();
+  const status = document.getElementById('translate-status');
+  const btn    = document.getElementById('btn-translate');
+
+  if (!nlText) {
+    status.style.display  = 'block';
+    status.style.color    = '#c0392b';
+    status.textContent    = '⚠️ Vul eerst de Nederlandse beschrijving in.';
+    return;
+  }
+
+  btn.disabled     = true;
+  btn.textContent  = '⏳ Vertalen...';
+  status.style.display = 'block';
+  status.style.color   = '#888';
+  status.textContent   = 'Bezig met vertalen...';
+
+  try {
+    const res  = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(nlText)}&langpair=nl|en`);
+    const json = await res.json();
+    const translated = json.responseData?.translatedText;
+
+    if (!translated || json.responseStatus !== 200) throw new Error('Vertaling mislukt');
+
+    document.getElementById('f-desc-en').value = translated;
+    status.style.color   = '#27ae60';
+    status.textContent   = '✅ Vertaald! Controleer de tekst en pas aan waar nodig.';
+  } catch {
+    status.style.color   = '#c0392b';
+    status.textContent   = '❌ Vertaling mislukt. Vul de Engelse tekst handmatig in.';
+  }
+
+  btn.disabled    = false;
+  btn.textContent = '🌐 Vertaal NL → EN';
 });
 
 // ── Afbeelding preview + upload ───────────────────────
