@@ -57,6 +57,29 @@ async function deleteEvent(id) {
     if (error) throw error;
 }
 
+// Upload een afbeelding naar Supabase Storage
+async function uploadImage(file) {
+    const MAX_MB   = 2;
+    const ALLOWED  = ['image/jpeg', 'image/png', 'image/webp'];
+
+    if (!ALLOWED.includes(file.type))
+        throw new Error('Alleen JPG, PNG of WebP bestanden zijn toegestaan.');
+    if (file.size > MAX_MB * 1024 * 1024)
+        throw new Error(`De afbeelding is te groot. Maximum is ${MAX_MB} MB.`);
+
+    const ext      = file.name.split('.').pop();
+    const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
+    const { error } = await db.storage
+        .from('event-images')
+        .upload(filename, file, { contentType: file.type });
+
+    if (error) throw error;
+
+    const { data } = db.storage.from('event-images').getPublicUrl(filename);
+    return data.publicUrl;
+}
+
 // Update een event (voor de admin-pagina)
 async function updateEvent(id, updates) {
     const { error } = await db.from('events').update(updates).eq('id', id);

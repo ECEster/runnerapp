@@ -158,8 +158,11 @@
         </div>
 
         <div class="form-full">
-          <label>Afbeelding URL</label>
-          <input type="url" id="f-image" placeholder="https://images.unsplash.com/...">
+          <label>Afbeelding</label>
+          <input type="file" id="f-image-file" accept="image/jpeg,image/png,image/webp">
+          <div id="img-feedback" style="font-size:.78rem;margin-top:6px;"></div>
+          <img id="img-preview" style="max-height:120px;margin-top:8px;border-radius:8px;display:none;">
+          <input type="hidden" id="f-image">
         </div>
 
         <div class="form-full">
@@ -237,6 +240,44 @@ document.getElementById('btn-logout').addEventListener('click', async () => {
   document.getElementById('admin-panel').hidden  = true;
   document.getElementById('login-email').value = '';
   document.getElementById('login-pw').value = '';
+});
+
+// ── Afbeelding preview + upload ───────────────────────
+document.getElementById('f-image-file').addEventListener('change', async e => {
+  const file     = e.target.files[0];
+  const feedback = document.getElementById('img-feedback');
+  const preview  = document.getElementById('img-preview');
+  document.getElementById('f-image').value = '';
+  preview.style.display = 'none';
+
+  if (!file) return;
+
+  const ALLOWED = ['image/jpeg', 'image/png', 'image/webp'];
+  if (!ALLOWED.includes(file.type)) {
+    feedback.style.color = '#c0392b';
+    feedback.textContent = '❌ Alleen JPG, PNG of WebP is toegestaan.';
+    return;
+  }
+  if (file.size > 2 * 1024 * 1024) {
+    feedback.style.color = '#c0392b';
+    feedback.textContent = '❌ Afbeelding is te groot (max 2 MB).';
+    return;
+  }
+
+  feedback.style.color = '#888';
+  feedback.textContent = '⏳ Uploaden...';
+
+  try {
+    const url = await uploadImage(file);
+    document.getElementById('f-image').value = url;
+    preview.src = url;
+    preview.style.display = 'block';
+    feedback.style.color = '#27ae60';
+    feedback.textContent = '✅ Afbeelding geüpload!';
+  } catch (err) {
+    feedback.style.color = '#c0392b';
+    feedback.textContent = '❌ ' + err.message;
+  }
 });
 
 // ── Formulier opslaan ─────────────────────────────────
