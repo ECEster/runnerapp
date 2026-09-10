@@ -149,10 +149,19 @@
     .btn-pub   { background: #d4edda; color: #1a7431; }
     .btn-unpub { background: #fff3cd; color: #856404; }
     .btn-del   { background: #f8d7da; color: #721c24; }
+    .btn-edit  { background: #e8f0fe; color: #4f7cff; }
     .btn-pub:hover   { background: #c3e6cb; }
     .btn-unpub:hover { background: #ffeaa0; }
     .btn-del:hover   { background: #f5c6cb; }
+    .btn-edit:hover  { background: #d2e3fc; }
     .no-events { text-align: center; color: #aaa; padding: 24px; font-size: .88rem; }
+    .form-editing { border: 2px solid #4f7cff; }
+    .btn-cancel {
+      background: #f0f0f0; color: #555; border: none; border-radius: 10px;
+      padding: 12px 20px; font-size: .95rem; font-weight: 600; cursor: pointer;
+      font-family: inherit; margin-top: 8px; margin-left: 8px;
+    }
+    .btn-cancel:hover { background: #e0e0e0; }
   </style>
 </head>
 <body>
@@ -168,9 +177,9 @@
 
 <div class="panel">
 
-  <!-- Formulier: nieuw event toevoegen -->
-  <div class="card">
-    <h2>➕ Nieuw evenement toevoegen</h2>
+  <!-- Formulier: nieuw event toevoegen / bewerken -->
+  <div class="card" id="form-card">
+    <h2 id="form-title">➕ Nieuw evenement toevoegen</h2>
     <form id="event-form" autocomplete="off">
       <div class="form-grid">
 
@@ -262,6 +271,7 @@
       </div><!-- /form-grid -->
 
       <button type="submit" class="btn-submit" id="btn-submit">Evenement opslaan</button>
+      <button type="button" class="btn-cancel" id="btn-cancel" hidden>Annuleren</button>
       <div class="submit-msg" id="submit-msg"></div>
     </form>
   </div>
@@ -345,6 +355,54 @@ async function translateToEnglish(nlText) {
   }
 }
 
+// ─── Bewerk-modus ─────────────────────────────────────────────
+let editingId = null;
+let existingImageUrl = '';
+
+function startEdit(ev) {
+  editingId = ev.id;
+  existingImageUrl = ev.image || '';
+
+  document.getElementById('form-title').textContent = '✏️ Evenement bewerken';
+  document.getElementById('form-card').classList.add('form-editing');
+  document.getElementById('btn-submit').textContent = 'Wijzigingen opslaan';
+  document.getElementById('btn-cancel').hidden = false;
+
+  document.getElementById('f-name-nl').value   = ev.name_nl || '';
+  document.getElementById('f-date').value       = ev.date || '';
+  document.getElementById('f-type').value       = ev.type || 'road';
+  document.getElementById('f-city').value       = ev.city || '';
+  document.getElementById('f-province').value   = ev.province || '';
+  document.getElementById('f-distances').value  = ev.distances || '';
+  document.getElementById('f-price').value      = ev.price || '';
+  document.getElementById('f-organizer').value  = ev.organizer || '';
+  document.getElementById('f-reg-url').value    = ev.registration_url || '';
+  document.getElementById('f-desc-nl').value    = ev.description_nl || '';
+  document.getElementById('f-kidsrun').checked  = ev.kidsrun || false;
+  document.getElementById('f-published').checked = ev.published || false;
+
+  if (existingImageUrl) {
+    imgPreview.src = existingImageUrl;
+    imgPreview.style.display = 'block';
+  }
+
+  document.getElementById('form-card').scrollIntoView({ behavior: 'smooth' });
+}
+
+function cancelEdit() {
+  editingId = null;
+  existingImageUrl = '';
+  document.getElementById('event-form').reset();
+  imgPreview.style.display = 'none';
+  document.getElementById('form-title').textContent = '➕ Nieuw evenement toevoegen';
+  document.getElementById('form-card').classList.remove('form-editing');
+  document.getElementById('btn-submit').textContent = 'Evenement opslaan';
+  document.getElementById('btn-cancel').hidden = true;
+  document.getElementById('submit-msg').style.display = 'none';
+}
+
+document.getElementById('btn-cancel').addEventListener('click', cancelEdit);
+
 // ─── Formulier opslaan ────────────────────────────────────────
 document.getElementById('event-form').addEventListener('submit', async e => {
   e.preventDefault();
@@ -355,7 +413,7 @@ document.getElementById('event-form').addEventListener('submit', async e => {
   msg.style.display = 'none';
 
   try {
-    let imageUrl = '';
+    let imageUrl = existingImageUrl;
     const file = fileInput.files[0];
     if (file) imageUrl = await uploadImage(file);
 
@@ -388,13 +446,19 @@ document.getElementById('event-form').addEventListener('submit', async e => {
       published:        document.getElementById('f-published').checked,
     };
 
-    await addEvent(event);
+    if (editingId) {
+      await updateEvent(editingId, event);
+      msg.textContent = '✅ Wijzigingen opgeslagen!';
+      cancelEdit();
+    } else {
+      await addEvent(event);
+      msg.textContent = '✅ Evenement opgeslagen!';
+      e.target.reset();
+      imgPreview.style.display = 'none';
+    }
 
-    msg.textContent = '✅ Evenement opgeslagen!';
     msg.className = 'submit-msg ok';
     msg.style.display = 'block';
-    e.target.reset();
-    imgPreview.style.display = 'none';
     loadEventsTable();
   } catch (err) {
     msg.textContent = '❌ Fout: ' + err.message;
@@ -403,7 +467,7 @@ document.getElementById('event-form').addEventListener('submit', async e => {
   }
 
   btn.disabled = false;
-  btn.textContent = 'Evenement opslaan';
+  btn.textContent = editingId ? 'Wijzigingen opslaan' : 'Evenement opslaan';
 });
 
 // ─── Events tabel ─────────────────────────────────────────────
@@ -427,6 +491,9 @@ async function loadEventsTable() {
           </span>
         </td>
         <td style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn-table btn-edit" onclick="startEdit(${JSON.stringify(ev).replace(/"/g, '&quot;')})">
+            Bewerk
+          </button>
           <button class="btn-table ${ev.published ? 'btn-unpub' : 'btn-pub'}"
             onclick="togglePublish('${ev.id}', ${ev.published})">
             ${ev.published ? 'Verbergen' : 'Publiceer'}
