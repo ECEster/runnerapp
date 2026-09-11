@@ -613,7 +613,7 @@ p:last-child { margin-bottom: 0; }
   background-size: cover;
   background-position: center;
   padding-top: 5.5rem;
-  padding-bottom: 5.5rem;
+  padding-bottom: 4.3rem;
 }
 .page-header--photo::before {
   content: '';
