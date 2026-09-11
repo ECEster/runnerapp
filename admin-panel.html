@@ -220,7 +220,7 @@
           <input type="text" id="f-city" placeholder="bijv. Amsterdam">
         </div>
         <div>
-          <label for="f-province">Provincie</label>
+          <label for="f-province">Provincie (optioneel)</label>
           <select id="f-province">
             <option value="">— kies provincie —</option>
             <option>Groningen</option><option>Friesland</option><option>Drenthe</option>
@@ -446,7 +446,7 @@ document.getElementById('event-form').addEventListener('submit', async e => {
       date:             document.getElementById('f-date').value,
       type:             document.getElementById('f-type').value,
       city:             document.getElementById('f-city').value.trim(),
-      province:         document.getElementById('f-province').value,
+      province:         document.getElementById('f-province').value || null,
       distances:        document.getElementById('f-distances').value.trim(),
       price:            document.getElementById('f-price').value.trim(),
       organizer:        document.getElementById('f-organizer').value.trim(),

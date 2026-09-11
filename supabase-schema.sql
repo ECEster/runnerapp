@@ -7,6 +7,12 @@
 --
 -- Veilig om opnieuw te draaien: alle statements zijn "if not exists".
 
+-- ─── Provincie optioneel maken op bestaande events-tabel ────────────────
+-- Veiligheidsnet: als de kolom nog NOT NULL staat, kan een evenement zonder
+-- provincie niet worden opgeslagen. Dit statement is een no-op als de kolom
+-- al nullable is.
+alter table events alter column province drop not null;
+
 -- ─── Runs (hardloophistorie per gebruiker) ──────────────────────────────
 create table if not exists runs (
   id          bigint generated always as identity primary key,
