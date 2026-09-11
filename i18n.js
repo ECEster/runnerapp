@@ -132,6 +132,7 @@ var I18N = {
     // Over ons
     overons_title: "Over ons",
     overons_sub: "Wij zijn runningnederland.nl",
+    overons_intro: "Uit de wens voor een volledig overzicht van alle runs in Nederland is RunningNederland.nl ontstaan. Of je nu jezelf wilt uitdagen, verbinding wil zoeken met andere runs, of je kinderen wilt aanmoedigen bij hun eerste runs, je vindt hier genoeg mogelijkheden!",
     overons_p1: "Runningnederland.nl is het toonaangevende platform voor hardloopevenementen in Nederland, met een compleet en actueel overzicht van alle runs door het hele land.",
     overons_p2: "Ons platform biedt een compleet overzicht van alle hardloopevenementen — van spontane parklopen tot gecertificeerde marathons. We geloven dat hardlopen voor iedereen toegankelijk moet zijn, ongeacht leeftijd, niveau of achtergrond.",
     overons_p3: "Met duizenden deelnemers per jaar en tientallen evenementen verspreid over het hele jaar, zijn wij de grootste en meest betrouwbare bron voor hardloopevenementen in Nederland. Onze missie: meer mensen aan het lopen krijgen en ze te helpen hun doelen te bereiken.",
@@ -294,6 +295,7 @@ var I18N = {
     // Over ons
     overons_title: "About us",
     overons_sub: "We are runningnederland.nl",
+    overons_intro: "RunningNederland.nl was born from the wish for a complete overview of all runs in the Netherlands. Whether you want to challenge yourself, connect with other runners, or cheer your kids on during their first runs — you'll find plenty of options here!",
     overons_p1: "Runningnederland.nl is the leading platform for running events in the Netherlands, with a complete and up-to-date overview of all runs across the country.",
     overons_p2: "Our platform provides a complete overview of all running events — from spontaneous park runs to certified marathons. We believe running should be accessible to everyone, regardless of age, level or background.",
     overons_p3: "With thousands of participants per year and dozens of events spread throughout the year, we are the largest and most reliable source for running events in the Netherlands. Our mission: to get more people running and help them achieve their goals.",
