@@ -596,6 +596,25 @@ p:last-child { margin-bottom: 0; }
 .page-header h1 { color: var(--white); text-transform: uppercase; }
 .page-header p { color: rgba(255,255,255,0.7); margin-top: 0.5rem; font-size: 1.05rem; }
 
+/* Page header met foto op de achtergrond (bijv. regio-paginas) — achtergrond
+   via inline style="background-image:url(...)" op het element zelf */
+.page-header--photo {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+}
+.page-header--photo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.72);
+}
+.page-header--photo h1,
+.page-header--photo p {
+  position: relative;
+  z-index: 1;
+}
+
 /* ── Agenda page ─────────────────────────────────────────────── */
 .agenda-layout {
   display: grid;
