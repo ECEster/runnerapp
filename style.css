@@ -605,6 +605,8 @@ p:last-child { margin-bottom: 0; }
   margin-bottom: 0.5rem;
 }
 .regio-nav__btn {
+  display: inline-flex;
+  align-items: center;
   padding: 0.5rem 1.2rem;
   border-radius: var(--radius);
   background: var(--surface2);
@@ -617,6 +619,33 @@ p:last-child { margin-bottom: 0; }
 }
 .regio-nav__btn:hover { background: var(--accent); color: var(--white); }
 .regio-nav__btn.active { background: var(--accent); color: var(--white); border-color: var(--accent); }
+
+/* Regio richtingicoon — pijl in een rechthoek, gedraaid per windrichting */
+.regio-nav__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-right: 0.5rem;
+  border-radius: 6px;
+  background: var(--accent);
+  flex-shrink: 0;
+  transition: background var(--transition);
+}
+.regio-nav__icon svg {
+  width: 13px;
+  height: 13px;
+  fill: var(--white);
+  transition: transform var(--transition), fill var(--transition);
+}
+.regio-nav__icon--oost svg { transform: rotate(90deg); }
+.regio-nav__icon--zuid svg { transform: rotate(180deg); }
+.regio-nav__icon--west svg { transform: rotate(270deg); }
+.regio-nav__btn:hover .regio-nav__icon,
+.regio-nav__btn.active .regio-nav__icon { background: var(--white); }
+.regio-nav__btn:hover .regio-nav__icon svg,
+.regio-nav__btn.active .regio-nav__icon svg { fill: var(--accent); }
 
 /* Filter panel */
 .filter-panel {
