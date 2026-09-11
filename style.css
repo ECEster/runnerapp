@@ -433,6 +433,7 @@ p:last-child { margin-bottom: 0; }
 }
 .event-card__type {
   display: inline-block;
+  align-self: flex-start;
   padding: 3px 10px;
   border-radius: 20px;
   font-size: 0.72rem;
@@ -440,13 +441,13 @@ p:last-child { margin-bottom: 0; }
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--white);
+  margin-top: auto;
   margin-bottom: 0.7rem;
 }
 .event-card__footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: auto;
   padding-top: 0.8rem;
   border-top: 1px solid var(--surface2);
 }
