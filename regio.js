@@ -127,7 +127,7 @@ function renderCalendar() {
     if (isOther) cls += ' other-month';
     if (isToday) cls += ' today';
     if (evs.length) cls += ' has-events';
-    var dots = evs.slice(0,5).map(function(ev){ return '<div class="cal-dot cal-dot--lime" title="'+(lang==='en'?ev.name_en:ev.name_nl)+'"></div>'; }).join('');
+    var dots = evs.slice(0,5).map(function(ev){ return '<div class="cal-dot cal-dot--accent" title="'+(lang==='en'?ev.name_en:ev.name_nl)+'"></div>'; }).join('');
     var clickAttr = evs.length && !isOther ? ' onclick="openDayPanel('+calYear+','+(calMonth)+','+dayNum+')"' : '';
     html += '<div class="'+cls+'"'+clickAttr+'>'+
       '<div class="cal-day-num">'+dayNum+'</div>'+
