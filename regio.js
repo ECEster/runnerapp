@@ -70,7 +70,7 @@ function renderList(lang) {
     var dateStr = formatDate(ev.date, lang);
     var badgeClass = getBadgeClass(ev.type);
     var typeName = getTypeName(ev.type, lang);
-    var priceHtml = ev.paid ? '<span class="event-card__price">'+ev.price+'</span>' : '<span class="event-card__price free">Gratis</span>';
+    var priceHtml = ev.paid ? '<span class="event-card__price">'+formatPrice(ev.price)+'</span>' : '<span class="event-card__price free">Gratis</span>';
     var freeBadge = !ev.paid ? '<span class="event-card__free-badge">Gratis</span>' : '';
     var distChips = ev.distances.map(function(d){ return '<span class="event-card__dist-chip">'+d+'</span>'; }).join('');
     return '<div class="event-card">'+

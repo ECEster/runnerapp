@@ -373,7 +373,7 @@ function renderFavorites() {
         '<div class="event-card__title">'+name+'</div>'+
         '<div class="event-card__meta"><span>📍 '+ev.city+'</span></div>'+
         '<div class="event-card__footer">'+
-          (ev.paid?'<span class="event-card__price">'+ev.price+'</span>':'<span class="event-card__price free">'+t('free')+'</span>')+
+          (ev.paid?'<span class="event-card__price">'+formatPrice(ev.price)+'</span>':'<span class="event-card__price free">'+t('free')+'</span>')+
           '<a href="evenement.html?id='+ev.id+'" class="btn btn--ghost btn--sm">'+t('meer_info')+'</a>'+
         '</div>'+
       '</div>'+

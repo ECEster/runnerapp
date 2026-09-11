@@ -346,7 +346,7 @@ function renderKidsEvents(lang) {
   el.innerHTML = kidsEvents.map(function(ev) {
     var name = lang==='en' ? ev.name_en : ev.name_nl;
     var dateStr = formatDate(ev.date, lang);
-    var price = ev.paid ? ev.price : (lang==='en' ? 'Free' : 'Gratis');
+    var price = ev.paid ? formatPrice(ev.price) : (lang==='en' ? 'Free' : 'Gratis');
     return '<div class="kids-event-card">'+
       '<div class="kids-event-card__img">'+
         '<img src="'+ev.image+'" alt="'+name+'" loading="lazy">'+

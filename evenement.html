@@ -158,7 +158,7 @@ function renderEvent(ev, lang) {
         '<div class="detail-info-row"><span class="detail-info-icon">📍</span><div><div class="detail-info-label">'+t('location_label')+'</div><div class="detail-info-value">'+ev.city+'</div></div></div>'+
         '<div class="detail-info-row"><span class="detail-info-icon">🗺️</span><div><div class="detail-info-label">'+t('province_label')+'</div><div class="detail-info-value">'+ev.province+'</div></div></div>'+
         '<div class="detail-info-row"><span class="detail-info-icon">🏃</span><div><div class="detail-info-label">'+t('distances_label')+'</div><div class="detail-info-value">'+distList+'</div></div></div>'+
-        '<div class="detail-info-row"><span class="detail-info-icon">💶</span><div><div class="detail-info-label">'+t('price_label')+'</div><div class="detail-info-value">'+(ev.paid?ev.price:t('free'))+'</div></div></div>'+
+        '<div class="detail-info-row"><span class="detail-info-icon">💶</span><div><div class="detail-info-label">'+t('price_label')+'</div><div class="detail-info-value">'+(ev.paid?formatPrice(ev.price):t('free'))+'</div></div></div>'+
         '<div class="detail-info-row"><span class="detail-info-icon">👥</span><div><div class="detail-info-label">'+t('capacity_label')+'</div><div class="detail-info-value">'+ev.capacity.toLocaleString()+'</div></div></div>'+
         '<div class="detail-info-row"><span class="detail-info-icon">🏷️</span><div><div class="detail-info-label">'+t('categories_label')+'</div><div class="detail-info-value">'+catList+'</div></div></div>'+
         '<div class="detail-info-row"><span class="detail-info-icon">🏢</span><div><div class="detail-info-label">'+t('organizer_label')+'</div><div class="detail-info-value">'+ev.organizer+'</div></div></div>'+

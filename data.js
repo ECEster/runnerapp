@@ -395,6 +395,17 @@ var POSTAL_CODES = {
   "6700": { lat: 51.9693, lng: 5.6660 }    // Wageningen
 };
 
+// Formatteert een prijsveld: zet er automatisch een euroteken voor als
+// het ontbreekt (bijv. "15" -> "€15", "25-45" -> "€25-45"). Waarden die
+// al een € bevatten, of geen bedrag zijn (zoals "gratis" of "n.b."),
+// blijven ongewijzigd.
+function formatPrice(price) {
+  if (!price) return price;
+  var p = String(price).trim();
+  if (!p || p.indexOf('€') !== -1 || !/^\d/.test(p)) return p;
+  return '€' + p;
+}
+
 // Haversine distance formula
 function haversineKm(lat1, lon1, lat2, lon2) {
   var R = 6371;
