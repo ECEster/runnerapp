@@ -302,18 +302,29 @@
       </div>
       <div class="submit-msg" id="import-msg"></div>
     </div>
+    <div style="margin-bottom:14px;max-width:240px">
+      <label for="filter-regio">Regio</label>
+      <select id="filter-regio" onchange="renderEventsTable()">
+        <option value="">— Alle regio's —</option>
+        <option value="noord">Noord</option>
+        <option value="oost">Oost</option>
+        <option value="zuid">Zuid</option>
+        <option value="west">West</option>
+      </select>
+    </div>
     <table class="events-table">
       <thead>
         <tr>
           <th>Datum</th>
           <th>Naam</th>
           <th>Stad</th>
+          <th>Regio</th>
           <th>Status</th>
           <th>Acties</th>
         </tr>
       </thead>
       <tbody id="events-tbody">
-        <tr><td colspan="5" class="no-events">Laden…</td></tr>
+        <tr><td colspan="6" class="no-events">Laden…</td></tr>
       </tbody>
     </table>
   </div>
@@ -495,20 +506,53 @@ document.getElementById('event-form').addEventListener('submit', async e => {
 });
 
 // ─── Events tabel ─────────────────────────────────────────────
+const REGIO_MAP = {
+  noord: ['Groningen', 'Friesland', 'Drenthe'],
+  oost:  ['Overijssel', 'Gelderland', 'Flevoland'],
+  west:  ['Noord-Holland', 'Zuid-Holland', 'Utrecht', 'Zeeland'],
+  zuid:  ['Noord-Brabant', 'Limburg'],
+};
+const REGIO_LABELS = { noord: 'Noord', oost: 'Oost', west: 'West', zuid: 'Zuid' };
+
+function provinceToRegio(province) {
+  for (const [regio, provinces] of Object.entries(REGIO_MAP)) {
+    if (provinces.includes(province)) return regio;
+  }
+  return null;
+}
+
+let allEvents = [];
+
 async function loadEventsTable() {
   const tbody = document.getElementById('events-tbody');
-  tbody.innerHTML = '<tr><td colspan="5" class="no-events">Laden…</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="6" class="no-events">Laden…</td></tr>';
   try {
-    const events = await loadAllEventsAdmin();
-    if (!events.length) {
-      tbody.innerHTML = '<tr><td colspan="5" class="no-events">Geen evenementen gevonden.</td></tr>';
-      return;
-    }
-    tbody.innerHTML = events.map(ev => `
+    allEvents = await loadAllEventsAdmin();
+    renderEventsTable();
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="6" class="no-events" style="color:#c0392b">Fout: ${err.message}</td></tr>`;
+  }
+}
+
+function renderEventsTable() {
+  const tbody = document.getElementById('events-tbody');
+  const regioFilter = document.getElementById('filter-regio').value;
+  const events = regioFilter
+    ? allEvents.filter(ev => provinceToRegio(ev.province) === regioFilter)
+    : allEvents;
+
+  if (!events.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="no-events">Geen evenementen gevonden.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = events.map(ev => {
+    const regio = provinceToRegio(ev.province);
+    return `
       <tr>
         <td>${ev.date || '—'}</td>
         <td><strong>${ev.name_nl || '—'}</strong>${ev.name_en ? '<br><small style="color:#888">' + ev.name_en + '</small>' : ''}</td>
         <td>${ev.city || '—'}</td>
+        <td>${regio ? REGIO_LABELS[regio] : '<span style="color:#aaa">—</span>'}</td>
         <td>
           <span class="badge ${ev.published ? 'badge-green' : 'badge-gray'}">
             ${ev.published ? 'Gepubliceerd' : 'Concept'}
@@ -527,10 +571,8 @@ async function loadEventsTable() {
           </button>
         </td>
       </tr>
-    `).join('');
-  } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="5" class="no-events" style="color:#c0392b">Fout: ${err.message}</td></tr>`;
-  }
+    `;
+  }).join('');
 }
 
 // ─── Eenmalige import van de statische evenementen uit data.js ────
