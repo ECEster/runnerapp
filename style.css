@@ -617,7 +617,7 @@ p:last-child { margin-bottom: 0; }
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(17, 24, 39, 0.72);
+  background: rgba(17, 24, 39, 0.42);
 }
 .page-header--photo h1,
 .page-header--photo p {

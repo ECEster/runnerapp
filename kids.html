@@ -337,7 +337,8 @@
 var KIDS_TYPES = ['funrun', 'parkloop', 'studentenevenement', 'coopertest', 'inclusieve runs'];
 
 function renderKidsEvents(lang) {
-  var kidsEvents = EVENTS.slice();
+  var todayStr = new Date().toISOString().split('T')[0];
+  var kidsEvents = EVENTS.filter(function(ev){ return ev.date >= todayStr; });
   var el = document.getElementById('kids-events-grid');
   if (!kidsEvents.length) {
     el.innerHTML = '<p style="text-align:center;color:#666;">Geen kids evenementen gevonden.</p>';

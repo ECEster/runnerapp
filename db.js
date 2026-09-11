@@ -5,7 +5,10 @@ const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Haal alle gepubliceerde events op en zet ze in de globale EVENTS array
+// Haal alle gepubliceerde events op en vul de globale EVENTS array aan
+// (bovenop STATIC_EVENTS uit data.js, niet in plaats daarvan). Een
+// database-event met hetzelfde id als een statisch event overschrijft
+// dat statische event.
 async function loadEventsFromDB() {
     const { data, error } = await db
         .from('events')
@@ -19,7 +22,7 @@ async function loadEventsFromDB() {
     }
 
     // Zet Supabase-rijen om naar het formaat dat de app verwacht
-    EVENTS = data.map(e => ({
+    const dbEvents = data.map(e => ({
         id:               e.id,
         name_nl:          e.name_nl   || '',
         name_en:          e.name_en   || '',
@@ -40,6 +43,12 @@ async function loadEventsFromDB() {
         capacity:         null,
         youtube_url:      ''
     }));
+
+    const dbIds = new Set(dbEvents.map(e => e.id));
+    EVENTS = STATIC_EVENTS
+        .filter(e => !dbIds.has(e.id))
+        .concat(dbEvents)
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
 
     return true;
 }

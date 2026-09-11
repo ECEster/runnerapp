@@ -311,8 +311,10 @@ function cityCoords(city) {
 function filterEvents() {
   var f = getFilters();
   var postalCoords = f.postal.length === 4 ? getPostalCoords(f.postal) : null;
+  var todayStr = new Date().toISOString().split('T')[0];
 
   return EVENTS.filter(function(ev) {
+    if (ev.date < todayStr) return false;
     if (f.type && ev.type !== f.type) return false;
     if (f.province && ev.province !== f.province) return false;
     if (f.distance && !ev.distances.includes(f.distance)) return false;

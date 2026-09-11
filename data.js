@@ -7,7 +7,11 @@
 //   enschedemarathon.nl, lentemarathon.nl, marathon.nl, bruggenloop.nl,
 //   zandvoortcircuitrun.nl, sportpromotiediever.nl, bearsports.nl
 
-var EVENTS = [
+// STATIC_EVENTS is de vaste voorbeeld-/back-updataset. EVENTS is de
+// array die de pagina's daadwerkelijk gebruiken: die begint als kopie
+// van STATIC_EVENTS en wordt door loadEventsFromDB() (db.js) aangevuld
+// met evenementen uit de database, zonder de statische set te vervangen.
+var STATIC_EVENTS = [
   {
     id: 101,
     name_nl: "Egmond Halve Marathon",
@@ -370,6 +374,9 @@ var EVENTS = [
     youtube_url: ""
   }
 ];
+
+// Werkkopie die de pagina's uitlezen; loadEventsFromDB() vult deze aan.
+var EVENTS = STATIC_EVENTS.slice();
 
 // Dutch postal code prefixes mapped to {lat, lng}
 var POSTAL_CODES = {

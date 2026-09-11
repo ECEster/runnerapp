@@ -357,7 +357,12 @@ function renderFavorites() {
     el.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><span>❤️</span>'+t('favorites_empty')+'<br><small style="color:var(--mid)">'+t('no_favorites')+'</small></div>';
     return;
   }
-  var favEvents = EVENTS.filter(function(ev){ return cachedFavIds.indexOf(ev.id) !== -1; });
+  var todayStr = new Date().toISOString().split('T')[0];
+  var favEvents = EVENTS.filter(function(ev){ return cachedFavIds.indexOf(ev.id) !== -1 && ev.date >= todayStr; });
+  if (!favEvents.length) {
+    el.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><span>❤️</span>'+t('favorites_empty')+'<br><small style="color:var(--mid)">'+t('no_favorites')+'</small></div>';
+    return;
+  }
   el.innerHTML = favEvents.map(function(ev) {
     var name = lang==='en'?ev.name_en:ev.name_nl;
     var dateStr = formatDate(ev.date, lang);

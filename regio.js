@@ -31,7 +31,9 @@ function getFilters() {
 
 function filterEvents() {
   var f = getFilters();
+  var todayStr = new Date().toISOString().split('T')[0];
   return EVENTS.filter(function(ev) {
+    if (ev.date < todayStr) return false;
     // Always restrict to this regio's provinces
     if (REGIO_PROVINCES.indexOf(ev.province) === -1) return false;
     if (f.type && ev.type !== f.type) return false;
