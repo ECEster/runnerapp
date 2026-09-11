@@ -369,14 +369,14 @@ function renderList(lang) {
     var distChips = ev.distances.map(function(d){ return '<span class="event-card__dist-chip">'+d+'</span>'; }).join('');
     return '<div class="event-card">'+
       '<div class="event-card__img">'+
-        '<img src="'+ev.image+'" alt="'+name+'" loading="lazy">'+
-        '<span class="event-card__badge '+badgeClass+'">'+typeName+'</span>'+freeBadge+
+        '<img src="'+ev.image+'" alt="'+name+'" loading="lazy">'+freeBadge+
       '</div>'+
       '<div class="event-card__body">'+
         '<div class="event-card__date">📅 '+dateStr+'</div>'+
         '<div class="event-card__title">'+name+'</div>'+
         '<div class="event-card__meta"><span>📍 '+ev.city+'</span><span>'+ev.province+'</span></div>'+
         '<div class="event-card__distances">'+distChips+'</div>'+
+        '<span class="event-card__type '+badgeClass+'">'+typeName+'</span>'+
         '<div class="event-card__footer">'+priceHtml+'<a href="evenement.html?id='+ev.id+'" class="btn btn--ghost btn--sm">'+t('meer_info')+'</a>'+
         '</div>'+
       '</div>'+

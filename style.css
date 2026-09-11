@@ -421,7 +421,7 @@ p:last-child { margin-bottom: 0; }
   display: flex;
   flex-wrap: wrap;
   gap: 0.3rem;
-  margin-bottom: 0.9rem;
+  margin-bottom: 0.7rem;
 }
 .event-card__dist-chip {
   background: var(--surface2);
@@ -430,6 +430,17 @@ p:last-child { margin-bottom: 0; }
   border-radius: 4px;
   font-size: 0.75rem;
   font-weight: 600;
+}
+.event-card__type {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--white);
+  margin-bottom: 0.7rem;
 }
 .event-card__footer {
   display: flex;
