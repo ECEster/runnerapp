@@ -291,6 +291,17 @@
   <!-- Overzicht bestaande events -->
   <div class="card">
     <h2>📋 Alle evenementen</h2>
+    <div style="margin-bottom:16px">
+      <button type="button" class="btn-translate" id="btn-import-static" onclick="importStaticEvents()">
+        📥 Importeer de 18 standaardevenementen (eenmalig)
+      </button>
+      <div style="font-size:.75rem;color:#888;margin-top:6px">
+        Zet de evenementen uit data.js over naar de database zodat je ze hier kan bewerken.
+        Veilig om vaker te klikken — al geïmporteerde evenementen worden overgeslagen.
+        Let op: het Atletiekunie-keurmerk, deelnemersaantal en YouTube-video gaan hierbij verloren.
+      </div>
+      <div class="submit-msg" id="import-msg"></div>
+    </div>
     <table class="events-table">
       <thead>
         <tr>
@@ -310,6 +321,7 @@
 </div><!-- /panel -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="data.js"></script>
 <script src="db.js"></script>
 <script>
 // ─── Auth check ───────────────────────────────────────────────
@@ -518,6 +530,59 @@ async function loadEventsTable() {
     `).join('');
   } catch (err) {
     tbody.innerHTML = `<tr><td colspan="5" class="no-events" style="color:#c0392b">Fout: ${err.message}</td></tr>`;
+  }
+}
+
+// ─── Eenmalige import van de statische evenementen uit data.js ────
+async function importStaticEvents() {
+  const btn = document.getElementById('btn-import-static');
+  const msg = document.getElementById('import-msg');
+  btn.disabled = true;
+  const origText = btn.textContent;
+  btn.textContent = 'Importeren…';
+  msg.style.display = 'none';
+
+  try {
+    const existing = await loadAllEventsAdmin();
+    const existingKeys = new Set(existing.map(e => (e.name_nl || '') + '|' + (e.date || '')));
+
+    let imported = 0, skipped = 0;
+    for (const ev of STATIC_EVENTS) {
+      const key = ev.name_nl + '|' + ev.date;
+      if (existingKeys.has(key)) { skipped++; continue; }
+
+      await addEvent({
+        name_nl:          ev.name_nl,
+        name_en:          ev.name_en,
+        date:             ev.date,
+        type:             ev.type,
+        city:             ev.city,
+        province:         ev.province,
+        distances:        ev.distances.join(', '),
+        price:            ev.paid ? ev.price : 'gratis',
+        organizer:        ev.organizer,
+        registration_url: ev.registration_url,
+        description_nl:   ev.description_nl,
+        description_en:   ev.description_en,
+        image:            ev.image,
+        kidsrun:          ev.kidsrun || false,
+        published:        true,
+      });
+      existingKeys.add(key);
+      imported++;
+    }
+
+    msg.textContent = `✅ ${imported} evenement(en) geïmporteerd, ${skipped} overgeslagen (al aanwezig).`;
+    msg.className = 'submit-msg ok';
+    msg.style.display = 'block';
+    loadEventsTable();
+  } catch (err) {
+    msg.textContent = '❌ Fout bij importeren: ' + err.message;
+    msg.className = 'submit-msg err';
+    msg.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = origText;
   }
 }
 
