@@ -612,6 +612,8 @@ p:last-child { margin-bottom: 0; }
   position: relative;
   background-size: cover;
   background-position: center;
+  padding-top: 5.5rem;
+  padding-bottom: 5.5rem;
 }
 .page-header--photo::before {
   content: '';
@@ -631,7 +633,8 @@ p:last-child { margin-bottom: 0; }
   grid-template-columns: 280px 1fr;
   gap: 2rem;
   align-items: start;
-  padding: 2rem 0;
+  padding-top: 0.75rem;
+  padding-bottom: 2rem;
 }
 
 /* Regio nav — zelfde kolomverdeling als .agenda-layout eronder, zodat
