@@ -195,11 +195,22 @@
         <div>
           <label for="f-type">Type</label>
           <select id="f-type">
-            <option value="road">Weg</option>
+            <option value="marathon">Marathon</option>
             <option value="trail">Trail</option>
-            <option value="track">Baan</option>
-            <option value="cross">Veldloop</option>
-            <option value="virtual">Virtueel</option>
+            <option value="bosloop">Bosloop</option>
+            <option value="cross">Crossloop</option>
+            <option value="wegevenement">Wegevenement</option>
+            <option value="parkloop">Parkloop</option>
+            <option value="funrun">Fun Run</option>
+            <option value="survivalrun">Survival Run</option>
+            <option value="ultrarun">Ultrarun</option>
+            <option value="virtuele run">Virtuele Run</option>
+            <option value="estafette">Estafette</option>
+            <option value="coopertest">Coopertest</option>
+            <option value="studentenevenement">Studentenevenement</option>
+            <option value="sportief wandelen">Sportief Wandelen</option>
+            <option value="inclusieve runs">Inclusieve Run</option>
+            <option value="gecertificeerd parcours">Gecertificeerd Parcours</option>
           </select>
         </div>
 
@@ -370,7 +381,7 @@ function startEdit(ev) {
 
   document.getElementById('f-name-nl').value   = ev.name_nl || '';
   document.getElementById('f-date').value       = ev.date || '';
-  document.getElementById('f-type').value       = ev.type || 'road';
+  document.getElementById('f-type').value       = ev.type || 'wegevenement';
   document.getElementById('f-city').value       = ev.city || '';
   document.getElementById('f-province').value   = ev.province || '';
   document.getElementById('f-distances').value  = ev.distances || '';
