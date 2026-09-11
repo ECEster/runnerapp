@@ -63,6 +63,24 @@
       <span class="kids-section-icon">🏁</span>
       <h2 data-i18n="events_title">Kids evenementen</h2>
     </div>
+
+    <!-- Kalender: alle kidsruns uit alle regio's, automatisch gefilterd op kidsrun=true -->
+    <div class="calendar-wrapper">
+      <div class="calendar-nav">
+        <button id="cal-prev" onclick="calPrev()">‹ Vorige</button>
+        <h3 id="cal-title"></h3>
+        <button id="cal-next" onclick="calNext()">Volgende ›</button>
+      </div>
+      <div class="calendar-grid" id="calendar-grid"></div>
+    </div>
+    <div class="day-panel hidden" id="day-panel">
+      <div class="day-panel__header">
+        <h3 id="day-panel-title"></h3>
+        <button class="day-panel__close" onclick="closeDayPanel()">✕</button>
+      </div>
+      <div class="day-panel__list" id="day-panel-list"></div>
+    </div>
+
     <div class="kids-events-grid" id="kids-events-grid"></div>
   </div>
 </section>
@@ -336,31 +354,117 @@
 <script>
 var KIDS_TYPES = ['funrun', 'parkloop', 'studentenevenement', 'coopertest', 'inclusieve runs'];
 
-function renderKidsEvents(lang) {
+var MONTHS_NL = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+var MONTHS_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+var DAYS_NL = ['Ma','Di','Wo','Do','Vr','Za','Zo'];
+var DAYS_EN = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+var calYear, calMonth;
+
+// Alle kidsruns uit alle regio's samen: automatisch elk evenement met
+// kidsrun === true, ongeacht provincie/regio.
+function getKidsEvents() {
   var todayStr = new Date().toISOString().split('T')[0];
-  var kidsEvents = EVENTS.filter(function(ev){ return ev.date >= todayStr; });
+  return EVENTS.filter(function(ev){ return ev.kidsrun === true && ev.date >= todayStr; });
+}
+
+function renderKidsEvents(lang) {
+  var kidsEvents = getKidsEvents();
   var el = document.getElementById('kids-events-grid');
   if (!kidsEvents.length) {
     el.innerHTML = '<p style="text-align:center;color:#666;">Geen kids evenementen gevonden.</p>';
-    return;
+  } else {
+    el.innerHTML = kidsEvents.map(function(ev) {
+      var name = lang==='en' ? ev.name_en : ev.name_nl;
+      var dateStr = formatDate(ev.date, lang);
+      var price = ev.paid ? formatPrice(ev.price) : (lang==='en' ? 'Free' : 'Gratis');
+      return '<div class="kids-event-card">'+
+        '<div class="kids-event-card__img">'+
+          '<img src="'+ev.image+'" alt="'+name+'" loading="lazy">'+
+        '</div>'+
+        '<div class="kids-event-card__body">'+
+          '<div class="kids-event-card__date">📅 '+dateStr+'</div>'+
+          '<h4>'+name+'</h4>'+
+          '<p>📍 '+ev.city+' &nbsp;|&nbsp; '+ev.distances.join(', ')+'&nbsp;|&nbsp; '+price+'</p>'+
+          '<a href="evenement.html?id='+ev.id+'" class="btn">'+t('meer_info')+' →</a>'+
+        '</div>'+
+      '</div>';
+    }).join('');
   }
-  el.innerHTML = kidsEvents.map(function(ev) {
-    var name = lang==='en' ? ev.name_en : ev.name_nl;
-    var dateStr = formatDate(ev.date, lang);
-    var price = ev.paid ? formatPrice(ev.price) : (lang==='en' ? 'Free' : 'Gratis');
-    return '<div class="kids-event-card">'+
-      '<div class="kids-event-card__img">'+
-        '<img src="'+ev.image+'" alt="'+name+'" loading="lazy">'+
-      '</div>'+
-      '<div class="kids-event-card__body">'+
-        '<div class="kids-event-card__date">📅 '+dateStr+'</div>'+
-        '<h4>'+name+'</h4>'+
-        '<p>📍 '+ev.city+' &nbsp;|&nbsp; '+ev.distances.join(', ')+'&nbsp;|&nbsp; '+price+'</p>'+
-        '<a href="evenement.html?id='+ev.id+'" class="btn">'+t('meer_info')+' →</a>'+
-      '</div>'+
+  renderCalendar(lang);
+}
+
+function renderCalendar(lang) {
+  var kidsEvents = getKidsEvents();
+  var months = lang==='en' ? MONTHS_EN : MONTHS_NL;
+  var days   = lang==='en' ? DAYS_EN : DAYS_NL;
+  document.getElementById('cal-title').textContent =
+    months[calMonth].charAt(0).toUpperCase()+months[calMonth].slice(1)+' '+calYear;
+
+  var grid = document.getElementById('calendar-grid');
+  var html = days.map(function(d){ return '<div class="calendar-dow">'+d+'</div>'; }).join('');
+  var firstDay    = new Date(calYear, calMonth, 1).getDay();
+  var startOffset = (firstDay + 6) % 7;
+  var daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  var daysInPrev  = new Date(calYear, calMonth, 0).getDate();
+  var today = new Date(); today.setHours(0,0,0,0);
+
+  var evByDay = {};
+  kidsEvents.forEach(function(ev) {
+    var d = new Date(ev.date);
+    if (d.getFullYear()===calYear && d.getMonth()===calMonth) {
+      var day = d.getDate();
+      if (!evByDay[day]) evByDay[day] = [];
+      evByDay[day].push(ev);
+    }
+  });
+
+  var totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
+  for (var i=0; i<totalCells; i++) {
+    var dayNum, isOther=false;
+    if (i < startOffset) { dayNum = daysInPrev - startOffset + i + 1; isOther=true; }
+    else if (i >= startOffset + daysInMonth) { dayNum = i - startOffset - daysInMonth + 1; isOther=true; }
+    else { dayNum = i - startOffset + 1; }
+    var cellDate = isOther ? null : new Date(calYear, calMonth, dayNum);
+    var isToday  = cellDate && cellDate.getTime()===today.getTime();
+    var evs = (!isOther && evByDay[dayNum]) ? evByDay[dayNum] : [];
+    var cls = 'calendar-day';
+    if (isOther) cls += ' other-month';
+    if (isToday) cls += ' today';
+    if (evs.length) cls += ' has-events';
+    var dots = evs.slice(0,5).map(function(ev){ return '<div class="cal-dot cal-dot--accent" title="'+(lang==='en'?ev.name_en:ev.name_nl)+'"></div>'; }).join('');
+    var clickAttr = evs.length && !isOther ? ' onclick="openDayPanel('+calYear+','+calMonth+','+dayNum+')"' : '';
+    html += '<div class="'+cls+'"'+clickAttr+'>'+
+      '<div class="cal-day-num">'+dayNum+'</div>'+
+      '<div class="cal-dots">'+dots+'</div>'+
+    '</div>';
+  }
+  grid.innerHTML = html;
+}
+
+function openDayPanel(year, month, day) {
+  var lang = getLang();
+  var months = lang==='en' ? MONTHS_EN : MONTHS_NL;
+  var evs = getKidsEvents().filter(function(ev){
+    var d = new Date(ev.date);
+    return d.getFullYear()===year && d.getMonth()===month && d.getDate()===day;
+  });
+  var panel = document.getElementById('day-panel');
+  document.getElementById('day-panel-title').textContent = day+' '+months[month]+' '+year;
+  if (!evs.length) { panel.classList.add('hidden'); return; }
+  document.getElementById('day-panel-list').innerHTML = evs.map(function(ev){
+    var name = lang==='en'?ev.name_en:ev.name_nl;
+    return '<div style="display:flex;align-items:center;gap:1rem;padding:0.6rem 0;border-bottom:1px solid var(--surface2)">'+
+      '<span style="font-weight:600;flex:1">'+name+'</span>'+
+      '<span style="color:var(--mid);font-size:0.82rem">'+ev.city+'</span>'+
+      '<a href="evenement.html?id='+ev.id+'" class="btn btn--ghost btn--sm">'+t('meer_info')+'</a>'+
     '</div>';
   }).join('');
+  panel.classList.remove('hidden');
+  panel.scrollIntoView({behavior:'smooth', block:'nearest'});
 }
+function closeDayPanel() { document.getElementById('day-panel').classList.add('hidden'); }
+function calPrev() { calMonth--; if (calMonth < 0) { calMonth=11; calYear--; } renderCalendar(getLang()); }
+function calNext() { calMonth++; if (calMonth > 11) { calMonth=0; calYear++; } renderCalendar(getLang()); }
 
 function toggleLang() {
   var cur = getLang();
@@ -374,6 +478,9 @@ function toggleLang() {
 function toggleMobileNav() { document.getElementById('mobile-nav').classList.toggle('open'); }
 
 (async function() {
+  var now = new Date();
+  calYear  = now.getFullYear();
+  calMonth = now.getMonth();
   var lang = getLang();
   applyI18n(lang);
   var btn = document.getElementById('lang-toggle');
