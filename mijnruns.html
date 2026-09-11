@@ -61,7 +61,24 @@
     <div class="login-gate__icon">🏃‍♂️</div>
     <h3 data-i18n="mijnruns_title">Mijn Runs</h3>
     <p data-i18n="login_required">Log in om je runs bij te houden en evenementen op te slaan</p>
-    <button class="btn btn--primary" onclick="doLogin()" data-i18n="login_btn">Inloggen</button>
+
+    <form id="auth-form" style="text-align:left;max-width:320px;margin:0 auto;" onsubmit="submitAuth(event)">
+      <div class="form-group">
+        <label for="a-email" data-i18n="email_label">E-mailadres</label>
+        <input type="email" id="a-email" required placeholder="jouw@email.nl" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="a-pw" data-i18n="password_label">Wachtwoord</label>
+        <input type="password" id="a-pw" required minlength="6" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <div id="auth-error" class="hidden" style="background:#FEE2E2;color:#991B1B;padding:0.6rem 0.9rem;border-radius:var(--radius);font-size:0.85rem;margin-bottom:1rem;"></div>
+      <div id="auth-success" class="hidden" style="background:#DCFCE7;color:#166534;padding:0.6rem 0.9rem;border-radius:var(--radius);font-size:0.85rem;margin-bottom:1rem;"></div>
+      <button type="submit" class="btn btn--primary" id="auth-submit-btn" style="width:100%;" data-i18n="login_btn">Inloggen</button>
+    </form>
+    <p style="margin-top:1rem;font-size:0.85rem;color:var(--mid);">
+      <span id="auth-toggle-text" data-i18n="no_account_yet">Nog geen account?</span>
+      <a href="#" onclick="toggleAuthMode(event)" id="auth-toggle-link" data-i18n="signup_link" style="color:var(--accent);font-weight:600;">Registreren</a>
+    </p>
   </div>
 
   <!-- Logged in content -->
@@ -140,8 +157,10 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="data.js"></script>
 <script src="i18n.js"></script>
+<script src="db.js"></script>
 <script>
 function getBadgeClass(type) { return 'badge-' + type.toLowerCase().replace(/\s+/g, '-'); }
 function getTypeName(type, lang) {
@@ -152,58 +171,145 @@ function getTypeName(type, lang) {
   return (names[lang]||names.nl)[type]||type;
 }
 
-function getRuns() { return JSON.parse(localStorage.getItem('myRuns') || '[]'); }
-function saveRuns(runs) { localStorage.setItem('myRuns', JSON.stringify(runs)); }
+// ── Auth state ──────────────────────────────────────────────────────
+var currentSession = null;
+var authMode = 'login'; // 'login' | 'signup'
+var cachedRuns = [];
+var cachedFavIds = [];
 
-function doLogin() {
-  localStorage.setItem('loggedIn', 'true');
-  showLoggedIn();
+function toggleAuthMode(e) {
+  e.preventDefault();
+  authMode = authMode === 'login' ? 'signup' : 'login';
+  updateAuthModeUI();
 }
+
+function updateAuthModeUI() {
+  var btn = document.getElementById('auth-submit-btn');
+  var toggleText = document.getElementById('auth-toggle-text');
+  var toggleLink = document.getElementById('auth-toggle-link');
+  document.getElementById('auth-error').classList.add('hidden');
+  if (!btn) return;
+  if (authMode === 'login') {
+    btn.textContent = t('login_btn');
+    toggleText.textContent = t('no_account_yet');
+    toggleLink.textContent = t('signup_link');
+  } else {
+    btn.textContent = t('signup_btn');
+    toggleText.textContent = t('has_account_already');
+    toggleLink.textContent = t('login_link');
+  }
+}
+
+async function submitAuth(e) {
+  e.preventDefault();
+  var email = document.getElementById('a-email').value.trim();
+  var pw = document.getElementById('a-pw').value;
+  var errEl = document.getElementById('auth-error');
+  var okEl = document.getElementById('auth-success');
+  var btn = document.getElementById('auth-submit-btn');
+  errEl.classList.add('hidden');
+  okEl.classList.add('hidden');
+  var origText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = t('loading');
+
+  try {
+    if (authMode === 'login') {
+      await signIn(email, pw);
+    } else {
+      var result = await signUp(email, pw);
+      if (!result.session) {
+        okEl.textContent = t('signup_check_email');
+        okEl.classList.remove('hidden');
+        authMode = 'login';
+        updateAuthModeUI();
+      }
+    }
+  } catch (err) {
+    errEl.textContent = err.message || t('auth_error_generic');
+    errEl.classList.remove('hidden');
+  } finally {
+    btn.disabled = false;
+    if (btn.textContent === t('loading')) btn.textContent = origText;
+  }
+}
+
 function doLogout() {
-  localStorage.removeItem('loggedIn');
-  document.getElementById('login-gate').classList.remove('hidden');
-  document.getElementById('logged-in-content').classList.add('hidden');
+  signOut().catch(function(){});
 }
 
-function showLoggedIn() {
+async function showLoggedIn() {
   document.getElementById('login-gate').classList.add('hidden');
   document.getElementById('logged-in-content').classList.remove('hidden');
+  document.getElementById('auth-form').reset();
   // Set today's date
   var today = new Date().toISOString().split('T')[0];
   document.getElementById('r-date').value = today;
+  // Best-effort: pull in events added via the admin panel too
+  await loadEventsFromDB().catch(function(){ return false; });
+  await Promise.all([refreshRuns(), refreshFavorites()]);
+}
+
+function showLoggedOut() {
+  document.getElementById('login-gate').classList.remove('hidden');
+  document.getElementById('logged-in-content').classList.add('hidden');
+  cachedRuns = [];
+  cachedFavIds = [];
+}
+
+async function refreshRuns() {
+  try {
+    cachedRuns = await getRuns();
+  } catch (err) {
+    console.warn('Kon runs niet laden:', err.message);
+    cachedRuns = [];
+  }
   renderHistory();
-  renderFavorites();
   renderStats();
 }
 
-function submitRun(e) {
+async function refreshFavorites() {
+  try {
+    cachedFavIds = await getFavoriteIds();
+  } catch (err) {
+    console.warn('Kon favorieten niet laden:', err.message);
+    cachedFavIds = [];
+  }
+  renderFavorites();
+}
+
+async function submitRun(e) {
   e.preventDefault();
   var run = {
-    id: Date.now(),
     date: document.getElementById('r-date').value,
     distance: parseFloat(document.getElementById('r-dist').value),
     time: document.getElementById('r-time').value,
     notes: document.getElementById('r-notes').value
   };
-  var runs = getRuns();
-  runs.unshift(run);
-  saveRuns(runs);
+  try {
+    await addRun(run);
+  } catch (err) {
+    alert(err.message || t('auth_error_generic'));
+    return;
+  }
   document.getElementById('run-form').reset();
   document.getElementById('r-date').value = new Date().toISOString().split('T')[0];
-  renderHistory();
-  renderStats();
+  await refreshRuns();
 }
 
-function deleteRun(id) {
-  var runs = getRuns().filter(function(r){ return r.id !== id; });
-  saveRuns(runs);
-  renderHistory();
-  renderStats();
+async function deleteRun(id) {
+  try {
+    await deleteRunDB(id);
+  } catch (err) {
+    alert(err.message || t('auth_error_generic'));
+    return;
+  }
+  await refreshRuns();
 }
 
 function renderHistory() {
   var lang = getLang();
-  var runs = getRuns();
+  var runs = cachedRuns;
   var el = document.getElementById('run-history');
   if (!runs.length) {
     el.innerHTML = '<div class="empty-state"><span>🏃</span>'+t('run_empty')+'</div>';
@@ -225,7 +331,7 @@ function renderHistory() {
 }
 
 function renderStats() {
-  var runs = getRuns();
+  var runs = cachedRuns;
   var el = document.getElementById('stats-strip');
   if (!runs.length) { el.innerHTML = ''; return; }
   var totalDist = runs.reduce(function(s,r){ return s+r.distance; }, 0);
@@ -246,13 +352,12 @@ function renderStats() {
 
 function renderFavorites() {
   var lang = getLang();
-  var favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
   var el = document.getElementById('favorites-list');
-  if (!favorites.length) {
+  if (!cachedFavIds.length) {
     el.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><span>❤️</span>'+t('favorites_empty')+'<br><small style="color:var(--mid)">'+t('no_favorites')+'</small></div>';
     return;
   }
-  var favEvents = EVENTS.filter(function(ev){ return favorites.indexOf(ev.id) !== -1; });
+  var favEvents = EVENTS.filter(function(ev){ return cachedFavIds.indexOf(ev.id) !== -1; });
   el.innerHTML = favEvents.map(function(ev) {
     var name = lang==='en'?ev.name_en:ev.name_nl;
     var dateStr = formatDate(ev.date, lang);
@@ -277,7 +382,7 @@ function renderFavorites() {
 }
 
 function exportRuns() {
-  var runs = getRuns();
+  var runs = cachedRuns;
   if (!runs.length) return;
   var csv = 'Datum,Afstand (km),Tijd,Notities\n';
   runs.forEach(function(r) {
@@ -297,7 +402,8 @@ function toggleLang() {
   var btnM = document.getElementById('lang-toggle-mobile');
   if (btnM) btnM.textContent = I18N[lang].nav_language;
   applyI18n(lang);
-  if (localStorage.getItem('loggedIn')==='true') { renderHistory(); renderFavorites(); }
+  updateAuthModeUI();
+  if (currentSession) { renderHistory(); renderFavorites(); }
 }
 function toggleMobileNav() { document.getElementById('mobile-nav').classList.toggle('open'); }
 
@@ -308,9 +414,12 @@ function toggleMobileNav() { document.getElementById('mobile-nav').classList.tog
   if (btn) btn.textContent = I18N[lang].nav_language;
   var btnM = document.getElementById('lang-toggle-mobile');
   if (btnM) btnM.textContent = I18N[lang].nav_language;
-  if (localStorage.getItem('loggedIn') === 'true') {
-    showLoggedIn();
-  }
+  updateAuthModeUI();
+
+  db.auth.onAuthStateChange(function(event, session) {
+    currentSession = session;
+    if (session) showLoggedIn(); else showLoggedOut();
+  });
 })();
 </script>
 </body>

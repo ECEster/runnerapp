@@ -95,3 +95,76 @@ async function loadAllEventsAdmin() {
     if (error) throw error;
     return data;
 }
+
+// ─── Auth (voor "Mijn Runs") ────────────────────────────────────────────
+
+// Account aanmaken. Geeft { user, session } terug — session is null als
+// e-mailbevestiging vereist is (afhankelijk van de projectinstellingen).
+async function signUp(email, password) {
+    const { data, error } = await db.auth.signUp({ email, password });
+    if (error) throw error;
+    return data;
+}
+
+async function signIn(email, password) {
+    const { data, error } = await db.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    return data;
+}
+
+async function signOut() {
+    const { error } = await db.auth.signOut();
+    if (error) throw error;
+}
+
+async function getCurrentUser() {
+    const { data } = await db.auth.getUser();
+    return data.user || null;
+}
+
+// ─── Runs (hardloophistorie, per ingelogde gebruiker) ───────────────────
+
+async function addRun(run) {
+    const { data, error } = await db.from('runs').insert([run]).select();
+    if (error) throw error;
+    return data[0];
+}
+
+async function getRuns() {
+    const { data, error } = await db
+        .from('runs')
+        .select('*')
+        .order('date', { ascending: false });
+    if (error) throw error;
+    return data;
+}
+
+async function deleteRunDB(id) {
+    const { error } = await db.from('runs').delete().eq('id', id);
+    if (error) throw error;
+}
+
+// ─── Favorites (opgeslagen evenementen, per ingelogde gebruiker) ────────
+
+async function addFavorite(eventId) {
+    const { error } = await db.from('favorites').insert([{ event_id: eventId }]);
+    if (error) throw error;
+}
+
+async function removeFavoriteDB(eventId) {
+    const { error } = await db.from('favorites').delete().eq('event_id', eventId);
+    if (error) throw error;
+}
+
+async function getFavoriteIds() {
+    const { data, error } = await db.from('favorites').select('event_id');
+    if (error) throw error;
+    return data.map(r => r.event_id);
+}
+
+// ─── Contact (publiek contactformulier) ─────────────────────────────────
+
+async function submitContactMessage(msg) {
+    const { error } = await db.from('contact_messages').insert([msg]);
+    if (error) throw error;
+}

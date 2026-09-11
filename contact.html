@@ -206,18 +206,22 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="data.js"></script>
 <script src="i18n.js"></script>
+<script src="db.js"></script>
 <script>
-function submitContact(e) {
+async function submitContact(e) {
   e.preventDefault();
   var name = document.getElementById('c-name').value.trim();
   var email = document.getElementById('c-email').value.trim();
   var subject = document.getElementById('c-subject').value;
   var message = document.getElementById('c-message').value.trim();
   var errEl = document.getElementById('form-error');
+  var btn = document.querySelector('#contact-form button[type="submit"]');
 
   if (!name || !email || !subject || !message) {
+    errEl.textContent = 'Vul alle verplichte velden in.';
     errEl.style.display = 'block';
     return;
   }
@@ -228,7 +232,20 @@ function submitContact(e) {
   }
   errEl.style.display = 'none';
 
-  // Simulate submit
+  var origText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = t('loading');
+
+  try {
+    await submitContactMessage({ name: name, email: email, subject: subject, message: message });
+  } catch (err) {
+    errEl.textContent = err.message || 'Versturen mislukt. Probeer het later opnieuw.';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = origText;
+    return;
+  }
+
   document.getElementById('contact-form').style.display = 'none';
   var success = document.getElementById('contact-success');
   success.style.display = 'block';
