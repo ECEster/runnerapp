@@ -27,6 +27,7 @@
   --badge-marathon:            #DC2626;
   --badge-trail:               #15803D;
   --badge-bosloop:              #14532D;
+  --badge-gemengd:              #475569;
   --badge-cross:               #92400E;
   --badge-wegevenement:        #1D4ED8;
   --badge-parkloop:            #059669;
@@ -450,6 +451,7 @@ p:last-child { margin-bottom: 0; }
 .badge-marathon           { background: var(--badge-marathon); }
 .badge-trail              { background: var(--badge-trail); }
 .badge-bosloop            { background: var(--badge-bosloop); }
+.badge-gemengd-parcours   { background: var(--badge-gemengd); }
 .badge-cross              { background: var(--badge-cross); }
 .badge-wegevenement       { background: var(--badge-wegevenement); }
 .badge-parkloop           { background: var(--badge-parkloop); }

@@ -86,6 +86,7 @@
           <option value="trail">Trail</option>
           <option value="bosloop">Bosloop</option>
           <option value="cross">Crossloop</option>
+          <option value="gemengd parcours">Gemengd parcours</option>
           <option value="wegevenement">Wegevenement</option>
           <option value="parkloop">Parkloop</option>
           <option value="funrun">Fun Run</option>
@@ -261,8 +262,8 @@ var DAYS_EN = ['Mo','Tu','We','Th','Fr','Sa','Su'];
 function getBadgeClass(type) { return 'badge-' + type.toLowerCase().replace(/\s+/g, '-'); }
 function getTypeName(type, lang) {
   var names = {
-    nl: { 'marathon':'Marathon','trail':'Trail','bosloop':'Bosloop','cross':'Cross','wegevenement':'Wegevenement','parkloop':'Parkloop','funrun':'Fun Run','survivalrun':'Survival Run','ultrarun':'Ultrarun','virtuele run':'Virtuele Run','estafette':'Estafette','coopertest':'Coopertest','studentenevenement':'Studentenevenement','sportief wandelen':'Sportief Wandelen','inclusieve runs':'Inclusieve Run','gecertificeerd parcours':'Gecert. Parcours' },
-    en: { 'marathon':'Marathon','trail':'Trail','bosloop':'Forest Run','cross':'Cross Country','wegevenement':'Road Race','parkloop':'Park Run','funrun':'Fun Run','survivalrun':'Survival Run','ultrarun':'Ultra Run','virtuele run':'Virtual Run','estafette':'Relay','coopertest':'Cooper Test','studentenevenement':'Student Event','sportief wandelen':'Sports Walking','inclusieve runs':'Inclusive Run','gecertificeerd parcours':'Certified Course' }
+    nl: { 'marathon':'Marathon','trail':'Trail','bosloop':'Bosloop','cross':'Cross','gemengd parcours':'Gemengd parcours','wegevenement':'Wegevenement','parkloop':'Parkloop','funrun':'Fun Run','survivalrun':'Survival Run','ultrarun':'Ultrarun','virtuele run':'Virtuele Run','estafette':'Estafette','coopertest':'Coopertest','studentenevenement':'Studentenevenement','sportief wandelen':'Sportief Wandelen','inclusieve runs':'Inclusieve Run','gecertificeerd parcours':'Gecert. Parcours' },
+    en: { 'marathon':'Marathon','trail':'Trail','bosloop':'Forest Run','cross':'Cross Country','gemengd parcours':'Mixed Terrain','wegevenement':'Road Race','parkloop':'Park Run','funrun':'Fun Run','survivalrun':'Survival Run','ultrarun':'Ultra Run','virtuele run':'Virtual Run','estafette':'Relay','coopertest':'Cooper Test','studentenevenement':'Student Event','sportief wandelen':'Sports Walking','inclusieve runs':'Inclusive Run','gecertificeerd parcours':'Certified Course' }
   };
   return (names[lang]||names.nl)[type]||type;
 }
