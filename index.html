@@ -129,8 +129,10 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="data.js"></script>
 <script src="i18n.js"></script>
+<script src="db.js"></script>
 <script>
 // ── Helpers ──────────────────────────────────────────────────
 function getBadgeClass(type) {
@@ -191,16 +193,7 @@ function renderEventCard(ev, lang) {
 }
 
 // ── Init ─────────────────────────────────────────────────────
-(function() {
-  var lang = getLang();
-  applyI18n(lang);
-
-  // Update lang toggle
-  var btn = document.getElementById('lang-toggle');
-  if (btn) btn.textContent = I18N[lang].nav_language;
-  var btnM = document.getElementById('lang-toggle-mobile');
-  if (btnM) btnM.textContent = I18N[lang].nav_language;
-
+function renderFeatured(lang) {
   // Render 4 soonest events
   var today = new Date();
   today.setHours(0,0,0,0);
@@ -218,22 +211,30 @@ function renderEventCard(ev, lang) {
       return renderEventCard(ev, lang);
     }).join('');
   }
+}
+
+(async function() {
+  var lang = getLang();
+  applyI18n(lang);
+
+  // Update lang toggle
+  var btn = document.getElementById('lang-toggle');
+  if (btn) btn.textContent = I18N[lang].nav_language;
+  var btnM = document.getElementById('lang-toggle-mobile');
+  if (btnM) btnM.textContent = I18N[lang].nav_language;
+
+  // Haal ook evenementen op die via het admin-paneel zijn toegevoegd
+  await loadEventsFromDB().catch(function(){ return false; });
+  renderFeatured(lang);
 })();
 
 function toggleLang() {
   var cur = getLang();
   var next = cur === 'nl' ? 'en' : 'nl';
   setLang(next);
-  // Re-render featured events
-  var lang = next;
-  var today = new Date(); today.setHours(0,0,0,0);
-  var sorted = EVENTS.slice().sort(function(a,b){ return new Date(a.date)-new Date(b.date); });
-  var featured = sorted.filter(function(ev){ return new Date(ev.date) >= today; }).slice(0,4);
-  if (!featured.length) featured = sorted.slice(0,4);
-  var grid = document.getElementById('featured-events');
-  if (grid) grid.innerHTML = featured.map(function(ev){ return renderEventCard(ev, lang); }).join('');
+  renderFeatured(next);
   var btnM = document.getElementById('lang-toggle-mobile');
-  if (btnM) btnM.textContent = I18N[lang].nav_language;
+  if (btnM) btnM.textContent = I18N[next].nav_language;
 }
 
 function toggleMobileNav() {

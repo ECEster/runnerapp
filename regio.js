@@ -188,7 +188,7 @@ function toggleLang() {
 function toggleMobileNav() { document.getElementById('mobile-nav').classList.toggle('open'); }
 
 // Init
-(function() {
+(async function() {
   var now = new Date();
   calYear  = now.getFullYear();
   calMonth = now.getMonth();
@@ -198,5 +198,7 @@ function toggleMobileNav() { document.getElementById('mobile-nav').classList.tog
   if (btn) btn.textContent = I18N[lang].nav_language;
   var btnM = document.getElementById('lang-toggle-mobile');
   if (btnM) btnM.textContent = I18N[lang].nav_language;
+  // Haal ook evenementen op die via het admin-paneel zijn toegevoegd
+  await loadEventsFromDB().catch(function(){ return false; });
   applyFilters();
 })();

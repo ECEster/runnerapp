@@ -230,13 +230,16 @@ function toggleLang() {
 }
 function toggleMobileNav() { document.getElementById('mobile-nav').classList.toggle('open'); }
 
-function init() {
+async function init() {
   var lang = getLang();
   applyI18n(lang);
   var btn = document.getElementById('lang-toggle');
   if (btn) btn.textContent = I18N[lang].nav_language;
   var btnM = document.getElementById('lang-toggle-mobile');
   if (btnM) btnM.textContent = I18N[lang].nav_language;
+
+  // Haal ook evenementen op die via het admin-paneel zijn toegevoegd
+  await loadEventsFromDB().catch(function(){ return false; });
 
   var params = new URLSearchParams(window.location.search);
   var id = parseInt(params.get('id'));
