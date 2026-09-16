@@ -1,0 +1,35 @@
+name: Scrape hardloopevenementen
+
+# Alleen handmatig te starten (geen schema) — jij klikt op "Run workflow" in de
+# Actions-tab op GitHub, vanaf elke computer, wanneer jij wilt.
+on:
+  workflow_dispatch:
+    inputs:
+      live:
+        description: "Echt naar Supabase schrijven? (uit = alleen dry-run, print maar schrijft niets)"
+        type: boolean
+        default: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: scraper
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Run scraper
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          if [ "${{ github.event.inputs.live }}" = "true" ]; then
+            node write-events.js --live
+          else
+            node write-events.js
+          fi

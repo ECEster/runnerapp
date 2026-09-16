@@ -56,6 +56,24 @@ Losse test-/inspectiescripts:
 - `afbeelding_url` wordt nog altijd leeg gelaten (gereserveerd voor een latere
   Unsplash-koppeling).
 
+## Draaien vanaf GitHub (zonder deze computer)
+
+Er is een GitHub Actions workflow (`.github/workflows/scrape-events.yml`) die dit script
+op GitHub's eigen servers draait — je hebt hiervoor geen lokale computer nodig. Hij start
+**alleen handmatig**, niet op een schema.
+
+Eenmalig instellen:
+1. Ga naar de GitHub-repo → **Settings → Secrets and variables → Actions**.
+2. Voeg twee **Repository secrets** toe: `SUPABASE_URL` en `SUPABASE_SERVICE_ROLE_KEY`
+   (dezelfde waarden als in je lokale `.env`). Secrets zijn versleuteld en komen nooit in
+   logs of code terecht.
+
+Draaien:
+1. Ga naar de **Actions**-tab van de repo (op GitHub.com, ook vanaf je telefoon).
+2. Kies "Scrape hardloopevenementen" → **Run workflow**.
+3. Vink "live" aan om écht te schrijven, laat 'm uit voor een dry-run (print alleen, net
+   als lokaal). Bekijk de output onder de workflow-run.
+
 ## Nog te bouwen
 
 - Migratie `migrations/0001_add_source_url.sql` moet je nog handmatig uitvoeren in de
