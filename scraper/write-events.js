@@ -21,7 +21,7 @@ import { dedupeAgainstDb } from './lib/dedupeAgainstDb.js'
 import { mapToSupabaseShape } from './lib/mapToSupabaseShape.js'
 import { fetchExistingEventKeys, insertEventRow } from './lib/supabaseAdmin.js'
 
-const MAX_INSERTS_PER_RUN = 150
+const MAX_INSERTS_PER_RUN = 50
 
 const isLive = process.argv.includes('--live')
 
