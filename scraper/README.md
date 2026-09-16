@@ -1,0 +1,64 @@
+# Events-scraper
+
+Verzamelt hardloopevenementen in Noord-Nederland (Groningen, Friesland, Drenthe) van
+runphy.nl en hardloopkalendernederland.nl, en schrijft nieuwe events naar de Supabase
+`events`-tabel (altijd met `published: false` — jij publiceert handmatig in het
+admin-portaal).
+
+## Installatie
+
+```
+cp .env.example .env
+```
+
+Vul in `.env` in:
+- `SUPABASE_URL` — Project Settings → API in het Supabase-dashboard
+- `SUPABASE_SERVICE_ROLE_KEY` — idem, de **service_role** key (niet de anon key)
+
+`.env` staat in `.gitignore` en mag nooit gecommit worden. De service_role key negeert
+Row Level Security volledig — gebruik dit script dus alleen lokaal of in een vertrouwde
+geplande taak, nooit vanuit frontend-code.
+
+## Gebruik
+
+```
+node write-events.js              # dry-run (standaard) — print alleen wat er zou gebeuren
+node write-events.js --live       # schrijft daadwerkelijk naar Supabase
+```
+
+Losse test-/inspectiescripts:
+- `node test-step3.js` — toont de eerste 5 geparste runphy.nl-events (Groningen)
+- `node test-step4.js` — toont alle geparste hardloopkalendernederland.nl-events (Groningen)
+- `node run-dry-run.js` — volledige dry-run zonder de Supabase-verbinding (dus zonder
+  dedup tegen bestaande database-rijen, en zonder dat `.env` nodig is)
+
+## Veiligheidsmaatregelen in write-events.js
+
+- **Dry-run is de standaard.** Alleen `--live` schrijft echt.
+- **Limiet van 50 nieuwe events per run.** Zou een run er meer willen wegschrijven, dan
+  stopt het script zonder iets te schrijven — dat is een signaal dat een bron een andere
+  structuur teruggeeft dan verwacht.
+- **Dedupliceert tweemaal:** eerst onderling (tussen de twee bronnen, zie `lib/dedupe.js`),
+  daarna tegen wat al in de database staat (`lib/dedupeAgainstDb.js`). Beide gebruiken
+  dezelfde matchlogica: datum + plaats primair (naam alleen als fallback wanneer plaats
+  onbekend is) — zo herken je hetzelfde evenement ook als de naam op de bronnen anders
+  geschreven staat (bv. "Woellust Run" vs. "Woellustrun").
+- **published: false voor elke nieuwe rij** — niets komt automatisch live.
+
+## Bekende beperkingen (bewuste keuzes, geen bugs)
+
+- `afstanden`/`plaats`-herkenning bij hardloopkalendernederland.nl is patroonherkenning op
+  vrije tekst; zie de uitgebreide toelichting bovenaan `lib/parseHardloopkalender.js`.
+  Sommige events krijgen terecht `plaats: null` omdat de bron geen "in [plaats]" vermeldt.
+- `type` (bv. "wegevenement" vs. "trail") en `organizer` (organisatienaam) worden niet
+  betrouwbaar uit de bronnen afgeleid — zie `lib/mapToSupabaseShape.js`. Corrigeer dit
+  tijdens het reviewen in het admin-portaal.
+- `afbeelding_url` wordt nog altijd leeg gelaten (gereserveerd voor een latere
+  Unsplash-koppeling).
+
+## Nog te bouwen
+
+- Migratie `migrations/0001_add_source_url.sql` moet je nog handmatig uitvoeren in de
+  Supabase SQL Editor (voegt de `source_url`-kolom toe) voordat `write-events.js` succesvol
+  kan schrijven.
+- Afbeeldingen ophalen (Unsplash API).

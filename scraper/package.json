@@ -1,0 +1,7 @@
+{
+  "name": "events-scraper",
+  "private": true,
+  "type": "module",
+  "version": "0.0.0",
+  "description": "Verzamelt hardloopevenementen in Noord-Nederland (Groningen, Friesland, Drenthe) uit externe bronnen voor runningnederland.nl"
+}
