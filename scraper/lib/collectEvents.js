@@ -1,8 +1,11 @@
-// Haalt en parset events van beide bronnen, voor alle opgegeven provincies, en
-// dedupliceert ze onderling (zie lib/dedupe.js voor de matchlogica).
+// Haalt en parset events van alle drie bronnen, voor alle opgegeven
+// provincies, en dedupliceert ze onderling (zie lib/dedupe.js voor de
+// matchlogica).
 import { fetchHtml } from './fetchPage.js'
 import { parseRunphyEvents } from './parseRunphy.js'
 import { parseHardloopkalenderEvents } from './parseHardloopkalender.js'
+import { parseLoopjeLoopjeEvents } from './parseLoopjeLoopje.js'
+import { persistProvinceCache } from './resolveProvince.js'
 import { dedupeEvents } from './dedupe.js'
 
 const PROVINCES = ['groningen', 'friesland', 'drenthe']
@@ -22,6 +25,13 @@ export async function collectEvents({ year }) {
       ...parseHardloopkalenderEvents(hknHtml, { year, provincie, bronUrl: hknUrl }),
     )
   }
+
+  // loopjeloopje.nl heeft geen aparte pagina per provincie (in tegenstelling
+  // tot de twee bronnen hierboven) — één keer ophalen, zelf filteren op
+  // Noord-Nederland (zie lib/parseLoopjeLoopje.js + lib/resolveProvince.js).
+  const loopjeLoopjeHtml = await fetchHtml('https://www.loopjeloopje.nl/')
+  allEvents.push(...(await parseLoopjeLoopjeEvents(loopjeLoopjeHtml)))
+  persistProvinceCache()
 
   return dedupeEvents(allEvents)
 }

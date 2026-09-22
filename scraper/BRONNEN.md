@@ -8,7 +8,7 @@ en de `regio-*.html`-pagina's).
 
 | Regio | Provincies | Actief? | Bronnen |
 |---|---|---|---|
-| **Noord** | Groningen, Friesland, Drenthe | ✅ Ja | runphy.nl + hardloopkalendernederland.nl |
+| **Noord** | Groningen, Friesland, Drenthe | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl |
 | **Oost** | Overijssel, Gelderland, Flevoland | ❌ Nog niet | — |
 | **Zuid** | Noord-Brabant, Limburg | ❌ Nog niet | — |
 | **West** | Noord-Holland, Zuid-Holland, Utrecht, Zeeland | ❌ Nog niet | — |
@@ -44,9 +44,31 @@ koppelteken, kleine letters). hardloopkalendernederland.nl doet dat ook,
 **behalve** bij Noord-Brabant, Noord-Holland en Zuid-Holland — daar moet het
 koppelteken weg (`noordbrabant`, `noordholland`, `zuidholland`).
 
+## loopjeloopje.nl: één landelijke pagina, geen provincie-URL
+
+Deze derde bron werkt anders dan de andere twee: **loopjeloopje.nl heeft geen
+aparte pagina per provincie** — `https://www.loopjeloopje.nl/` is één
+landelijke tabel met alle evenementen in heel Nederland (372 op het moment van
+schrijven), netjes gestructureerd (naam, datum+tijd, plaats als Google
+Maps-link, afstanden — zie `lib/parseLoopjeLoopje.js`).
+
+Om daar toch alleen Noord-Nederland uit te halen, wordt élke plaatsnaam
+opgezocht bij de **PDOK Locatieserver** — de gratis, publieke geocodeservice
+van de Nederlandse overheid (gebaseerd op de BAG, dus officieel en
+authoritatief, in tegenstelling tot een handmatig getypte plaatsenlijst) —
+zie `lib/resolveProvince.js`. Resultaten worden gecachet in
+`scraper/.cache/pdok-provinces.json` (niet in git, wel lokaal blijvend) zodat
+niet elke run alle ~350 plaatsen opnieuw hoeft op te vragen.
+
+Bij het opzetten (2026-09-22) leverde dit voor Noord-Nederland alleen al
+**~215 extra evenementen** op die niet in runphy.nl of
+hardloopkalendernederland.nl stonden — vooral kleinere, terugkerende
+evenementen (trainingsloop-series, parkrun, clubwedstrijden) die de andere
+twee bronnen niet apart bijhouden.
+
 ## Wat de bronnen wél en niet vertellen
 
-Beide bronnen zijn *aggregators*: overzichtspagina's die evenementen van
+Alle drie bronnen zijn *aggregators*: overzichtspagina's die evenementen van
 allerlei organisatoren samen tonen, niet de organisator-eigen website zelf.
 Dat betekent dat alles wat de scraper aan een evenement toekent, beperkt is
 tot wat er op díé overzichtspagina staat — niet wat er op de eigen site van
@@ -58,7 +80,12 @@ de organisator staat:
   — plaats en afstanden worden met patroonherkenning uit die tekst gehaald,
   zie de uitgebreide toelichting bovenaan `lib/parseHardloopkalender.js`.
   Plaats ontbreekt hier vaker.
-- **Geen van beide bronnen bezoekt de organisator-eigen website.** Als een
+- **loopjeloopje.nl** geeft, net als runphy.nl, gestructureerde data in een
+  nette tabel — zie `lib/parseLoopjeLoopje.js`. De plaats staat er wel altijd
+  bij (geen "plaats ontbreekt"-probleem), maar moet via de PDOK Locatieserver
+  aan een provincie gekoppeld worden omdat de bron zelf geen provincie-indeling
+  heeft (zie hierboven).
+- **Geen van de drie bronnen bezoekt de organisator-eigen website.** Als een
   organisator op zijn eigen site wél een kidsrun, een Atletiekunie-keurmerk
   of een deelnemersaantal vermeldt, maar dat niet (duidelijk) terugkomt op
   runphy.nl of hardloopkalendernederland.nl zelf, dan ziet de scraper dat
