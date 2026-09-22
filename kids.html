@@ -379,7 +379,7 @@ function renderKidsEvents(lang) {
       var price = ev.paid ? formatPrice(ev.price) : (lang==='en' ? 'Free' : 'Gratis');
       return '<div class="kids-event-card">'+
         '<div class="kids-event-card__img">'+
-          '<img src="'+ev.image+'" alt="'+name+'" loading="lazy">'+
+          '<img src="'+getEventImage(ev)+'" alt="'+name+'" loading="lazy">'+
         '</div>'+
         '<div class="kids-event-card__body">'+
           '<div class="kids-event-card__date">📅 '+dateStr+'</div>'+

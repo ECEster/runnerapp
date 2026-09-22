@@ -44,6 +44,14 @@ function formatPrice(price) {
   return '€' + p;
 }
 
+// Geeft de afbeelding voor een evenement terug. Baanevenementen tonen altijd
+// dezelfde vaste foto (images/baanevenement.jpg) — handig omdat veel
+// (geïmporteerde) baanevenementen geen eigen foto hebben.
+function getEventImage(ev) {
+  if (ev.type === 'baanevenement') return 'images/baanevenement.jpg';
+  return ev.image;
+}
+
 // Haversine distance formula
 function haversineKm(lat1, lon1, lat2, lon2) {
   var R = 6371;

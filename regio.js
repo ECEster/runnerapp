@@ -12,8 +12,8 @@ var DAYS_EN = ['Mo','Tu','We','Th','Fr','Sa','Su'];
 function getBadgeClass(type) { return 'badge-' + type.toLowerCase().replace(/\s+/g, '-'); }
 function getTypeName(type, lang) {
   var names = {
-    nl: { 'marathon':'Marathon','trail':'Trail','bosloop':'Bosloop','cross':'Cross','gemengd parcours':'Gemengd parcours','wegevenement':'Wegevenement','parkloop':'Parkloop','funrun':'Fun Run','survivalrun':'Survival Run','ultrarun':'Ultrarun','virtuele run':'Virtuele Run','estafette':'Estafette','coopertest':'Coopertest','studentenevenement':'Studentenevenement','sportief wandelen':'Sportief Wandelen','inclusieve runs':'Inclusieve Run','gecertificeerd parcours':'Gecert. Parcours' },
-    en: { 'marathon':'Marathon','trail':'Trail','bosloop':'Forest Run','cross':'Cross Country','gemengd parcours':'Mixed Terrain','wegevenement':'Road Race','parkloop':'Park Run','funrun':'Fun Run','survivalrun':'Survival Run','ultrarun':'Ultra Run','virtuele run':'Virtual Run','estafette':'Relay','coopertest':'Cooper Test','studentenevenement':'Student Event','sportief wandelen':'Sports Walking','inclusieve runs':'Inclusive Run','gecertificeerd parcours':'Certified Course' }
+    nl: { 'marathon':'Marathon','trail':'Trail','bosloop':'Bosloop','cross':'Cross','gemengd parcours':'Gemengd parcours','wegevenement':'Wegevenement','parkloop':'Parkloop','funrun':'Fun Run','survivalrun':'Survival Run','ultrarun':'Ultrarun','virtuele run':'Virtuele Run','estafette':'Estafette','coopertest':'Coopertest','baanevenement':'Baanevenement','studentenevenement':'Studentenevenement','sportief wandelen':'Sportief Wandelen','inclusieve runs':'Inclusieve Run','gecertificeerd parcours':'Gecert. Parcours' },
+    en: { 'marathon':'Marathon','trail':'Trail','bosloop':'Forest Run','cross':'Cross Country','gemengd parcours':'Mixed Terrain','wegevenement':'Road Race','parkloop':'Park Run','funrun':'Fun Run','survivalrun':'Survival Run','ultrarun':'Ultra Run','virtuele run':'Virtual Run','estafette':'Relay','coopertest':'Cooper Test','baanevenement':'Track Event','studentenevenement':'Student Event','sportief wandelen':'Sports Walking','inclusieve runs':'Inclusive Run','gecertificeerd parcours':'Certified Course' }
   };
   return (names[lang]||names.nl)[type]||type;
 }
@@ -77,7 +77,7 @@ function renderList(lang) {
     var distChips = ev.distances.map(function(d){ return '<span class="event-card__dist-chip">'+d+'</span>'; }).join('');
     return '<div class="event-card">'+
       '<div class="event-card__img">'+
-        '<img src="'+ev.image+'" alt="'+name+'" loading="lazy">'+freeBadge+
+        '<img src="'+getEventImage(ev)+'" alt="'+name+'" loading="lazy">'+freeBadge+
       '</div>'+
       '<div class="event-card__body">'+
         '<div class="event-card__date">📅 '+dateStr+'</div>'+

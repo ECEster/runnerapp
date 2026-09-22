@@ -146,6 +146,7 @@ function getTypeName(type, lang) {
       'wegevenement': 'Wegevenement', 'parkloop': 'Parkloop',
       'funrun': 'Fun Run', 'survivalrun': 'Survival Run', 'ultrarun': 'Ultrarun',
       'virtuele run': 'Virtuele Run', 'estafette': 'Estafette', 'coopertest': 'Coopertest',
+      'baanevenement': 'Baanevenement',
       'studentenevenement': 'Studentenevenement', 'sportief wandelen': 'Sportief Wandelen',
       'inclusieve runs': 'Inclusieve Run', 'gecertificeerd parcours': 'Gecert. Parcours'
     },
@@ -154,6 +155,7 @@ function getTypeName(type, lang) {
       'wegevenement': 'Road Race', 'parkloop': 'Park Run',
       'funrun': 'Fun Run', 'survivalrun': 'Survival Run', 'ultrarun': 'Ultra Run',
       'virtuele run': 'Virtual Run', 'estafette': 'Relay', 'coopertest': 'Cooper Test',
+      'baanevenement': 'Track Event',
       'studentenevenement': 'Student Event', 'sportief wandelen': 'Sports Walking',
       'inclusieve runs': 'Inclusive Run', 'gecertificeerd parcours': 'Certified Course'
     }
@@ -175,7 +177,7 @@ function renderEventCard(ev, lang) {
   }).join('');
   return '<div class="event-card">' +
     '<div class="event-card__img">' +
-      '<img src="' + ev.image + '" alt="' + name + '" loading="lazy">' +
+      '<img src="' + getEventImage(ev) + '" alt="' + name + '" loading="lazy">' +
       freeBadge +
     '</div>' +
     '<div class="event-card__body">' +
