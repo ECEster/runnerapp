@@ -5,6 +5,10 @@ runphy.nl en hardloopkalendernederland.nl, en schrijft nieuwe events naar de Sup
 `events`-tabel (altijd met `published: false` — jij publiceert handmatig in het
 admin-portaal).
 
+Zie **[BRONNEN.md](./BRONNEN.md)** voor een overzicht per regio (Noord/Oost/Zuid/West):
+welke regio's al gescraped worden, welke bronnen daarbij gebruikt worden, en wat die
+bronnen wél/niet vertellen (bv. waarom een kidsrun soms gemist wordt).
+
 ## Installatie
 
 ```
@@ -57,12 +61,13 @@ Losse test-/inspectiescripts:
 ## Tests
 
 ```
-node --test lib/dedupe.test.js
+node --test lib/*.test.js
 ```
 
 Test de dedupliceer-logica (`lib/dedupe.js`, `lib/dedupeAgainstDb.js`,
 `lib/nameSimilarity.js`) met o.a. het echte "4 Mijl van Groningen"-scenario dat
-eerder drie keer los in de database terechtkwam. Geen netwerk of `.env` nodig.
+eerder drie keer los in de database terechtkwam, en de kidsrun-herkenning
+(`lib/detectKidsrun.js`). Geen netwerk of `.env` nodig.
 
 ## Bekende beperkingen (bewuste keuzes, geen bugs)
 
@@ -76,6 +81,12 @@ eerder drie keer los in de database terechtkwam. Geen netwerk of `.env` nodig.
 - `afstanden`/`plaats`-herkenning bij hardloopkalendernederland.nl is patroonherkenning op
   vrije tekst; zie de uitgebreide toelichting bovenaan `lib/parseHardloopkalender.js`.
   Sommige events krijgen terecht `plaats: null` omdat de bron geen "in [plaats]" vermeldt.
+- `kidsrun` wordt automatisch op `true` gezet als de naam of een van de afstanden/onderdelen
+  een kids-achtig woord bevat (zie `lib/detectKidsrun.js`) — maar alleen als de bron dat zelf
+  al vermeldt. Noemt runphy.nl/hardloopkalendernederland.nl geen kidsrun terwijl de
+  organisator die op zijn eigen site wél aanbiedt (bv. Kûbaarder Hurdrindei), dan blijft dit
+  `false` staan. Zie [BRONNEN.md](./BRONNEN.md) voor meer over wat de bronnen wél/niet
+  vertellen. Controleer dit dus ook tijdens het reviewen.
 - `type` (bv. "wegevenement" vs. "trail") en `organizer` (organisatienaam) worden niet
   betrouwbaar uit de bronnen afgeleid — zie `lib/mapToSupabaseShape.js`. Corrigeer dit
   tijdens het reviewen in het admin-portaal.

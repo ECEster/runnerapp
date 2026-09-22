@@ -1,3 +1,5 @@
+import { detectKidsrun } from './detectKidsrun.js'
+
 // Zet ons interne event-formaat om naar de vorm van de bestaande 'events'-tabel.
 //
 // Aannames / bewuste keuzes:
@@ -7,6 +9,9 @@
 //   de placeholder 'wegevenement'. Omdat published:false is, staat dit nooit ongecontroleerd
 //   live — je corrigeert dit (bv. naar 'trail' voor de Gaasterland Trail/Drenthe Trail Run)
 //   tijdens het reviewen.
+// - kidsrun: alleen true als de bron zelf al iets kids-achtigs noemt in de naam of de
+//   afstanden (zie lib/detectKidsrun.js). Kan een kidsrun missen die de bron niet vermeldt —
+//   controleer dit sowieso tijdens het reviewen, net als 'type'.
 // - organizer (organisatienaam, tekst) laten we leeg: we hebben alleen een URL, geen naam.
 // - distances: van array naar komma-string, zoals de rest van de tabel dat al doet.
 // - source_url: NIEUWE kolom (nog toe te voegen via migratie), alleen voor het admin-portaal —
@@ -24,6 +29,6 @@ export function mapToSupabaseShape(event) {
     type: 'wegevenement',
     organizer: null,
     published: false,
-    kidsrun: false,
+    kidsrun: detectKidsrun(event),
   }
 }
