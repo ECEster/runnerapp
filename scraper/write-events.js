@@ -21,7 +21,10 @@ import { dedupeAgainstDb } from './lib/dedupeAgainstDb.js'
 import { mapToSupabaseShape } from './lib/mapToSupabaseShape.js'
 import { fetchExistingEventKeys, insertEventRow } from './lib/supabaseAdmin.js'
 
-const MAX_INSERTS_PER_RUN = 50
+// TIJDELIJK verhoogd (was 50) voor de eerste, grote import nu loopjeloopje.nl
+// als 3e bron is toegevoegd — een dry-run liet ~354 unieke Noord-Nederlandse
+// events zien. Zet dit na de eenmalige inhaalslag terug naar 50.
+const MAX_INSERTS_PER_RUN = 400
 
 const isLive = process.argv.includes('--live')
 
