@@ -14,7 +14,7 @@ export function printDryRunSummary(events, duplicates) {
   const missingDatum = events.filter((e) => !e.datum).length
   console.log(`Events zonder plaats: ${missingPlaats}`)
   console.log(`Events zonder datum: ${missingDatum}`)
-  console.log(`Als duplicaat weggefilterd (datum+plaats, of naam+datum als plaats onbekend): ${duplicates.length}`)
+  console.log(`Als duplicaat weggefilterd (datum+plaats, naam+datum als plaats onbekend, of datum+sterk-overeenkomende naam): ${duplicates.length}`)
 
   if (duplicates.length > 0) {
     console.log('\nWeggefilterde duplicaten (behouden vs. verwijderd — controleer op foute matches):')

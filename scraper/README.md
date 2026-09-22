@@ -40,13 +40,39 @@ Losse test-/inspectiescripts:
   structuur teruggeeft dan verwacht.
 - **Dedupliceert tweemaal:** eerst onderling (tussen de twee bronnen, zie `lib/dedupe.js`),
   daarna tegen wat al in de database staat (`lib/dedupeAgainstDb.js`). Beide gebruiken
-  dezelfde matchlogica: datum + plaats primair (naam alleen als fallback wanneer plaats
-  onbekend is) — zo herken je hetzelfde evenement ook als de naam op de bronnen anders
-  geschreven staat (bv. "Woellust Run" vs. "Woellustrun").
+  dezelfde matchlogica:
+  1. Datum + plaats (of datum + naam als plaats onbekend is) — exacte match, zo herken je
+     hetzelfde evenement ook als de naam op de bronnen anders geschreven staat (bv.
+     "Woellust Run" vs. "Woellustrun").
+  2. Als dat niet matcht: dezelfde datum + een sterk overeenkomende naam (zie
+     `lib/nameSimilarity.js`). Vangt het geval waarin de ene bron geen plaats geeft en de
+     andere een andere/specifiekere plaats geeft voor dezelfde run (bv. "4 mijl 4 You Haren
+     - Groningen", plaats onbekend, vs. "4 Mijl van Groningen", plaats "Haren" — Haren is in
+     2019 bij de gemeente Groningen gevoegd). Bewust terughoudend: vereist minstens één
+     gedeeld woord dat geen generieke loopterm ("km", "loop", "5", ...) is, en behandelt
+     "Kleintje X" / "Kids X" / "Mini X" altijd als een ANDER evenement dan "X" (vaak een
+     losstaande kortere/jeugdvariant op dezelfde kalender).
 - **published: false voor elke nieuwe rij** — niets komt automatisch live.
+
+## Tests
+
+```
+node --test lib/dedupe.test.js
+```
+
+Test de dedupliceer-logica (`lib/dedupe.js`, `lib/dedupeAgainstDb.js`,
+`lib/nameSimilarity.js`) met o.a. het echte "4 Mijl van Groningen"-scenario dat
+eerder drie keer los in de database terechtkwam. Geen netwerk of `.env` nodig.
 
 ## Bekende beperkingen (bewuste keuzes, geen bugs)
 
+- De fuzzy naam-check in `lib/dedupeAgainstDb.js` vergelijkt alleen tegen `name_nl` van
+  bestaande rijen. Een handmatig/officieel toegevoegd evenement met een sponsornaam die
+  niets met de geschraapte naam deelt (bv. "Menzis 4 Mijl & Kids 4 Mijl" vs. "4 Mijl van
+  Groningen" — geen gedeeld, niet-generiek woord in de titel zelf) wordt dus niet
+  automatisch herkend als dezelfde run. Geeft in het ergste geval een extra concept-rij
+  naast een al gepubliceerd evenement — geen dataverlies, je ziet en verwijdert 'm gewoon
+  tijdens het reviewen.
 - `afstanden`/`plaats`-herkenning bij hardloopkalendernederland.nl is patroonherkenning op
   vrije tekst; zie de uitgebreide toelichting bovenaan `lib/parseHardloopkalender.js`.
   Sommige events krijgen terecht `plaats: null` omdat de bron geen "in [plaats]" vermeldt.
