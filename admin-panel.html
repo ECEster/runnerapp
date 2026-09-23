@@ -155,6 +155,20 @@
     .btn-del:hover   { background: #f5c6cb; }
     .btn-edit:hover  { background: #d2e3fc; }
     .no-events { text-align: center; color: #aaa; padding: 24px; font-size: .88rem; }
+    .events-subheading {
+      font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+      color: #888; margin: 4px 0 8px;
+    }
+    .past-events { margin-top: 24px; }
+    .past-events summary {
+      cursor: pointer; list-style: none; user-select: none;
+      font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+      color: #888; padding: 8px 0; border-top: 1.5px solid #eee;
+    }
+    .past-events summary::-webkit-details-marker { display: none; }
+    .past-events summary::before { content: '▸ '; }
+    .past-events[open] summary::before { content: '▾ '; }
+    .past-events summary:hover { color: #4f7cff; }
     .form-editing { border: 2px solid #4f7cff; }
     .btn-cancel {
       background: #f0f0f0; color: #555; border: none; border-radius: 10px;
@@ -312,6 +326,7 @@
         <option value="west">West</option>
       </select>
     </div>
+    <h3 class="events-subheading">Aankomend</h3>
     <table class="events-table">
       <thead>
         <tr>
@@ -329,6 +344,27 @@
         <tr><td colspan="8" class="no-events">Laden…</td></tr>
       </tbody>
     </table>
+
+    <details class="past-events">
+      <summary>Afgelopen evenementen (<span id="past-count">0</span>)</summary>
+      <table class="events-table">
+        <thead>
+          <tr>
+            <th>Datum</th>
+            <th>Naam</th>
+            <th>Stad</th>
+            <th>Regio</th>
+            <th>Serie</th>
+            <th>Editie</th>
+            <th>Status</th>
+            <th>Acties</th>
+          </tr>
+        </thead>
+        <tbody id="events-tbody-past">
+          <tr><td colspan="8" class="no-events">Laden…</td></tr>
+        </tbody>
+      </table>
+    </details>
   </div>
 
 </div><!-- /panel -->
@@ -531,56 +567,74 @@ let allEvents = [];
 
 async function loadEventsTable() {
   const tbody = document.getElementById('events-tbody');
+  const tbodyPast = document.getElementById('events-tbody-past');
   tbody.innerHTML = '<tr><td colspan="8" class="no-events">Laden…</td></tr>';
+  tbodyPast.innerHTML = '<tr><td colspan="8" class="no-events">Laden…</td></tr>';
   try {
     allEvents = await loadAllEventsAdmin();
     renderEventsTable();
   } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="8" class="no-events" style="color:#c0392b">Fout: ${err.message}</td></tr>`;
+    const msg = `<tr><td colspan="8" class="no-events" style="color:#c0392b">Fout: ${err.message}</td></tr>`;
+    tbody.innerHTML = msg;
+    tbodyPast.innerHTML = msg;
   }
 }
 
+function renderEventRow(ev) {
+  const regio = provinceToRegio(ev.province);
+  return `
+    <tr>
+      <td>${ev.date || '—'}</td>
+      <td><strong>${ev.name_nl || '—'}</strong>${ev.name_en ? '<br><small style="color:#888">' + ev.name_en + '</small>' : ''}</td>
+      <td>${ev.city || '—'}</td>
+      <td>${regio ? REGIO_LABELS[regio] : '<span style="color:#aaa">—</span>'}</td>
+      <td>${ev.serie || '<span style="color:#aaa">—</span>'}</td>
+      <td>${ev.editie || '<span style="color:#aaa">—</span>'}</td>
+      <td>
+        <span class="badge ${ev.published ? 'badge-green' : 'badge-gray'}">
+          ${ev.published ? 'Gepubliceerd' : 'Concept'}
+        </span>
+      </td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn-table btn-edit" onclick="startEdit(${JSON.stringify(ev).replace(/"/g, '&quot;')})">
+          Bewerk
+        </button>
+        <button class="btn-table ${ev.published ? 'btn-unpub' : 'btn-pub'}"
+          onclick="togglePublish('${ev.id}', ${ev.published})">
+          ${ev.published ? 'Verbergen' : 'Publiceer'}
+        </button>
+        <button class="btn-table btn-del" onclick="confirmDelete('${ev.id}', '${(ev.name_nl || '').replace(/'/g, "\\'")}')">
+          Verwijder
+        </button>
+      </td>
+    </tr>
+  `;
+}
+
+// Splitst op datum in "aankomend" (altijd zichtbaar) en "afgelopen" (achter
+// het inklapmenu, dichtgevouwen — zo blijft het overzicht overzichtelijk
+// zonder oude evenementen kwijt te raken).
 function renderEventsTable() {
-  const tbody = document.getElementById('events-tbody');
+  const tbodyUpcoming = document.getElementById('events-tbody');
+  const tbodyPast = document.getElementById('events-tbody-past');
+  const pastCount = document.getElementById('past-count');
   const regioFilter = document.getElementById('filter-regio').value;
   const events = regioFilter
     ? allEvents.filter(ev => provinceToRegio(ev.province) === regioFilter)
     : allEvents;
 
-  if (!events.length) {
-    tbody.innerHTML = '<tr><td colspan="8" class="no-events">Geen evenementen gevonden.</td></tr>';
-    return;
-  }
-  tbody.innerHTML = events.map(ev => {
-    const regio = provinceToRegio(ev.province);
-    return `
-      <tr>
-        <td>${ev.date || '—'}</td>
-        <td><strong>${ev.name_nl || '—'}</strong>${ev.name_en ? '<br><small style="color:#888">' + ev.name_en + '</small>' : ''}</td>
-        <td>${ev.city || '—'}</td>
-        <td>${regio ? REGIO_LABELS[regio] : '<span style="color:#aaa">—</span>'}</td>
-        <td>${ev.serie || '<span style="color:#aaa">—</span>'}</td>
-        <td>${ev.editie || '<span style="color:#aaa">—</span>'}</td>
-        <td>
-          <span class="badge ${ev.published ? 'badge-green' : 'badge-gray'}">
-            ${ev.published ? 'Gepubliceerd' : 'Concept'}
-          </span>
-        </td>
-        <td style="display:flex;gap:6px;flex-wrap:wrap">
-          <button class="btn-table btn-edit" onclick="startEdit(${JSON.stringify(ev).replace(/"/g, '&quot;')})">
-            Bewerk
-          </button>
-          <button class="btn-table ${ev.published ? 'btn-unpub' : 'btn-pub'}"
-            onclick="togglePublish('${ev.id}', ${ev.published})">
-            ${ev.published ? 'Verbergen' : 'Publiceer'}
-          </button>
-          <button class="btn-table btn-del" onclick="confirmDelete('${ev.id}', '${(ev.name_nl || '').replace(/'/g, "\\'")}')">
-            Verwijder
-          </button>
-        </td>
-      </tr>
-    `;
-  }).join('');
+  const todayStr = new Date().toISOString().split('T')[0];
+  const upcoming = events.filter(ev => (ev.date || '') >= todayStr);
+  const past = events.filter(ev => (ev.date || '') < todayStr).reverse(); // meest recent verleden eerst
+
+  tbodyUpcoming.innerHTML = upcoming.length
+    ? upcoming.map(renderEventRow).join('')
+    : '<tr><td colspan="8" class="no-events">Geen aankomende evenementen gevonden.</td></tr>';
+
+  pastCount.textContent = past.length;
+  tbodyPast.innerHTML = past.length
+    ? past.map(renderEventRow).join('')
+    : '<tr><td colspan="8" class="no-events">Geen afgelopen evenementen gevonden.</td></tr>';
 }
 
 async function togglePublish(id, currentlyPublished) {
