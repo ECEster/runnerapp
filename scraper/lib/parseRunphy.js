@@ -42,6 +42,9 @@ function graphToEvent(graph) {
 
   return {
     naam: sportsEvent.name ?? null,
+    // Ongewijzigd t.o.v. 'naam' — deze bron strip geen rangtelwoord-prefix,
+    // dus 'naam' bevat al de ruwe tekst (zie lib/extractEditie.js).
+    naam_ruw: sportsEvent.name ?? null,
     datum: sportsEvent.startDate ?? null,
     plaats: address.addressLocality ?? null,
     provincie: address.addressRegion ?? null,

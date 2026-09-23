@@ -50,21 +50,41 @@ Losse test-/inspectiescripts:
   waarschijnlijk ruim meer dan 50 nieuwe events op — verhoog `MAX_INSERTS_PER_RUN` tijdelijk
   (zoals eerder ook al eens gedaan, zie git-historie), en zet 'm terug naar 50 zodra de
   eenmalige inhaalslag achter de rug is.
-- **Dedupliceert tweemaal:** eerst onderling (tussen de drie bronnen, zie `lib/dedupe.js`),
-  daarna tegen wat al in de database staat (`lib/dedupeAgainstDb.js`). Beide gebruiken
-  dezelfde matchlogica:
-  1. Datum + plaats (of datum + naam als plaats onbekend is) — exacte match, zo herken je
-     hetzelfde evenement ook als de naam op de bronnen anders geschreven staat (bv.
-     "Woellust Run" vs. "Woellustrun").
-  2. Als dat niet matcht: dezelfde datum + een sterk overeenkomende naam (zie
-     `lib/nameSimilarity.js`). Vangt het geval waarin de ene bron geen plaats geeft en de
-     andere een andere/specifiekere plaats geeft voor dezelfde run (bv. "4 mijl 4 You Haren
-     - Groningen", plaats onbekend, vs. "4 Mijl van Groningen", plaats "Haren" — Haren is in
-     2019 bij de gemeente Groningen gevoegd). Bewust terughoudend: vereist minstens één
-     gedeeld woord dat geen generieke loopterm ("km", "loop", "5", ...) is, en behandelt
-     "Kleintje X" / "Kids X" / "Mini X" altijd als een ANDER evenement dan "X" (vaak een
-     losstaande kortere/jeugdvariant op dezelfde kalender).
+- **Dedupliceert tweemaal, met verschillende matchlogica per stap:**
+  1. **Onderling** (tussen de drie bronnen, `lib/dedupe.js`) op datum + plaats (of datum +
+     naam als plaats onbekend is), met een tweede, voorzichtigere ronde op datum + een sterk
+     overeenkomende naam (zie `lib/nameSimilarity.js`) voor het geval de ene bron geen plaats
+     geeft en de andere een andere/specifiekere plaats geeft voor dezelfde run (bv. "4 mijl 4
+     You Haren - Groningen", plaats onbekend, vs. "4 Mijl van Groningen", plaats "Haren").
+     Bewust terughoudend: vereist minstens één gedeeld woord dat geen generieke loopterm
+     ("km", "loop", "5", ...) is, en behandelt "Kleintje X" / "Kids X" / "Mini X" altijd als
+     een ANDER evenement dan "X".
+  2. **Tegen de database** (`lib/dedupeAgainstDb.js`) op de combinatie `(serie, date)` — zie
+     "Serie & editie" hieronder. Bestaat die combinatie al, dan wordt er geen nieuwe rij
+     aangemaakt maar worden alleen de velden aangevuld die op de bestaande rij nog leeg zijn;
+     een niet-lege bestaande waarde wordt nooit overschreven (je corrigeert soms handmatig
+     via het admin-paneel).
 - **published: false voor elke nieuwe rij** — niets komt automatisch live.
+
+## Serie & editie
+
+Elke jaargang van een terugkerend evenement blijft een eigen rij, gekoppeld via een
+stabiele `serie`-kolom (bv. `4-mijl-van-groningen`), plus een optionele `editie`-kolom
+(het editienummer van díe specifieke rij).
+
+- `lib/buildSerie.js` berekent `serie` uit naam + plaats: kleine letters, leestekens weg,
+  jaartallen/rangtelwoorden weg, veelvoorkomende Nederlandse stopwoorden (net als
+  `lib/nameSimilarity.js`, incl. "van") genegeerd. Zo leveren "De 4 Mijl van Groningen 2026"
+  en "4 Mijl Groningen" beide `4-mijl-groningen` op.
+- `lib/extractEditie.js` haalt een editienummer alleen uit een EXPLICIET signaal in de ruwe
+  brontekst — een leidend rangtelwoord (bv. "22ste Proostmeerloop") of "sinds JJJJ" (dan
+  berekend uit het evenementjaar). Geen van beide gevonden → `null`, er wordt nooit gegokt.
+- Beide zijn los, met eigen tests (`lib/buildSerie.test.js`, `lib/extractEditie.test.js`) —
+  pas de logica daar aan als je een geval tegenkomt dat verkeerd wordt herkend.
+- **Eenmalige backfill:** bestaande rijen (van vóór deze migratie) hebben nog geen `serie`.
+  Draai `node backfill-serie.js` (dry-run eerst!) om die te vullen — zie de bestandskop van
+  dat script en "Nog te bouwen" hieronder voor de vereiste volgorde t.o.v. de migraties.
+- Beide velden zijn ook zichtbaar en met de hand corrigeerbaar in het admin-paneel.
 
 ## Tests
 
@@ -83,13 +103,17 @@ met `node run-dry-run.js`.
 
 ## Bekende beperkingen (bewuste keuzes, geen bugs)
 
-- De fuzzy naam-check in `lib/dedupeAgainstDb.js` vergelijkt alleen tegen `name_nl` van
-  bestaande rijen. Een handmatig/officieel toegevoegd evenement met een sponsornaam die
-  niets met de geschraapte naam deelt (bv. "Menzis 4 Mijl & Kids 4 Mijl" vs. "4 Mijl van
-  Groningen" — geen gedeeld, niet-generiek woord in de titel zelf) wordt dus niet
-  automatisch herkend als dezelfde run. Geeft in het ergste geval een extra concept-rij
-  naast een al gepubliceerd evenement — geen dataverlies, je ziet en verwijdert 'm gewoon
-  tijdens het reviewen.
+- `lib/dedupeAgainstDb.js` herkent een bestaande rij alleen via diens (al ingevulde) `serie`-
+  kolom. Rijen die nog geen `serie` hebben (vóór `node backfill-serie.js` is gedraaid) worden
+  dus niet herkend en kunnen een extra concept-rij opleveren naast het origineel — geen
+  dataverlies, je ziet en verwijdert 'm gewoon tijdens het reviewen.
+- `buildSerie()` gebruikt naam + plaats; twee jaargangen van hetzelfde, generiek genoemde
+  evenement (bv. kaal "Bosloop") kunnen een net andere serie krijgen als de drie bronnen het
+  onderling oneens zijn over de plaats — zie de toelichting bovenin `lib/buildSerie.js`.
+- `extractEditie()` vindt in de huidige 3 bronnen vrijwel alleen het "leidend rangtelwoord"-
+  signaal (bv. "22ste Proostmeerloop" bij hardloopkalendernederland.nl); "sinds JJJJ" komt er
+  niet in voor omdat geen van de bronnen vrije beschrijvingstekst aanlevert. `editie` blijft
+  voor de meeste events dus `null` tot je 'm handmatig invult in het admin-paneel.
 - `afstanden`/`plaats`-herkenning bij hardloopkalendernederland.nl is patroonherkenning op
   vrije tekst; zie de uitgebreide toelichting bovenaan `lib/parseHardloopkalender.js`.
   Sommige events krijgen terecht `plaats: null` omdat de bron geen "in [plaats]" vermeldt.
@@ -139,9 +163,14 @@ service is publiek toegankelijk zonder sleutel. Wel start elke Actions-run met e
 een paar minuten door de ~350 opzoekingen, ook al is dat lokaal met een gevulde cache
 al eens sneller gegaan.
 
-## Nog te bouwen
+## Nog te bouwen / nog uit te voeren
 
-- Migratie `migrations/0001_add_source_url.sql` moet je nog handmatig uitvoeren in de
-  Supabase SQL Editor (voegt de `source_url`-kolom toe) voordat `write-events.js` succesvol
-  kan schrijven.
+- **Serie/editie in productie zetten** (nieuw, nog niet gedaan): voer in deze volgorde uit in
+  de Supabase SQL Editor en op de command line —
+  1. `migrations/0002_add_serie_editie.sql` (voegt `serie` en de check-constraint op `editie`
+     toe — `editie` zelf bestaat al in de tabel).
+  2. `node backfill-serie.js` (dry-run, controleer de gemelde mogelijke dubbelen, corrigeer
+     die zo nodig in het admin-paneel, dan pas `--live`).
+  3. Pas dán `migrations/0003_unique_serie_date.sql` (de unique constraint faalt als er op
+     dat moment nog dubbele (serie, date)-combinaties bestaan).
 - Afbeeldingen ophalen (Unsplash API).

@@ -2,7 +2,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { dedupeEvents } from './dedupe.js'
-import { dedupeAgainstDb } from './dedupeAgainstDb.js'
 import { namesLikelyMatch } from './nameSimilarity.js'
 
 test('dedupeEvents: exacte plaats+datum match (bestaand gedrag blijft werken)', () => {
@@ -78,20 +77,6 @@ test('namesLikelyMatch: "Kleintje X" is een apart evenement naast "X", geen dupl
   assert.equal(namesLikelyMatch('Berenloop Terschelling', 'Kleintje Berenloop'), false)
 })
 
-test('dedupeAgainstDb: vangt dezelfde run met afwijkende plaats tegen een bestaande rij', () => {
-  const existingRows = [{ name_nl: '4 Mijl van Groningen', date: '2026-10-11', city: 'Haren' }]
-  const candidates = [{ naam: 'De 4 mijl van Groningen', datum: '2026-10-11', plaats: null }]
-
-  const { toInsert, alreadyExists } = dedupeAgainstDb(candidates, existingRows)
-  assert.equal(toInsert.length, 0)
-  assert.equal(alreadyExists.length, 1)
-})
-
-test('dedupeAgainstDb: schrijft een echt nieuw evenement gewoon weg', () => {
-  const existingRows = [{ name_nl: '4 Mijl van Groningen', date: '2026-10-11', city: 'Haren' }]
-  const candidates = [{ naam: 'Stadsloop Appingedam', datum: '2026-10-03', plaats: 'Appingedam' }]
-
-  const { toInsert, alreadyExists } = dedupeAgainstDb(candidates, existingRows)
-  assert.equal(toInsert.length, 1)
-  assert.equal(alreadyExists.length, 0)
-})
+// dedupeAgainstDb (matching tegen de database) gebruikt sinds de invoering
+// van 'serie' geen fuzzy naam/plaats-matching meer, maar (serie, date) — zie
+// lib/dedupeAgainstDb.test.js.

@@ -117,6 +117,10 @@ export function parseHardloopkalenderEvents(html, { year, provincie, bronUrl }) 
 
     events.push({
       naam: naam || null,
+      // Ruwe tekst VÓÓR het strippen van het leidend rangtelwoord (zie punt 5
+      // hierboven) — nodig om een editienummer als "22ste " te herkennen
+      // (zie lib/extractEditie.js), want 'naam' zelf is daar al van ontdaan.
+      naam_ruw: descriptor.trim() || null,
       datum,
       plaats,
       provincie,

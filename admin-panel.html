@@ -213,6 +213,7 @@
             <option value="sportief wandelen">Sportief Wandelen</option>
             <option value="inclusieve runs">Inclusieve Run</option>
             <option value="gecertificeerd parcours">Gecertificeerd Parcours</option>
+            <option value="hondenloop">Hondenloop</option>
           </select>
         </div>
 
@@ -247,6 +248,15 @@
         <div>
           <label for="f-reg-url">Inschrijflink (URL)</label>
           <input type="url" id="f-reg-url" placeholder="https://...">
+        </div>
+
+        <div>
+          <label for="f-serie">Serie (koppelt jaargangen van hetzelfde evenement)</label>
+          <input type="text" id="f-serie" placeholder="bijv. 4-mijl-van-groningen">
+        </div>
+        <div>
+          <label for="f-editie">Editienummer (optioneel)</label>
+          <input type="number" id="f-editie" min="1" placeholder="bijv. 42">
         </div>
 
         <!-- Afbeelding -->
@@ -292,17 +302,6 @@
   <!-- Overzicht bestaande events -->
   <div class="card">
     <h2>📋 Alle evenementen</h2>
-    <div style="margin-bottom:16px">
-      <button type="button" class="btn-translate" id="btn-import-static" onclick="importStaticEvents()">
-        📥 Importeer de 18 standaardevenementen (eenmalig)
-      </button>
-      <div style="font-size:.75rem;color:#888;margin-top:6px">
-        Zet de evenementen uit data.js over naar de database zodat je ze hier kan bewerken.
-        Veilig om vaker te klikken — al geïmporteerde evenementen worden overgeslagen.
-        Let op: het Atletiekunie-keurmerk, deelnemersaantal en YouTube-video gaan hierbij verloren.
-      </div>
-      <div class="submit-msg" id="import-msg"></div>
-    </div>
     <div style="margin-bottom:14px;max-width:240px">
       <label for="filter-regio">Regio</label>
       <select id="filter-regio" onchange="renderEventsTable()">
@@ -320,12 +319,14 @@
           <th>Naam</th>
           <th>Stad</th>
           <th>Regio</th>
+          <th>Serie</th>
+          <th>Editie</th>
           <th>Status</th>
           <th>Acties</th>
         </tr>
       </thead>
       <tbody id="events-tbody">
-        <tr><td colspan="6" class="no-events">Laden…</td></tr>
+        <tr><td colspan="8" class="no-events">Laden…</td></tr>
       </tbody>
     </table>
   </div>
@@ -413,6 +414,8 @@ function startEdit(ev) {
   document.getElementById('f-price').value      = ev.price || '';
   document.getElementById('f-organizer').value  = ev.organizer || '';
   document.getElementById('f-reg-url').value    = ev.registration_url || '';
+  document.getElementById('f-serie').value      = ev.serie || '';
+  document.getElementById('f-editie').value     = ev.editie || '';
   document.getElementById('f-desc-nl').value    = ev.description_nl || '';
   document.getElementById('f-kidsrun').checked  = ev.kidsrun || false;
   document.getElementById('f-published').checked = ev.published || false;
@@ -475,6 +478,8 @@ document.getElementById('event-form').addEventListener('submit', async e => {
       price:            document.getElementById('f-price').value.trim(),
       organizer:        document.getElementById('f-organizer').value.trim(),
       registration_url: document.getElementById('f-reg-url').value.trim(),
+      serie:            document.getElementById('f-serie').value.trim() || null,
+      editie:           document.getElementById('f-editie').value ? parseInt(document.getElementById('f-editie').value, 10) : null,
       description_nl:   descNl,
       description_en:   descEn,
       image:            imageUrl,
@@ -526,12 +531,12 @@ let allEvents = [];
 
 async function loadEventsTable() {
   const tbody = document.getElementById('events-tbody');
-  tbody.innerHTML = '<tr><td colspan="6" class="no-events">Laden…</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="8" class="no-events">Laden…</td></tr>';
   try {
     allEvents = await loadAllEventsAdmin();
     renderEventsTable();
   } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="6" class="no-events" style="color:#c0392b">Fout: ${err.message}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" class="no-events" style="color:#c0392b">Fout: ${err.message}</td></tr>`;
   }
 }
 
@@ -543,7 +548,7 @@ function renderEventsTable() {
     : allEvents;
 
   if (!events.length) {
-    tbody.innerHTML = '<tr><td colspan="6" class="no-events">Geen evenementen gevonden.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" class="no-events">Geen evenementen gevonden.</td></tr>';
     return;
   }
   tbody.innerHTML = events.map(ev => {
@@ -554,6 +559,8 @@ function renderEventsTable() {
         <td><strong>${ev.name_nl || '—'}</strong>${ev.name_en ? '<br><small style="color:#888">' + ev.name_en + '</small>' : ''}</td>
         <td>${ev.city || '—'}</td>
         <td>${regio ? REGIO_LABELS[regio] : '<span style="color:#aaa">—</span>'}</td>
+        <td>${ev.serie || '<span style="color:#aaa">—</span>'}</td>
+        <td>${ev.editie || '<span style="color:#aaa">—</span>'}</td>
         <td>
           <span class="badge ${ev.published ? 'badge-green' : 'badge-gray'}">
             ${ev.published ? 'Gepubliceerd' : 'Concept'}
@@ -574,59 +581,6 @@ function renderEventsTable() {
       </tr>
     `;
   }).join('');
-}
-
-// ─── Eenmalige import van de statische evenementen uit data.js ────
-async function importStaticEvents() {
-  const btn = document.getElementById('btn-import-static');
-  const msg = document.getElementById('import-msg');
-  btn.disabled = true;
-  const origText = btn.textContent;
-  btn.textContent = 'Importeren…';
-  msg.style.display = 'none';
-
-  try {
-    const existing = await loadAllEventsAdmin();
-    const existingKeys = new Set(existing.map(e => (e.name_nl || '') + '|' + (e.date || '')));
-
-    let imported = 0, skipped = 0;
-    for (const ev of STATIC_EVENTS) {
-      const key = ev.name_nl + '|' + ev.date;
-      if (existingKeys.has(key)) { skipped++; continue; }
-
-      await addEvent({
-        name_nl:          ev.name_nl,
-        name_en:          ev.name_en,
-        date:             ev.date,
-        type:             ev.type,
-        city:             ev.city,
-        province:         ev.province,
-        distances:        ev.distances.join(', '),
-        price:            ev.paid ? ev.price : 'gratis',
-        organizer:        ev.organizer,
-        registration_url: ev.registration_url,
-        description_nl:   ev.description_nl,
-        description_en:   ev.description_en,
-        image:            ev.image,
-        kidsrun:          ev.kidsrun || false,
-        published:        true,
-      });
-      existingKeys.add(key);
-      imported++;
-    }
-
-    msg.textContent = `✅ ${imported} evenement(en) geïmporteerd, ${skipped} overgeslagen (al aanwezig).`;
-    msg.className = 'submit-msg ok';
-    msg.style.display = 'block';
-    loadEventsTable();
-  } catch (err) {
-    msg.textContent = '❌ Fout bij importeren: ' + err.message;
-    msg.className = 'submit-msg err';
-    msg.style.display = 'block';
-  } finally {
-    btn.disabled = false;
-    btn.textContent = origText;
-  }
 }
 
 async function togglePublish(id, currentlyPublished) {

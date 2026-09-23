@@ -45,8 +45,12 @@ function parseRow(rowHtml) {
     .map((s) => s.trim())
     .filter(Boolean)
 
+  const naam = naamMatch ? naamMatch[1].trim() : stripTags(naamCell) || null
   return {
-    naam: naamMatch ? naamMatch[1].trim() : stripTags(naamCell) || null,
+    naam,
+    // Ongewijzigd t.o.v. 'naam' — deze bron strip geen rangtelwoord-prefix,
+    // dus 'naam' bevat al de ruwe tekst (zie lib/extractEditie.js).
+    naam_ruw: naam,
     datum: parseDatum(stripTags(datumCell)),
     plaats: plaats || null,
     afstanden,
