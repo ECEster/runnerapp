@@ -47,8 +47,23 @@ function formatPrice(price) {
 // Geeft de afbeelding voor een evenement terug. Baanevenementen tonen altijd
 // dezelfde vaste foto (images/baanevenement.jpg) — handig omdat veel
 // (geïmporteerde) baanevenementen geen eigen foto hebben.
+//
+// De types hieronder tonen hun vaste foto alleen als FALLBACK (dus niet
+// altijd, in tegenstelling tot baanevenement hierboven) — 'wegevenement' is
+// bijvoorbeeld de placeholder die de scraper aan elk nieuw event toekent
+// (zie scraper/lib/mapToSupabaseShape.js), dus verreweg de meeste evenementen
+// met dit type hebben nog geen eigen foto — maar een handjevol handmatig
+// toegevoegde evenementen heeft er al wél een, en die mag niet overschreven
+// worden.
+var FALLBACK_IMAGE_BY_TYPE = {
+  'wegevenement': 'images/wegevenement.jpg',
+  'parkloop': 'images/parkloop.jpg',
+  'hondenloop': 'images/hondenloop.jpg',
+};
+
 function getEventImage(ev) {
   if (ev.type === 'baanevenement') return 'images/baanevenement.jpg';
+  if (!ev.image && FALLBACK_IMAGE_BY_TYPE[ev.type]) return FALLBACK_IMAGE_BY_TYPE[ev.type];
   return ev.image;
 }
 
