@@ -468,7 +468,7 @@ p:last-child { margin-bottom: 0; }
 .badge-marathon           { background: var(--badge-marathon); }
 .badge-trail              { background: var(--badge-trail); }
 .badge-bosloop            { background: var(--badge-bosloop); }
-.badge-gemengd-parcours   { background: var(--badge-gemengd); }
+.badge-gemengd-parcours   { background: var(--badge-gemengd); color: limegreen; }
 .badge-baanevenement      { background: var(--badge-baanevenement); }
 .badge-cross              { background: var(--badge-cross); }
 .badge-wegevenement       { background: var(--badge-wegevenement); }
