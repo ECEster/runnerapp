@@ -60,6 +60,7 @@ var FALLBACK_IMAGE_BY_TYPE = {
   'parkloop': 'images/parkloop.jpg',
   'hondenloop': 'images/hondenloop.jpg',
   'gemengd parcours': 'images/gemengd-parcours.jpg',
+  'cross': 'images/cross.jpg',
 };
 
 function getEventImage(ev) {
