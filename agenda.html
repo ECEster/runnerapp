@@ -371,17 +371,20 @@ function renderList(lang) {
     var priceHtml = ev.paid ? '<span class="event-card__price">'+formatPrice(ev.price)+'</span>' : '<span class="event-card__price free">'+t('free')+'</span>';
     var freeBadge = !ev.paid ? '<span class="event-card__free-badge">'+t('free')+'</span>' : '';
     var distChips = ev.distances.map(function(d){ return '<span class="event-card__dist-chip">'+d+'</span>'; }).join('');
+    var detailUrl = 'evenement.html?id='+ev.id;
+    var moreInfoHref = ev.registration_url || detailUrl;
+    var moreInfoAttrs = ev.registration_url ? ' target="_blank" rel="noopener"' : '';
     return '<div class="event-card">'+
-      '<div class="event-card__img">'+
+      '<a class="event-card__img" href="'+detailUrl+'">'+
         '<img src="'+getEventImage(ev)+'" alt="'+name+'" loading="lazy">'+freeBadge+
-      '</div>'+
+      '</a>'+
       '<div class="event-card__body">'+
         '<div class="event-card__date">📅 '+dateStr+'</div>'+
-        '<div class="event-card__title">'+name+'</div>'+
+        '<a class="event-card__title" href="'+detailUrl+'">'+name+'</a>'+
         '<div class="event-card__meta"><span>📍 '+ev.city+'</span><span>'+ev.province+'</span></div>'+
         '<div class="event-card__distances">'+distChips+'</div>'+
         '<span class="event-card__type '+badgeClass+'">'+typeName+'</span>'+
-        '<div class="event-card__footer">'+priceHtml+'<a href="evenement.html?id='+ev.id+'" class="btn btn--ghost btn--sm">'+t('meer_info')+'</a>'+
+        '<div class="event-card__footer">'+priceHtml+'<a href="'+moreInfoHref+'" class="btn btn--ghost btn--sm"'+moreInfoAttrs+'>'+t('meer_info')+'</a>'+
         '</div>'+
       '</div>'+
     '</div>';
@@ -457,11 +460,14 @@ function openDayPanel(year, month, day) {
     var name = lang==='en'?ev.name_en:ev.name_nl;
     var badgeClass = getBadgeClass(ev.type);
     var typeName = getTypeName(ev.type, lang);
+    var detailUrl = 'evenement.html?id='+ev.id;
+    var moreInfoHref = ev.registration_url || detailUrl;
+    var moreInfoAttrs = ev.registration_url ? ' target="_blank" rel="noopener"' : '';
     return '<div style="display:flex;align-items:center;gap:1rem;padding:0.6rem 0;border-bottom:1px solid var(--surface2)">'+
       '<span class="event-card__badge '+badgeClass+'" style="position:static;font-size:0.72rem;padding:3px 10px;">'+typeName+'</span>'+
-      '<span style="font-weight:600;flex:1">'+name+'</span>'+
+      '<a href="'+detailUrl+'" style="font-weight:600;flex:1;color:inherit;text-decoration:none">'+name+'</a>'+
       '<span style="color:var(--mid);font-size:0.82rem">'+ev.city+'</span>'+
-      '<a href="evenement.html?id='+ev.id+'" class="btn btn--ghost btn--sm">'+t('meer_info')+'</a>'+
+      '<a href="'+moreInfoHref+'" class="btn btn--ghost btn--sm"'+moreInfoAttrs+'>'+t('meer_info')+'</a>'+
     '</div>';
   }).join('');
   // Mark selected day

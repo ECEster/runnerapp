@@ -357,6 +357,7 @@ p:last-child { margin-bottom: 0; }
   box-shadow: var(--shadow-lg);
 }
 .event-card__img {
+  display: block;
   position: relative;
   height: 180px;
   overflow: hidden;
@@ -412,7 +413,10 @@ p:last-child { margin-bottom: 0; }
   color: var(--dark);
   margin-bottom: 0.35rem;
   line-height: 1.2;
+  display: block;
+  text-decoration: none;
 }
+.event-card__title:hover { color: var(--accent); }
 .event-card__meta {
   font-size: 0.82rem;
   color: var(--mid);

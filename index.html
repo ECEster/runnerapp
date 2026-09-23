@@ -177,20 +177,23 @@ function renderEventCard(ev, lang) {
   var distChips = ev.distances.map(function(d) {
     return '<span class="event-card__dist-chip">' + d + '</span>';
   }).join('');
+  var detailUrl = 'evenement.html?id=' + ev.id;
+  var moreInfoHref = ev.registration_url || detailUrl;
+  var moreInfoAttrs = ev.registration_url ? ' target="_blank" rel="noopener"' : '';
   return '<div class="event-card">' +
-    '<div class="event-card__img">' +
+    '<a class="event-card__img" href="' + detailUrl + '">' +
       '<img src="' + getEventImage(ev) + '" alt="' + name + '" loading="lazy">' +
       freeBadge +
-    '</div>' +
+    '</a>' +
     '<div class="event-card__body">' +
       '<div class="event-card__date">📅 ' + dateStr + '</div>' +
-      '<div class="event-card__title">' + name + '</div>' +
+      '<a class="event-card__title" href="' + detailUrl + '">' + name + '</a>' +
       '<div class="event-card__meta"><span>📍 ' + ev.city + '</span></div>' +
       '<div class="event-card__distances">' + distChips + '</div>' +
       '<span class="event-card__type ' + badgeClass + '">' + typeName + '</span>' +
       '<div class="event-card__footer">' +
         priceHtml +
-        '<a href="evenement.html?id=' + ev.id + '" class="btn btn--ghost btn--sm" data-i18n="meer_info">' + t('meer_info') + '</a>' +
+        '<a href="' + moreInfoHref + '" class="btn btn--ghost btn--sm"' + moreInfoAttrs + ' data-i18n="meer_info">' + t('meer_info') + '</a>' +
       '</div>' +
     '</div>' +
   '</div>';
