@@ -62,6 +62,7 @@ var FALLBACK_IMAGE_BY_TYPE = {
   'gemengd parcours': 'images/gemengd-parcours.png',
   'cross': 'images/cross.jpg',
   'swimrun': 'images/swimrun.jpg',
+  'ultrarun': 'images/ultrarun.jpg',
 };
 
 function getEventImage(ev) {
