@@ -786,13 +786,14 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   accent-color: var(--accent);
 }
 .filter-checkbox--kids {
-  background: #fff3e0;
-  border: 1.5px solid #ffb74d;
-  border-radius: 8px;
-  padding: 8px 12px;
+  background: transparent;
+  border: 1.5px dashed #ffb74d;
+  border-radius: 6px;
+  padding: 4px 8px;
   font-weight: 600;
   color: #e65100;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
+  margin-left: -8px;
 }
 .filter-checkbox--kids input[type="checkbox"] {
   accent-color: #e65100;
