@@ -1,4 +1,6 @@
 import { detectKidsrun } from './detectKidsrun.js'
+import { buildSerie } from './buildSerie.js'
+import { extractEditie } from './extractEditie.js'
 
 // Zet ons interne event-formaat om naar de vorm van de bestaande 'events'-tabel.
 //
@@ -16,6 +18,8 @@ import { detectKidsrun } from './detectKidsrun.js'
 // - distances: van array naar komma-string, zoals de rest van de tabel dat al doet.
 // - source_url: NIEUWE kolom (nog toe te voegen via migratie), alleen voor het admin-portaal —
 //   niet bedoeld om aan bezoekers te tonen.
+// - serie/editie: NIEUWE kolommen (migratie 0002) — zie lib/buildSerie.js en
+//   lib/extractEditie.js voor hoe deze worden afgeleid.
 export function mapToSupabaseShape(event) {
   return {
     name_nl: event.naam,
@@ -30,5 +34,7 @@ export function mapToSupabaseShape(event) {
     organizer: null,
     published: false,
     kidsrun: detectKidsrun(event),
+    serie: buildSerie({ naam: event.naam, plaats: event.plaats }),
+    editie: extractEditie({ rawNaam: event.naam_ruw, datum: event.datum }),
   }
 }

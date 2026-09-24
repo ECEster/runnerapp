@@ -19,7 +19,7 @@ try {
 import { collectEvents } from './lib/collectEvents.js'
 import { dedupeAgainstDb } from './lib/dedupeAgainstDb.js'
 import { mapToSupabaseShape } from './lib/mapToSupabaseShape.js'
-import { fetchExistingEventKeys, insertEventRow } from './lib/supabaseAdmin.js'
+import { fetchExistingEventKeys, insertEventRow, updateEventFields } from './lib/supabaseAdmin.js'
 
 const MAX_INSERTS_PER_RUN = 50
 
@@ -36,12 +36,21 @@ async function main() {
   const existingRows = await fetchExistingEventKeys()
   console.log(`  ${existingRows.length} events staan al in de database`)
 
-  const { toInsert, alreadyExists } = dedupeAgainstDb(unique, existingRows)
-  console.log(`\nStap 3/4: ${toInsert.length} nieuw, ${alreadyExists.length} bestaan al (overgeslagen)`)
+  const { toInsert, toMerge, skipped } = dedupeAgainstDb(unique, existingRows)
+  console.log(
+    `\nStap 3/4: ${toInsert.length} nieuw, ${toMerge.length} aan te vullen, ${skipped.length} overgeslagen (al compleet)`,
+  )
 
-  if (alreadyExists.length > 0) {
-    console.log('\nOvergeslagen (bestaan al):')
-    for (const e of alreadyExists) {
+  if (toMerge.length > 0) {
+    console.log('\nAan te vullen (bestaande rij, alleen lege velden):')
+    for (const { event, existingId, fillable } of toMerge) {
+      console.log(`  - id ${existingId}: ${event.naam} | ${event.datum} | velden: ${Object.keys(fillable).join(', ')}`)
+    }
+  }
+
+  if (skipped.length > 0) {
+    console.log('\nOvergeslagen (bestaan al, niets aan te vullen):')
+    for (const e of skipped) {
       console.log(`  - ${e.naam} | ${e.datum} | ${e.plaats}`)
     }
   }
@@ -58,31 +67,51 @@ async function main() {
     return
   }
 
-  console.log(`\nStap 4/4: ${toInsert.length} nieuwe events ${isLive ? 'schrijven naar' : 'die geschreven zouden worden naar'} Supabase (published: false)`)
+  console.log(
+    `\nStap 4/4: ${toInsert.length} nieuwe rijen en ${toMerge.length} aanvullingen ` +
+      `${isLive ? 'schrijven naar' : 'die geschreven zouden worden naar'} Supabase`,
+  )
 
   if (!isLive) {
     console.log('\n(dry-run — geen --live vlag meegegeven, er wordt niets geschreven)\n')
+    console.log('Nieuwe rijen (published: false):')
     console.log(JSON.stringify(toInsert.map(mapToSupabaseShape), null, 2))
+    console.log('\nAanvullingen op bestaande rijen:')
+    console.log(JSON.stringify(toMerge.map(({ existingId, fillable }) => ({ existingId, fillable })), null, 2))
     return
   }
 
-  let succeeded = 0
+  let inserted = 0
+  let updated = 0
   let failed = 0
 
   for (const event of toInsert) {
     const row = mapToSupabaseShape(event)
     try {
-      const inserted = await insertEventRow(row)
-      succeeded++
-      console.log(`  ✓ toegevoegd (id ${inserted.id}): ${row.name_nl} | ${row.date} | ${row.city}`)
+      const result = await insertEventRow(row)
+      inserted++
+      console.log(`  ✓ toegevoegd (id ${result.id}): ${row.name_nl} | ${row.date} | ${row.city}`)
     } catch (err) {
       failed++
-      console.error(`  ✗ MISLUKT: ${row.name_nl} | ${row.date} | ${row.city} — ${err.message}`)
+      console.error(`  ✗ MISLUKT (toevoegen): ${row.name_nl} | ${row.date} | ${row.city} — ${err.message}`)
     }
   }
 
-  console.log(`\nKlaar. ${succeeded} toegevoegd, ${failed} mislukt, ${alreadyExists.length} overgeslagen (bestonden al).`)
-  if (succeeded > 0) {
+  for (const { event, existingId, fillable } of toMerge) {
+    try {
+      await updateEventFields(existingId, fillable)
+      updated++
+      console.log(`  ✓ aangevuld (id ${existingId}): ${event.naam} | ${event.datum} | velden: ${Object.keys(fillable).join(', ')}`)
+    } catch (err) {
+      failed++
+      console.error(`  ✗ MISLUKT (aanvullen): id ${existingId} — ${err.message}`)
+    }
+  }
+
+  console.log(
+    `\nKlaar. ${inserted} toegevoegd, ${updated} aangevuld, ${failed} mislukt, ${skipped.length} overgeslagen (bestonden al compleet).`,
+  )
+  if (inserted > 0) {
     console.log('Alle nieuwe rijen staan met published: false — controleer en publiceer ze in het admin-portaal.')
   }
 }

@@ -46,6 +46,7 @@ test('parseLoopjeLoopjeRows: haalt naam, datum, plaats, afstanden en url uit elk
   assert.equal(events.length, 3)
   assert.deepEqual(events[0], {
     naam: 'Zeijer Strubbenloop',
+    naam_ruw: 'Zeijer Strubbenloop',
     datum: '2026-11-08',
     plaats: 'ZEIJEN',
     afstanden: ['0,5KM', '1KM', '5KM'],

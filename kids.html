@@ -377,15 +377,18 @@ function renderKidsEvents(lang) {
       var name = lang==='en' ? ev.name_en : ev.name_nl;
       var dateStr = formatDate(ev.date, lang);
       var price = ev.paid ? formatPrice(ev.price) : (lang==='en' ? 'Free' : 'Gratis');
+      var detailUrl = 'evenement.html?id='+ev.id;
+      var moreInfoHref = ev.registration_url || detailUrl;
+      var moreInfoAttrs = ev.registration_url ? ' target="_blank" rel="noopener"' : '';
       return '<div class="kids-event-card">'+
-        '<div class="kids-event-card__img">'+
+        '<a class="kids-event-card__img" href="'+detailUrl+'">'+
           '<img src="'+getEventImage(ev)+'" alt="'+name+'" loading="lazy">'+
-        '</div>'+
+        '</a>'+
         '<div class="kids-event-card__body">'+
           '<div class="kids-event-card__date">📅 '+dateStr+'</div>'+
-          '<h4>'+name+'</h4>'+
+          '<h4><a href="'+detailUrl+'">'+name+'</a></h4>'+
           '<p>📍 '+ev.city+' &nbsp;|&nbsp; '+ev.distances.join(', ')+'&nbsp;|&nbsp; '+price+'</p>'+
-          '<a href="evenement.html?id='+ev.id+'" class="btn">'+t('meer_info')+' →</a>'+
+          '<a href="'+moreInfoHref+'" class="btn"'+moreInfoAttrs+'>'+t('meer_info')+' →</a>'+
         '</div>'+
       '</div>';
     }).join('');
@@ -453,10 +456,13 @@ function openDayPanel(year, month, day) {
   if (!evs.length) { panel.classList.add('hidden'); return; }
   document.getElementById('day-panel-list').innerHTML = evs.map(function(ev){
     var name = lang==='en'?ev.name_en:ev.name_nl;
+    var detailUrl = 'evenement.html?id='+ev.id;
+    var moreInfoHref = ev.registration_url || detailUrl;
+    var moreInfoAttrs = ev.registration_url ? ' target="_blank" rel="noopener"' : '';
     return '<div style="display:flex;align-items:center;gap:1rem;padding:0.6rem 0;border-bottom:1px solid var(--surface2)">'+
-      '<span style="font-weight:600;flex:1">'+name+'</span>'+
+      '<a href="'+detailUrl+'" style="font-weight:600;flex:1;color:inherit;text-decoration:none">'+name+'</a>'+
       '<span style="color:var(--mid);font-size:0.82rem">'+ev.city+'</span>'+
-      '<a href="evenement.html?id='+ev.id+'" class="btn btn--ghost btn--sm">'+t('meer_info')+'</a>'+
+      '<a href="'+moreInfoHref+'" class="btn btn--ghost btn--sm"'+moreInfoAttrs+'>'+t('meer_info')+'</a>'+
     '</div>';
   }).join('');
   panel.classList.remove('hidden');

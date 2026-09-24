@@ -1,55 +1,78 @@
-// Filtert events eruit die al in de database staan, vóórdat we ook maar overwegen
-// iets te schrijven. Zelfde matchlogica als lib/dedupe.js (datum+plaats primair,
-// naam+datum als plaats onbekend is, plus dezelfde datum + sterk overeenkomende
-// naam als tweede, voorzichtigere ronde — zie lib/nameSimilarity.js) — bewust
-// consistent gehouden, anders zouden we events die op de twee bronnen anders
-// geschreven staan (bv. "Woellust Run" vs. "Woellustrun") telkens opnieuw als
-// "nieuw" behandelen bij elke volgende run.
+// Vergelijkt gescrapete events met wat al in de database staat, aan de hand
+// van de stabiele (serie, date)-combinatie (zie lib/buildSerie.js) — niet
+// meer via fuzzy naam/plaats-matching zoals voorheen. Reden: elke jaargang
+// van een terugkerend evenement moet een eigen rij blijven, gekoppeld via
+// dezelfde 'serie'; datum+serie is daarmee een exactere sleutel dan
+// datum+plaats-of-naam.
 //
-// Bekende beperking: de fuzzy naam-check vergelijkt hier alleen tegen name_nl
-// van bestaande rijen. Een handmatig/officieel toegevoegd evenement met een
-// sponsornaam die niets met de geschraapte naam deelt (bv. "Menzis 4 Mijl &
-// Kids 4 Mijl" vs. "4 Mijl van Groningen" — geen gedeeld, niet-generiek woord)
-// wordt daardoor niet automatisch herkend. Dat geeft in het ergste geval een
-// extra concept-rij naast een al gepubliceerd evenement, geen dataverlies —
-// de reviewer ziet en verwijdert 'm gewoon in het admin-paneel.
-import { normalize } from './dedupe.js'
-import { namesLikelyMatch } from './nameSimilarity.js'
+// Drie mogelijke uitkomsten per event:
+// - toInsert: geen bestaande rij met deze (serie, date) -> nieuwe rij.
+// - toMerge: bestaande rij gevonden mét minstens één leeg veld dat de
+//   kandidaat wél heeft -> alleen die lege velden aanvullen (nooit een
+//   bestaande, niet-lege waarde overschrijven — de reviewer corrigeert soms
+//   handmatig via het admin-paneel).
+// - skipped: bestaande rij gevonden, niets aan te vullen.
+//
+// Bekende beperking: events waarvan de bestaande rij nog geen 'serie' heeft
+// (vóór het draaien van backfill-serie.js) worden hier niet herkend als
+// duplicaat — zie scraper/README.md voor de vereiste volgorde (eerst
+// migreren + backfillen, dan pas op deze matchlogica vertrouwen).
+import { mapToSupabaseShape } from './mapToSupabaseShape.js'
 
-function keyForExisting(row) {
-  if (row.city) {
-    return `loc|${normalize(row.city)}|${row.date ?? ''}`
-  }
-  return `naam|${normalize(row.name_nl)}|${row.date ?? ''}`
+// Velden die de scraper daadwerkelijk met een echte waarde kan aanleveren
+// (zie mapToSupabaseShape.js) en die dus zinvol zijn om aan te vullen op een
+// bestaande rij. 'serie' zelf staat hier bewust niet in — dat is de
+// matchsleutel, niet een aan te vullen veld — en evenmin 'type'/'organizer',
+// die de scraper altijd als gok/placeholder resp. altijd leeg aanlevert.
+const FILLABLE_FIELDS = [
+  'name_nl', 'city', 'province', 'distances',
+  'registration_url', 'source_url', 'image', 'editie',
+]
+
+function isEmpty(value) {
+  return value === null || value === undefined || value === ''
 }
 
-function keyForCandidate(event) {
-  if (event.plaats) {
-    return `loc|${normalize(event.plaats)}|${event.datum ?? ''}`
+function computeFillableFields(existingRow, candidateRow) {
+  const fillable = {}
+  for (const field of FILLABLE_FIELDS) {
+    if (isEmpty(existingRow[field]) && !isEmpty(candidateRow[field])) {
+      fillable[field] = candidateRow[field]
+    }
   }
-  return `naam|${normalize(event.naam)}|${event.datum ?? ''}`
+  return fillable
 }
 
 export function dedupeAgainstDb(events, existingRows) {
-  const existingKeys = new Set(existingRows.map(keyForExisting))
-
-  const toInsert = []
-  const alreadyExists = []
-
-  for (const event of events) {
-    if (existingKeys.has(keyForCandidate(event))) {
-      alreadyExists.push(event)
-      continue
-    }
-    const fuzzyMatch = existingRows.some(
-      (row) => row.date === event.datum && namesLikelyMatch(row.name_nl, event.naam),
-    )
-    if (fuzzyMatch) {
-      alreadyExists.push(event)
-      continue
-    }
-    toInsert.push(event)
+  const existingBySerieDate = new Map()
+  for (const row of existingRows) {
+    if (!row.serie || !row.date) continue
+    existingBySerieDate.set(`${row.serie}|${row.date}`, row)
   }
 
-  return { toInsert, alreadyExists }
+  const toInsert = []
+  const toMerge = []
+  const skipped = []
+
+  for (const event of events) {
+    const candidateRow = mapToSupabaseShape(event)
+    const existing =
+      candidateRow.serie && candidateRow.date
+        ? existingBySerieDate.get(`${candidateRow.serie}|${candidateRow.date}`)
+        : undefined
+
+    if (!existing) {
+      toInsert.push(event)
+      continue
+    }
+
+    const fillable = computeFillableFields(existing, candidateRow)
+    if (Object.keys(fillable).length > 0) {
+      toMerge.push({ event, existingId: existing.id, fillable })
+    } else {
+      skipped.push(event)
+    }
+  }
+
+  return { toInsert, toMerge, skipped }
 }

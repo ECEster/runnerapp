@@ -155,6 +155,20 @@
     .btn-del:hover   { background: #f5c6cb; }
     .btn-edit:hover  { background: #d2e3fc; }
     .no-events { text-align: center; color: #aaa; padding: 24px; font-size: .88rem; }
+    .events-subheading {
+      font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+      color: #888; margin: 4px 0 8px;
+    }
+    .past-events { margin-top: 24px; }
+    .past-events summary {
+      cursor: pointer; list-style: none; user-select: none;
+      font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+      color: #888; padding: 8px 0; border-top: 1.5px solid #eee;
+    }
+    .past-events summary::-webkit-details-marker { display: none; }
+    .past-events summary::before { content: '▸ '; }
+    .past-events[open] summary::before { content: '▾ '; }
+    .past-events summary:hover { color: #4f7cff; }
     .form-editing { border: 2px solid #4f7cff; }
     .btn-cancel {
       background: #f0f0f0; color: #555; border: none; border-radius: 10px;
@@ -213,6 +227,7 @@
             <option value="sportief wandelen">Sportief Wandelen</option>
             <option value="inclusieve runs">Inclusieve Run</option>
             <option value="gecertificeerd parcours">Gecertificeerd Parcours</option>
+            <option value="hondenloop">Hondenloop</option>
           </select>
         </div>
 
@@ -247,6 +262,15 @@
         <div>
           <label for="f-reg-url">Inschrijflink (URL)</label>
           <input type="url" id="f-reg-url" placeholder="https://...">
+        </div>
+
+        <div>
+          <label for="f-serie">Serie (koppelt jaargangen van hetzelfde evenement)</label>
+          <input type="text" id="f-serie" placeholder="bijv. 4-mijl-van-groningen">
+        </div>
+        <div>
+          <label for="f-editie">Editienummer (optioneel)</label>
+          <input type="number" id="f-editie" min="1" placeholder="bijv. 42">
         </div>
 
         <!-- Afbeelding -->
@@ -292,17 +316,6 @@
   <!-- Overzicht bestaande events -->
   <div class="card">
     <h2>📋 Alle evenementen</h2>
-    <div style="margin-bottom:16px">
-      <button type="button" class="btn-translate" id="btn-import-static" onclick="importStaticEvents()">
-        📥 Importeer de 18 standaardevenementen (eenmalig)
-      </button>
-      <div style="font-size:.75rem;color:#888;margin-top:6px">
-        Zet de evenementen uit data.js over naar de database zodat je ze hier kan bewerken.
-        Veilig om vaker te klikken — al geïmporteerde evenementen worden overgeslagen.
-        Let op: het Atletiekunie-keurmerk, deelnemersaantal en YouTube-video gaan hierbij verloren.
-      </div>
-      <div class="submit-msg" id="import-msg"></div>
-    </div>
     <div style="margin-bottom:14px;max-width:240px">
       <label for="filter-regio">Regio</label>
       <select id="filter-regio" onchange="renderEventsTable()">
@@ -313,6 +326,7 @@
         <option value="west">West</option>
       </select>
     </div>
+    <h3 class="events-subheading">Aankomend</h3>
     <table class="events-table">
       <thead>
         <tr>
@@ -320,14 +334,37 @@
           <th>Naam</th>
           <th>Stad</th>
           <th>Regio</th>
+          <th>Serie</th>
+          <th>Editie</th>
           <th>Status</th>
           <th>Acties</th>
         </tr>
       </thead>
       <tbody id="events-tbody">
-        <tr><td colspan="6" class="no-events">Laden…</td></tr>
+        <tr><td colspan="8" class="no-events">Laden…</td></tr>
       </tbody>
     </table>
+
+    <details class="past-events">
+      <summary>Afgelopen evenementen (<span id="past-count">0</span>)</summary>
+      <table class="events-table">
+        <thead>
+          <tr>
+            <th>Datum</th>
+            <th>Naam</th>
+            <th>Stad</th>
+            <th>Regio</th>
+            <th>Serie</th>
+            <th>Editie</th>
+            <th>Status</th>
+            <th>Acties</th>
+          </tr>
+        </thead>
+        <tbody id="events-tbody-past">
+          <tr><td colspan="8" class="no-events">Laden…</td></tr>
+        </tbody>
+      </table>
+    </details>
   </div>
 
 </div><!-- /panel -->
@@ -413,6 +450,8 @@ function startEdit(ev) {
   document.getElementById('f-price').value      = ev.price || '';
   document.getElementById('f-organizer').value  = ev.organizer || '';
   document.getElementById('f-reg-url').value    = ev.registration_url || '';
+  document.getElementById('f-serie').value      = ev.serie || '';
+  document.getElementById('f-editie').value     = ev.editie || '';
   document.getElementById('f-desc-nl').value    = ev.description_nl || '';
   document.getElementById('f-kidsrun').checked  = ev.kidsrun || false;
   document.getElementById('f-published').checked = ev.published || false;
@@ -475,6 +514,8 @@ document.getElementById('event-form').addEventListener('submit', async e => {
       price:            document.getElementById('f-price').value.trim(),
       organizer:        document.getElementById('f-organizer').value.trim(),
       registration_url: document.getElementById('f-reg-url').value.trim(),
+      serie:            document.getElementById('f-serie').value.trim() || null,
+      editie:           document.getElementById('f-editie').value ? parseInt(document.getElementById('f-editie').value, 10) : null,
       description_nl:   descNl,
       description_en:   descEn,
       image:            imageUrl,
@@ -526,107 +567,74 @@ let allEvents = [];
 
 async function loadEventsTable() {
   const tbody = document.getElementById('events-tbody');
-  tbody.innerHTML = '<tr><td colspan="6" class="no-events">Laden…</td></tr>';
+  const tbodyPast = document.getElementById('events-tbody-past');
+  tbody.innerHTML = '<tr><td colspan="8" class="no-events">Laden…</td></tr>';
+  tbodyPast.innerHTML = '<tr><td colspan="8" class="no-events">Laden…</td></tr>';
   try {
     allEvents = await loadAllEventsAdmin();
     renderEventsTable();
   } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="6" class="no-events" style="color:#c0392b">Fout: ${err.message}</td></tr>`;
+    const msg = `<tr><td colspan="8" class="no-events" style="color:#c0392b">Fout: ${err.message}</td></tr>`;
+    tbody.innerHTML = msg;
+    tbodyPast.innerHTML = msg;
   }
 }
 
+function renderEventRow(ev) {
+  const regio = provinceToRegio(ev.province);
+  return `
+    <tr>
+      <td>${ev.date || '—'}</td>
+      <td><strong>${ev.name_nl || '—'}</strong>${ev.name_en ? '<br><small style="color:#888">' + ev.name_en + '</small>' : ''}</td>
+      <td>${ev.city || '—'}</td>
+      <td>${regio ? REGIO_LABELS[regio] : '<span style="color:#aaa">—</span>'}</td>
+      <td>${ev.serie || '<span style="color:#aaa">—</span>'}</td>
+      <td>${ev.editie || '<span style="color:#aaa">—</span>'}</td>
+      <td>
+        <span class="badge ${ev.published ? 'badge-green' : 'badge-gray'}">
+          ${ev.published ? 'Gepubliceerd' : 'Concept'}
+        </span>
+      </td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn-table btn-edit" onclick="startEdit(${JSON.stringify(ev).replace(/"/g, '&quot;')})">
+          Bewerk
+        </button>
+        <button class="btn-table ${ev.published ? 'btn-unpub' : 'btn-pub'}"
+          onclick="togglePublish('${ev.id}', ${ev.published})">
+          ${ev.published ? 'Verbergen' : 'Publiceer'}
+        </button>
+        <button class="btn-table btn-del" onclick="confirmDelete('${ev.id}', '${(ev.name_nl || '').replace(/'/g, "\\'")}')">
+          Verwijder
+        </button>
+      </td>
+    </tr>
+  `;
+}
+
+// Splitst op datum in "aankomend" (altijd zichtbaar) en "afgelopen" (achter
+// het inklapmenu, dichtgevouwen — zo blijft het overzicht overzichtelijk
+// zonder oude evenementen kwijt te raken).
 function renderEventsTable() {
-  const tbody = document.getElementById('events-tbody');
+  const tbodyUpcoming = document.getElementById('events-tbody');
+  const tbodyPast = document.getElementById('events-tbody-past');
+  const pastCount = document.getElementById('past-count');
   const regioFilter = document.getElementById('filter-regio').value;
   const events = regioFilter
     ? allEvents.filter(ev => provinceToRegio(ev.province) === regioFilter)
     : allEvents;
 
-  if (!events.length) {
-    tbody.innerHTML = '<tr><td colspan="6" class="no-events">Geen evenementen gevonden.</td></tr>';
-    return;
-  }
-  tbody.innerHTML = events.map(ev => {
-    const regio = provinceToRegio(ev.province);
-    return `
-      <tr>
-        <td>${ev.date || '—'}</td>
-        <td><strong>${ev.name_nl || '—'}</strong>${ev.name_en ? '<br><small style="color:#888">' + ev.name_en + '</small>' : ''}</td>
-        <td>${ev.city || '—'}</td>
-        <td>${regio ? REGIO_LABELS[regio] : '<span style="color:#aaa">—</span>'}</td>
-        <td>
-          <span class="badge ${ev.published ? 'badge-green' : 'badge-gray'}">
-            ${ev.published ? 'Gepubliceerd' : 'Concept'}
-          </span>
-        </td>
-        <td style="display:flex;gap:6px;flex-wrap:wrap">
-          <button class="btn-table btn-edit" onclick="startEdit(${JSON.stringify(ev).replace(/"/g, '&quot;')})">
-            Bewerk
-          </button>
-          <button class="btn-table ${ev.published ? 'btn-unpub' : 'btn-pub'}"
-            onclick="togglePublish('${ev.id}', ${ev.published})">
-            ${ev.published ? 'Verbergen' : 'Publiceer'}
-          </button>
-          <button class="btn-table btn-del" onclick="confirmDelete('${ev.id}', '${(ev.name_nl || '').replace(/'/g, "\\'")}')">
-            Verwijder
-          </button>
-        </td>
-      </tr>
-    `;
-  }).join('');
-}
+  const todayStr = new Date().toISOString().split('T')[0];
+  const upcoming = events.filter(ev => (ev.date || '') >= todayStr);
+  const past = events.filter(ev => (ev.date || '') < todayStr).reverse(); // meest recent verleden eerst
 
-// ─── Eenmalige import van de statische evenementen uit data.js ────
-async function importStaticEvents() {
-  const btn = document.getElementById('btn-import-static');
-  const msg = document.getElementById('import-msg');
-  btn.disabled = true;
-  const origText = btn.textContent;
-  btn.textContent = 'Importeren…';
-  msg.style.display = 'none';
+  tbodyUpcoming.innerHTML = upcoming.length
+    ? upcoming.map(renderEventRow).join('')
+    : '<tr><td colspan="8" class="no-events">Geen aankomende evenementen gevonden.</td></tr>';
 
-  try {
-    const existing = await loadAllEventsAdmin();
-    const existingKeys = new Set(existing.map(e => (e.name_nl || '') + '|' + (e.date || '')));
-
-    let imported = 0, skipped = 0;
-    for (const ev of STATIC_EVENTS) {
-      const key = ev.name_nl + '|' + ev.date;
-      if (existingKeys.has(key)) { skipped++; continue; }
-
-      await addEvent({
-        name_nl:          ev.name_nl,
-        name_en:          ev.name_en,
-        date:             ev.date,
-        type:             ev.type,
-        city:             ev.city,
-        province:         ev.province,
-        distances:        ev.distances.join(', '),
-        price:            ev.paid ? ev.price : 'gratis',
-        organizer:        ev.organizer,
-        registration_url: ev.registration_url,
-        description_nl:   ev.description_nl,
-        description_en:   ev.description_en,
-        image:            ev.image,
-        kidsrun:          ev.kidsrun || false,
-        published:        true,
-      });
-      existingKeys.add(key);
-      imported++;
-    }
-
-    msg.textContent = `✅ ${imported} evenement(en) geïmporteerd, ${skipped} overgeslagen (al aanwezig).`;
-    msg.className = 'submit-msg ok';
-    msg.style.display = 'block';
-    loadEventsTable();
-  } catch (err) {
-    msg.textContent = '❌ Fout bij importeren: ' + err.message;
-    msg.className = 'submit-msg err';
-    msg.style.display = 'block';
-  } finally {
-    btn.disabled = false;
-    btn.textContent = origText;
-  }
+  pastCount.textContent = past.length;
+  tbodyPast.innerHTML = past.length
+    ? past.map(renderEventRow).join('')
+    : '<tr><td colspan="8" class="no-events">Geen afgelopen evenementen gevonden.</td></tr>';
 }
 
 async function togglePublish(id, currentlyPublished) {
