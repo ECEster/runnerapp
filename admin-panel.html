@@ -34,7 +34,8 @@
     .btn-logout:hover { background: rgba(255,255,255,.32); }
 
     /* ─── Layout ─── */
-    .panel { max-width: 820px; margin: 32px auto; padding: 0 16px 60px; }
+    .panel { max-width: 1200px; margin: 32px auto; padding: 0 24px 60px; }
+    .table-scroll { overflow-x: auto; }
 
     /* ─── Card ─── */
     .card {
@@ -346,6 +347,7 @@
       </div>
     </div>
     <h3 class="events-subheading">Aankomend</h3>
+    <div class="table-scroll">
     <table class="events-table">
       <thead>
         <tr>
@@ -363,9 +365,11 @@
         <tr><td colspan="8" class="no-events">Laden…</td></tr>
       </tbody>
     </table>
+    </div>
 
     <details class="past-events">
       <summary>Afgelopen evenementen (<span id="past-count">0</span>)</summary>
+      <div class="table-scroll">
       <table class="events-table">
         <thead>
           <tr>
@@ -383,6 +387,7 @@
           <tr><td colspan="8" class="no-events">Laden…</td></tr>
         </tbody>
       </table>
+      </div>
     </details>
   </div>
 
