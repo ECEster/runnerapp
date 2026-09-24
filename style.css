@@ -369,8 +369,8 @@ p:last-child { margin-bottom: 0; }
   transition: transform 0.4s ease;
 }
 .event-card:hover .event-card__img img { transform: scale(1.05); }
-.event-card__img img[src*="gemengd-parcours"] { object-position: center 45%; }
-.event-card__img img[src*="wegevenement"] { object-position: center 35%; }
+.event-card__img img[src*="gemengd-parcours"] { object-position: center 48%; }
+.event-card__img img[src*="wegevenement"] { object-position: center 25%; }
 .event-card__badge {
   position: absolute;
   top: 10px;
