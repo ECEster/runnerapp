@@ -465,6 +465,8 @@ p:last-child { margin-bottom: 0; }
   color: var(--dark);
 }
 .event-card__price.free { color: #059669; }
+.event-card__price--ext { color: var(--mid); font-weight: 500; font-size: 0.82rem; text-decoration: none; }
+a.event-card__price--ext:hover { color: var(--accent); text-decoration: underline; }
 
 /* ── Badge type colors ──────────────────────────────────────── */
 .badge-marathon           { background: var(--badge-marathon); }

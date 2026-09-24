@@ -471,10 +471,10 @@ function renderFavorites() {
       '<div class="event-card__body">'+
         '<div class="event-card__date">📅 '+dateStr+'</div>'+
         '<a class="event-card__title" href="'+detailUrl+'">'+name+'</a>'+
-        '<div class="event-card__meta"><span>📍 '+ev.city+'</span></div>'+
+        '<div class="event-card__meta"><span>'+ev.city+'</span></div>'+
         '<span class="event-card__type '+badgeClass+'">'+typeName+'</span>'+
         '<div class="event-card__footer">'+
-          (ev.paid?'<span class="event-card__price">'+formatPrice(ev.price)+'</span>':'<span class="event-card__price free">'+t('free')+'</span>')+
+          makePriceHtml(ev, lang)+
           '<a href="'+moreInfoHref+'" class="btn btn--ghost btn--sm"'+moreInfoAttrs+'>'+t('meer_info')+'</a>'+
         '</div>'+
       '</div>'+

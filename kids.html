@@ -376,7 +376,7 @@ function renderKidsEvents(lang) {
     el.innerHTML = kidsEvents.map(function(ev) {
       var name = lang==='en' ? ev.name_en : ev.name_nl;
       var dateStr = formatDate(ev.date, lang);
-      var price = ev.paid ? formatPrice(ev.price) : (lang==='en' ? 'Free' : 'Gratis');
+      var price = !ev.paid ? (lang==='en' ? 'Free' : 'Gratis') : (ev.price ? formatPrice(ev.price) : (lang==='en' ? 'See website' : 'Zie website'));
       var detailUrl = 'evenement.html?id='+ev.id;
       var moreInfoHref = ev.registration_url || detailUrl;
       var moreInfoAttrs = ev.registration_url ? ' target="_blank" rel="noopener"' : '';
@@ -387,7 +387,7 @@ function renderKidsEvents(lang) {
         '<div class="kids-event-card__body">'+
           '<div class="kids-event-card__date">📅 '+dateStr+'</div>'+
           '<h4><a href="'+detailUrl+'">'+name+'</a></h4>'+
-          '<p>📍 '+ev.city+' &nbsp;|&nbsp; '+ev.distances.join(', ')+'&nbsp;|&nbsp; '+price+'</p>'+
+          '<p>'+ev.city+' &nbsp;|&nbsp; '+ev.distances.join(', ')+'&nbsp;|&nbsp; '+price+'</p>'+
           '<a href="'+moreInfoHref+'" class="btn"'+moreInfoAttrs+'>'+t('meer_info')+' →</a>'+
         '</div>'+
       '</div>';

@@ -44,6 +44,22 @@ function formatPrice(price) {
   return '€' + p;
 }
 
+// Geeft de juiste prijs-HTML terug voor een eventcard:
+// gratis → groene badge, prijs bekend → toon prijs, prijs onbekend → "Zie website"
+function makePriceHtml(ev, lang) {
+  if (!ev.paid) {
+    return '<span class="event-card__price free">' + (lang === 'en' ? 'Free' : 'Gratis') + '</span>';
+  }
+  if (ev.price) {
+    return '<span class="event-card__price">' + formatPrice(ev.price) + '</span>';
+  }
+  var label = lang === 'en' ? 'See website' : 'Zie website';
+  if (ev.registration_url) {
+    return '<a class="event-card__price event-card__price--ext" href="' + ev.registration_url + '" target="_blank" rel="noopener noreferrer">' + label + '</a>';
+  }
+  return '<span class="event-card__price event-card__price--ext">' + label + '</span>';
+}
+
 // Geeft de afbeelding voor een evenement terug. Baanevenementen tonen altijd
 // dezelfde vaste foto (images/baanevenement.jpg) — handig omdat veel
 // (geïmporteerde) baanevenementen geen eigen foto hebben.
