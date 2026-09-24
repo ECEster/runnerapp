@@ -283,7 +283,7 @@
         <div class="full">
           <label>Afbeelding (JPG, PNG of WebP · max 2 MB)</label>
           <div class="img-upload-area">
-            <div>📷 Klik of sleep een afbeelding hierheen</div>
+            <div>Klik of sleep een afbeelding hierheen</div>
             <input type="file" id="f-image" accept="image/jpeg,image/png,image/webp">
             <img id="img-preview" alt="voorvertoning">
           </div>
@@ -294,7 +294,7 @@
         <div class="full">
           <label for="f-desc-nl">Beschrijving</label>
           <textarea id="f-desc-nl" placeholder="Schrijf hier een beschrijving..."></textarea>
-          <div style="font-size:.75rem;color:#888;margin-top:4px">🌐 Engelse vertaling wordt automatisch aangemaakt bij opslaan</div>
+          <div style="font-size:.75rem;color:#888;margin-top:4px">• Engelse vertaling wordt automatisch aangemaakt bij opslaan</div>
         </div>
 
         <!-- Checkboxes -->
@@ -510,7 +510,7 @@ document.getElementById('event-form').addEventListener('submit', async e => {
   const btn = document.getElementById('btn-submit');
   const msg = document.getElementById('submit-msg');
   btn.disabled = true;
-  btn.textContent = '🌐 Vertalen…';
+  btn.textContent = 'Vertalen…';
   msg.style.display = 'none';
 
   try {
