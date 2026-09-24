@@ -454,7 +454,7 @@ p:last-child { margin-bottom: 0; }
   border-top: 1px solid var(--surface2);
 }
 .event-card__price {
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--dark);
 }
