@@ -452,15 +452,16 @@ p:last-child { margin-bottom: 0; }
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.6rem;
   padding-top: 0.8rem;
   border-top: 1px solid var(--surface2);
 }
-.event-card__footer .btn { margin-left: 1rem; white-space: nowrap; flex-shrink: 0; }
+.event-card__footer .btn { margin-left: auto; white-space: nowrap; flex-shrink: 0; }
+.event-card__price { min-width: 0; }
 .event-card__price {
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--dark);
-  white-space: nowrap;
 }
 .event-card__price.free { color: #059669; }
 .event-card__price--ext { color: var(--mid); font-weight: 500; font-size: 0.82rem; text-decoration: none; }
