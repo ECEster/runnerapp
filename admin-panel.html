@@ -572,6 +572,11 @@ async function loadEventsTable() {
   tbodyPast.innerHTML = '<tr><td colspan="8" class="no-events">Laden…</td></tr>';
   try {
     allEvents = await loadAllEventsAdmin();
+    // Stabiele sortering: datum oplopend, bij gelijke datum op naam
+    allEvents.sort((a, b) => {
+      const d = (a.date || '').localeCompare(b.date || '');
+      return d !== 0 ? d : (a.name_nl || '').localeCompare(b.name_nl || '');
+    });
     renderEventsTable();
   } catch (err) {
     const msg = `<tr><td colspan="8" class="no-events" style="color:#c0392b">Fout: ${err.message}</td></tr>`;
@@ -640,7 +645,10 @@ function renderEventsTable() {
 async function togglePublish(id, currentlyPublished) {
   try {
     await updateEvent(id, { published: !currentlyPublished });
-    loadEventsTable();
+    // Lokaal bijwerken — geen nieuwe fetch, volgorde blijft stabiel
+    const ev = allEvents.find(e => e.id === id);
+    if (ev) ev.published = !currentlyPublished;
+    renderEventsTable();
   } catch (err) {
     alert('Fout bij bijwerken: ' + err.message);
   }
@@ -650,7 +658,9 @@ async function confirmDelete(id, name) {
   if (!confirm(`Wil je "${name}" echt verwijderen? Dit kan niet ongedaan worden gemaakt.`)) return;
   try {
     await deleteEvent(id);
-    loadEventsTable();
+    // Lokaal verwijderen — geen nieuwe fetch, volgorde blijft stabiel
+    allEvents = allEvents.filter(e => e.id !== id);
+    renderEventsTable();
   } catch (err) {
     alert('Fout bij verwijderen: ' + err.message);
   }

@@ -100,7 +100,8 @@ async function loadAllEventsAdmin() {
     const { data, error } = await db
         .from('events')
         .select('*')
-        .order('date', { ascending: true });
+        .order('date', { ascending: true })
+        .order('name_nl', { ascending: true });
     if (error) throw error;
     return data;
 }
