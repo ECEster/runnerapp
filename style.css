@@ -426,18 +426,12 @@ p:last-child { margin-bottom: 0; }
 }
 .event-card__meta span { margin-right: 0.6rem; }
 .event-card__distances {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
   margin-bottom: 0.7rem;
 }
-.event-card__dist-chip {
-  background: var(--surface2);
-  color: var(--dark3);
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.75rem;
+.event-card__distances-text {
+  font-size: 0.82rem;
   font-weight: 600;
+  color: var(--dark3);
 }
 .event-card__type {
   display: inline-block;
