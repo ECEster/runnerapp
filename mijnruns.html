@@ -125,6 +125,25 @@
       </div>
     </div>
 
+    <!-- Hardloopkalender -->
+    <div class="runs-card" style="margin-top:2rem;">
+      <div class="run-cal-nav">
+        <h3 style="margin:0;">📆 Hardloopkalender</h3>
+        <div style="display:flex;align-items:center;gap:0.4rem;">
+          <button class="btn btn--ghost btn--sm" onclick="calPrev()">&#8249;</button>
+          <span id="cal-month-label" class="run-cal-nav-title"></span>
+          <button class="btn btn--ghost btn--sm" onclick="calNext()">&#8250;</button>
+        </div>
+      </div>
+      <div class="run-cal-wrap">
+        <div id="run-calendar"></div>
+      </div>
+      <div class="run-cal-legend">
+        <span class="run-cal-legend-dot"></span>
+        <span>Dag met een run — klik op een dag om datum in te vullen</span>
+      </div>
+    </div>
+
     <!-- Favorites -->
     <div class="runs-card" style="margin-top:2rem;">
       <h3>❤️ <span data-i18n="favorites_title">Opgeslagen evenementen</span></h3>
@@ -176,6 +195,8 @@ var currentSession = null;
 var authMode = 'login'; // 'login' | 'signup'
 var cachedRuns = [];
 var cachedFavIds = [];
+var calYear = new Date().getFullYear();
+var calMonth = new Date().getMonth();
 
 function toggleAuthMode(e) {
   e.preventDefault();
@@ -307,12 +328,83 @@ async function deleteRun(id) {
   await refreshRuns();
 }
 
+// ── Hardloopkalender ────────────────────────────────────────────────
+var CAL_MONTHS = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+var CAL_DAYS   = ['Ma','Di','Wo','Do','Vr','Za','Zo'];
+
+function calPrev() {
+  if (calMonth === 0) { calMonth = 11; calYear--; } else calMonth--;
+  renderCalendarRuns();
+}
+function calNext() {
+  if (calMonth === 11) { calMonth = 0; calYear++; } else calMonth++;
+  renderCalendarRuns();
+}
+
+function calDayClick(dateStr) {
+  var dateInput = document.getElementById('r-date');
+  dateInput.value = dateStr;
+  // Scroll naar het formulier
+  document.querySelector('.runs-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderCalendarRuns() {
+  var label = document.getElementById('cal-month-label');
+  if (label) label.textContent = CAL_MONTHS[calMonth] + ' ' + calYear;
+
+  // Bouw run-map: datumstring → totale afstand
+  var runMap = {};
+  cachedRuns.forEach(function(r) {
+    if (!runMap[r.date]) runMap[r.date] = 0;
+    runMap[r.date] += r.distance;
+  });
+
+  var firstDay  = new Date(calYear, calMonth, 1);
+  var lastDay   = new Date(calYear, calMonth + 1, 0);
+  var startDow  = (firstDay.getDay() + 6) % 7; // maandag = 0
+  var todayStr  = new Date().toISOString().split('T')[0];
+
+  var html = '<table class="run-cal-table"><thead><tr>';
+  CAL_DAYS.forEach(function(d) { html += '<th>' + d + '</th>'; });
+  html += '</tr></thead><tbody><tr>';
+
+  for (var i = 0; i < startDow; i++) html += '<td class="run-cal-empty"></td>';
+
+  var dow = startDow;
+  for (var day = 1; day <= lastDay.getDate(); day++) {
+    var ds    = calYear + '-' + String(calMonth + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+    var dist  = runMap[ds];
+    var hasRun = dist !== undefined;
+    var isToday = ds === todayStr;
+
+    var cls = 'run-cal-day';
+    if (hasRun)  cls += ' run-cal-has-run';
+    if (isToday) cls += ' run-cal-today';
+
+    html += '<td class="' + cls + '" onclick="calDayClick(\'' + ds + '\')">' +
+      '<span class="run-cal-num">' + day + '</span>' +
+      (hasRun ? '<span class="run-cal-dist">' + dist.toFixed(1) + ' km</span>' : '') +
+    '</td>';
+
+    dow++;
+    if (dow === 7 && day < lastDay.getDate()) { html += '</tr><tr>'; dow = 0; }
+  }
+  // Lege cellen opvullen
+  while (dow % 7 !== 0) { html += '<td class="run-cal-empty"></td>'; dow++; }
+
+  html += '</tr></tbody></table>';
+
+  var el = document.getElementById('run-calendar');
+  if (el) el.innerHTML = html;
+}
+
 function renderHistory() {
   var lang = getLang();
   var runs = cachedRuns;
   var el = document.getElementById('run-history');
   if (!runs.length) {
     el.innerHTML = '<div class="empty-state"><span>🏃</span>'+t('run_empty')+'</div>';
+    renderCalendarRuns();
     return;
   }
   var rows = runs.map(function(r) {
@@ -328,6 +420,7 @@ function renderHistory() {
     '<thead><tr><th>'+t('run_date')+'</th><th>'+t('run_distance')+'</th><th>'+t('run_time')+'</th><th>'+t('run_notes')+'</th><th></th></tr></thead>'+
     '<tbody>'+rows+'</tbody>'+
   '</table>';
+  renderCalendarRuns();
 }
 
 function renderStats() {
