@@ -781,6 +781,18 @@ p:last-child { margin-bottom: 0; }
   height: 16px;
   accent-color: var(--accent);
 }
+.filter-checkbox--kids {
+  background: #fff3e0;
+  border: 1.5px solid #ffb74d;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 600;
+  color: #e65100;
+  font-size: 0.9rem;
+}
+.filter-checkbox--kids input[type="checkbox"] {
+  accent-color: #e65100;
+}
 
 /* Active filter chips */
 .filter-chips {
