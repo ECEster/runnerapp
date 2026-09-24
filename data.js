@@ -53,11 +53,7 @@ function makePriceHtml(ev, lang) {
   if (ev.price) {
     return '<span class="event-card__price">' + formatPrice(ev.price) + '</span>';
   }
-  var label = lang === 'en' ? 'See website' : 'Zie website';
-  if (ev.registration_url) {
-    return '<a class="event-card__price event-card__price--ext" href="' + ev.registration_url + '" target="_blank" rel="noopener noreferrer">' + label + '</a>';
-  }
-  return '<span class="event-card__price event-card__price--ext">' + label + '</span>';
+  return '';
 }
 
 // Geeft de afbeelding voor een evenement terug. Baanevenementen tonen altijd
