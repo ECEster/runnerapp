@@ -512,7 +512,7 @@ document.getElementById('event-form').addEventListener('submit', async e => {
       type:             document.getElementById('f-type').value,
       city:             document.getElementById('f-city').value.trim(),
       province:         document.getElementById('f-province').value || null,
-      distances:        document.getElementById('f-distances').value.trim(),
+      distances:        document.getElementById('f-distances').value.trim().replace(/(\d{1,2}),(\d)(?!\d)/g, '$1.$2'),
       price:            document.getElementById('f-price').value.trim(),
       organizer:        document.getElementById('f-organizer').value.trim(),
       registration_url: document.getElementById('f-reg-url').value.trim(),
