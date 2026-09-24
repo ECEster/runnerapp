@@ -467,7 +467,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 .badge-marathon           { background: var(--badge-marathon); }
 .badge-trail              { background: var(--badge-trail); }
 .badge-bosloop            { background: var(--badge-bosloop); }
-.badge-gemengd-parcours   { background: var(--badge-gemengd); color: limegreen; }
+.badge-gemengd-parcours   { background: var(--badge-gemengd); color: #fff; }
 .badge-baanevenement      { background: var(--badge-baanevenement); }
 .badge-cross              { background: var(--badge-cross); }
 .badge-wegevenement       { background: var(--badge-wegevenement); }
