@@ -526,18 +526,28 @@ document.getElementById('event-form').addEventListener('submit', async e => {
 
     if (editingId) {
       await updateEvent(editingId, event);
+      // Lokaal bijwerken — geen nieuwe fetch, volgorde blijft stabiel
+      const idx = allEvents.findIndex(e => e.id === editingId);
+      if (idx !== -1) Object.assign(allEvents[idx], { ...event, id: editingId });
       msg.textContent = '✅ Wijzigingen opgeslagen!';
       cancelEdit();
     } else {
-      await addEvent(event);
+      const saved = await addEvent(event);
+      // Nieuw event toevoegen aan lokale lijst
+      allEvents.push(saved);
       msg.textContent = '✅ Evenement opgeslagen!';
       e.target.reset();
       imgPreview.style.display = 'none';
     }
 
+    // Hersorteren en opnieuw renderen — geen fetch
+    allEvents.sort((a, b) => {
+      const d = (a.date || '').localeCompare(b.date || '');
+      return d !== 0 ? d : (a.name_nl || '').localeCompare(b.name_nl || '');
+    });
     msg.className = 'submit-msg ok';
     msg.style.display = 'block';
-    loadEventsTable();
+    renderEventsTable();
   } catch (err) {
     msg.textContent = '❌ Fout: ' + err.message;
     msg.className = 'submit-msg err';
