@@ -451,7 +451,6 @@ p:last-child { margin-bottom: 0; }
 .event-card__footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 0.6rem;
   padding-top: 0.8rem;
   border-top: 1px solid var(--surface2);
