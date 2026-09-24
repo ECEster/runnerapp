@@ -385,7 +385,7 @@ function renderKidsEvents(lang) {
           '<img src="'+getEventImage(ev)+'" alt="'+name+'" loading="lazy">'+
         '</a>'+
         '<div class="kids-event-card__body">'+
-          '<div class="kids-event-card__date">📅 '+dateStr+'</div>'+
+          '<div class="kids-event-card__date">'+dateStr+'</div>'+
           '<h4><a href="'+detailUrl+'">'+name+'</a></h4>'+
           '<p>'+ev.city+' &nbsp;|&nbsp; '+ev.distances.join(', ')+'&nbsp;|&nbsp; '+price+'</p>'+
           '<a href="'+moreInfoHref+'" class="btn"'+moreInfoAttrs+'>'+t('meer_info')+' →</a>'+
