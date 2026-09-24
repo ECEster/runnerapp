@@ -83,8 +83,10 @@ var FALLBACK_IMAGE_BY_TYPE = {
   'hondenloop': 'images/hondenloop.jpg',
   'gemengd parcours': 'images/gemengd-parcours.png',
   'cross': 'images/cross.jpg',
-  'swimrun': 'images/swimrun.jpg',
-  'ultrarun': 'images/ultrarun.jpg',
+  'swimrun':   'images/swimrun.jpg',
+  'ultrarun':  'images/ultrarun.jpg',
+  'urbanrun':  'images/urbanrun.jpg',
+  'bikerun':   'images/bikerun.jpg',
 };
 
 function getEventImage(ev) {

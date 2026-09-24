@@ -9,6 +9,16 @@ function titleCase(str) {
     .replace(/'[A-Z]/g, (m) => m.toLowerCase());
 }
 
+// Zet een afstandsstring van mijlen naar km als de eenheid "mi" of "mile(s)" is.
+// Bijv. "5mi" → "8.0km", "13.1 miles" → "21.1km". Andere eenheden blijven ongewijzigd.
+function normalizeerAfstand(afstand) {
+  const match = afstand.match(/^(\d+(?:[.,]\d+)?)\s*mi(?:les?)?$/i);
+  if (!match) return afstand;
+  const mijlen = parseFloat(match[1].replace(',', '.'));
+  const km = Math.round(mijlen * 1.60934 * 10) / 10;
+  return `${km}km`;
+}
+
 // Zet ons interne event-formaat om naar de vorm van de bestaande 'events'-tabel.
 //
 // Aannames / bewuste keuzes:
@@ -33,7 +43,7 @@ export function mapToSupabaseShape(event) {
     date: event.datum,
     city: titleCase(event.plaats),
     province: event.provincie,
-    distances: event.afstanden.join(', '),
+    distances: event.afstanden.map(normalizeerAfstand).join(', '),
     registration_url: event.organisator_url,
     source_url: event.bron_url,
     image: event.afbeelding_url,

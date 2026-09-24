@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin beheer — Runningnederland</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: Inter, sans-serif; background: #f5f5f5; color: #222; min-height: 100vh; }
+    body { font-family: 'Comfortaa', sans-serif; background: #f5f5f5; color: #222; min-height: 100vh; }
 
     /* ─── Header ─── */
     .admin-header {
@@ -55,7 +56,7 @@
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .form-grid .full { grid-column: 1 / -1; }
     label { display: block; font-size: .78rem; font-weight: 600; color: #555; margin-bottom: 4px; }
-    input[type=text], input[type=date], input[type=url], input[type=number],
+    input[type=text], input[type=date], input[type=url], input[type=number], input[type=search],
     select, textarea {
       width: 100%;
       padding: 9px 11px;
@@ -230,6 +231,8 @@
             <option value="inclusieve runs">Inclusieve Run</option>
             <option value="gecertificeerd parcours">Gecertificeerd Parcours</option>
             <option value="hondenloop">Hondenloop</option>
+            <option value="businessrun">Business Run</option>
+            <option value="bikerun">Bike Run</option>
           </select>
         </div>
 
@@ -299,6 +302,14 @@
             <input type="checkbox" id="f-kidsrun">
             <label for="f-kidsrun">Bevat kinderloop 👦</label>
           </div>
+          <div class="checkbox-row" style="margin-top:8px">
+            <input type="checkbox" id="f-businessrun">
+            <label for="f-businessrun">Business Run 💼</label>
+          </div>
+          <div class="checkbox-row" style="margin-top:8px">
+            <input type="checkbox" id="f-estafette">
+            <label for="f-estafette">Estafette 🔄</label>
+          </div>
         </div>
         <div>
           <div class="checkbox-row">
@@ -318,15 +329,21 @@
   <!-- Overzicht bestaande events -->
   <div class="card">
     <h2>📋 Alle evenementen</h2>
-    <div style="margin-bottom:14px;max-width:240px">
-      <label for="filter-regio">Regio</label>
-      <select id="filter-regio" onchange="renderEventsTable()">
-        <option value="">— Alle regio's —</option>
-        <option value="noord">Noord</option>
-        <option value="oost">Oost</option>
-        <option value="zuid">Zuid</option>
-        <option value="west">West</option>
-      </select>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;align-items:flex-end">
+      <div style="min-width:180px">
+        <label for="filter-regio">Regio</label>
+        <select id="filter-regio" onchange="renderEventsTable()">
+          <option value="">— Alle regio's —</option>
+          <option value="noord">Noord</option>
+          <option value="oost">Oost</option>
+          <option value="zuid">Zuid</option>
+          <option value="west">West</option>
+        </select>
+      </div>
+      <div style="flex:1;min-width:200px">
+        <label for="filter-zoek">Zoeken</label>
+        <input type="search" id="filter-zoek" placeholder="Naam, stad of organisator…" oninput="renderEventsTable()" style="width:100%">
+      </div>
     </div>
     <h3 class="events-subheading">Aankomend</h3>
     <table class="events-table">
@@ -455,8 +472,10 @@ function startEdit(ev) {
   document.getElementById('f-serie').value      = ev.serie || '';
   document.getElementById('f-editie').value     = ev.editie || '';
   document.getElementById('f-desc-nl').value    = ev.description_nl || '';
-  document.getElementById('f-kidsrun').checked  = ev.kidsrun || false;
-  document.getElementById('f-published').checked = ev.published || false;
+  document.getElementById('f-kidsrun').checked     = ev.kidsrun || false;
+  document.getElementById('f-businessrun').checked = ev.businessrun || false;
+  document.getElementById('f-estafette').checked   = ev.estafette || false;
+  document.getElementById('f-published').checked   = ev.published || false;
 
   if (existingImageUrl) {
     imgPreview.src = existingImageUrl;
@@ -522,6 +541,8 @@ document.getElementById('event-form').addEventListener('submit', async e => {
       description_en:   descEn,
       image:            imageUrl,
       kidsrun:          document.getElementById('f-kidsrun').checked,
+      businessrun:      document.getElementById('f-businessrun').checked,
+      estafette:        document.getElementById('f-estafette').checked,
       published:        document.getElementById('f-published').checked,
     };
 
@@ -636,9 +657,17 @@ function renderEventsTable() {
   const tbodyPast = document.getElementById('events-tbody-past');
   const pastCount = document.getElementById('past-count');
   const regioFilter = document.getElementById('filter-regio').value;
-  const events = regioFilter
+  const zoekFilter = (document.getElementById('filter-zoek')?.value || '').toLowerCase().trim();
+  let events = regioFilter
     ? allEvents.filter(ev => provinceToRegio(ev.province) === regioFilter)
     : allEvents;
+  if (zoekFilter) {
+    events = events.filter(ev =>
+      (ev.name_nl || '').toLowerCase().includes(zoekFilter) ||
+      (ev.city || '').toLowerCase().includes(zoekFilter) ||
+      (ev.organizer || '').toLowerCase().includes(zoekFilter)
+    );
+  }
 
   const todayStr = new Date().toISOString().split('T')[0];
   const upcoming = events.filter(ev => (ev.date || '') >= todayStr);

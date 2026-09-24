@@ -22,28 +22,30 @@
   --font-head:   'Barlow Condensed', sans-serif;
   --font-body:   'Inter', sans-serif;
 
-  /* badge colors */
-  --badge-marathon:            #DC2626;
-  --badge-trail:               #15803D;
-  --badge-bosloop:              #14532D;
-  --badge-gemengd:              #B8956A;
-  --badge-baanevenement:        #C2410C;
-  --badge-cross:               #92400E;
-  --badge-wegevenement:        #6B8FAD;
-  --badge-parkloop:            #059669;
-  --badge-funrun:              #D97706;
-  --badge-survivalrun:         #7C3AED;
-  --badge-ultrarun:            #BE185D;
-  --badge-virtuele:            #0891B2;
-  --badge-estafette:           #0369A1;
-  --badge-coopertest:          #4F46E5;
-  --badge-studentenevenement:  #6D28D9;
-  --badge-wandelen:            #65A30D;
-  --badge-inclusief:           #EC4899;
-  --badge-gecertificeerd:      #B45309;
-  --badge-hondenloop:          #A16207;
+  /* badge colors — blauwgroene tintfamilie */
+  --badge-marathon:            #0F766E;
+  --badge-trail:               #166534;
+  --badge-bosloop:              #065F46;
+  --badge-gemengd:              #5A7F74;
+  --badge-baanevenement:        #0C6E8C;
+  --badge-cross:               #1A4E6B;
+  --badge-wegevenement:        #3B7A9E;
+  --badge-parkloop:            #1E8A6A;
+  --badge-funrun:              #0891B2;
+  --badge-survivalrun:         #1E5F72;
+  --badge-ultrarun:            #155E75;
+  --badge-virtuele:            #0369A1;
+  --badge-estafette:           #0C5173;
+  --badge-coopertest:          #116975;
+  --badge-studentenevenement:  #1D4E89;
+  --badge-wandelen:            #2D6A4F;
+  --badge-inclusief:           #3D7A6B;
+  --badge-gecertificeerd:      #4A6E7F;
+  --badge-hondenloop:          #4A7A6B;
   --badge-swimrun:             #0E7490;
-  --badge-urbanrun:            #64748B;
+  --badge-urbanrun:            #334E68;
+  --badge-businessrun:         #1A5E6B;
+  --badge-bikerun:             #2C6E8A;
 }
 
 /* ── Reset ─────────────────────────────────────────────────── */
@@ -488,6 +490,8 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 .badge-hondenloop         { background: var(--badge-hondenloop); }
 .badge-swimrun            { background: var(--badge-swimrun); }
 .badge-urbanrun           { background: var(--badge-urbanrun); }
+.badge-businessrun        { background: var(--badge-businessrun); }
+.badge-bikerun            { background: var(--badge-bikerun); }
 
 /* ── About section ──────────────────────────────────────────── */
 .about-section {
