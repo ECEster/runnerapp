@@ -184,7 +184,7 @@ function renderEventCard(ev, lang) {
     '<div class="event-card__body">' +
       '<div class="event-card__date">' + dateStr + '</div>' +
       '<a class="event-card__title" href="' + detailUrl + '">' + name + '</a>' +
-      '<div class="event-card__meta"><span>' + ev.city + '</span></div>' +
+      '<div class="event-card__meta"><span>' + titleCase(ev.city) + '</span></div>' +
       '<div class="event-card__distances">' + distChips + '</div>' +
       '<span class="event-card__type ' + badgeClass + '">' + typeName + '</span>' +
       '<div class="event-card__footer">' +

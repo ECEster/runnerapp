@@ -2,6 +2,13 @@ import { detectKidsrun } from './detectKidsrun.js'
 import { buildSerie } from './buildSerie.js'
 import { extractEditie } from './extractEditie.js'
 
+function titleCase(str) {
+  if (!str) return str;
+  return str.toLowerCase()
+    .replace(/\b[a-zà-ÿ]/g, (c) => c.toUpperCase())
+    .replace(/'[A-Z]/g, (m) => m.toLowerCase());
+}
+
 // Zet ons interne event-formaat om naar de vorm van de bestaande 'events'-tabel.
 //
 // Aannames / bewuste keuzes:
@@ -24,7 +31,7 @@ export function mapToSupabaseShape(event) {
   return {
     name_nl: event.naam,
     date: event.datum,
-    city: event.plaats,
+    city: titleCase(event.plaats),
     province: event.provincie,
     distances: event.afstanden.join(', '),
     registration_url: event.organisator_url,

@@ -37,6 +37,16 @@ var POSTAL_CODES = {
 // het ontbreekt (bijv. "15" -> "€15", "25-45" -> "€25-45"). Waarden die
 // al een € bevatten, of geen bedrag zijn (zoals "gratis" of "n.b."),
 // blijven ongewijzigd.
+// Eerste letter van elk woord hoofdletter, rest kleine letters.
+// Werkt ook op ALL-CAPS invoer van de scraper.
+// Uitzondering: 's- (zoals 's-Hertogenbosch) blijft lowercase na apostrof.
+function titleCase(str) {
+  if (!str) return str;
+  return str.toLowerCase()
+    .replace(/\b[a-zà-ÿ]/g, function(c) { return c.toUpperCase(); })
+    .replace(/'[A-Z]/g, function(m) { return m.toLowerCase(); });
+}
+
 function formatPrice(price) {
   if (!price) return price;
   var p = String(price).trim();

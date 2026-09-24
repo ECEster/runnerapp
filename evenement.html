@@ -155,7 +155,7 @@ function renderEvent(ev, lang) {
       '</div>'+
       '<aside class="event-detail__sidebar">'+
         '<div class="detail-info-row"><span class="detail-info-icon">📅</span><div><div class="detail-info-label">'+t('date_label')+'</div><div class="detail-info-value">'+dateStr+'</div></div></div>'+
-        '<div class="detail-info-row"><span class="detail-info-icon">📍</span><div><div class="detail-info-label">'+t('location_label')+'</div><div class="detail-info-value">'+ev.city+'</div></div></div>'+
+        '<div class="detail-info-row"><span class="detail-info-icon">📍</span><div><div class="detail-info-label">'+t('location_label')+'</div><div class="detail-info-value">'+titleCase(ev.city)+'</div></div></div>'+
         '<div class="detail-info-row"><span class="detail-info-icon">🗺️</span><div><div class="detail-info-label">'+t('province_label')+'</div><div class="detail-info-value">'+ev.province+'</div></div></div>'+
         '<div class="detail-info-row"><span class="detail-info-icon">🏃</span><div><div class="detail-info-label">'+t('distances_label')+'</div><div class="detail-info-value">'+distList+'</div></div></div>'+
         '<div class="detail-info-row"><span class="detail-info-icon">💶</span><div><div class="detail-info-label">'+t('price_label')+'</div><div class="detail-info-value">'+(!ev.paid ? t('free') : (ev.price ? formatPrice(ev.price) : (ev.registration_url ? '<a href="'+ev.registration_url+'" target="_blank" rel="noopener noreferrer" style="color:var(--mid);font-size:0.9rem;">Zie website</a>' : 'Zie website')))+'</div></div></div>'+
