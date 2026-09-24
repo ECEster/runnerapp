@@ -42,6 +42,7 @@
   --badge-inclusief:           #EC4899;
   --badge-gecertificeerd:      #B45309;
   --badge-hondenloop:          #A16207;
+  --badge-swimrun:             #0E7490;
 }
 
 /* ── Reset ─────────────────────────────────────────────────── */
@@ -482,6 +483,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 .badge-inclusieve-runs    { background: var(--badge-inclusief); }
 .badge-gecertificeerd-parcours { background: var(--badge-gecertificeerd); }
 .badge-hondenloop         { background: var(--badge-hondenloop); }
+.badge-swimrun            { background: var(--badge-swimrun); }
 
 /* ── About section ──────────────────────────────────────────── */
 .about-section {
