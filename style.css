@@ -369,6 +369,7 @@ p:last-child { margin-bottom: 0; }
   transition: transform 0.4s ease;
 }
 .event-card:hover .event-card__img img { transform: scale(1.05); }
+.event-card__img img[src*="gemengd-parcours"] { object-position: top; }
 .event-card__badge {
   position: absolute;
   top: 10px;
