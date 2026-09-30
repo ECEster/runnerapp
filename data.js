@@ -80,7 +80,6 @@ function makePriceHtml(ev, lang) {
 var FALLBACK_IMAGE_BY_TYPE = {
   'wegevenement': 'images/wegevenement.jpg',
   'parkloop': 'images/parkloop.jpg',
-  'hondenloop': 'images/hondenloop.jpg',
   'gemengd parcours': 'images/gemengd-parcours.png',
   'cross': 'images/cross.jpg',
   'swimrun':   'images/swimrun.jpg',
@@ -89,8 +88,11 @@ var FALLBACK_IMAGE_BY_TYPE = {
   'bikerun':   'images/bikerun.jpg',
 };
 
+// 'hondenloop' is geen type (kan bij elk type event aangevinkt worden, net als
+// kidsrun), dus die fallback-foto wordt los gecheckt i.p.v. via FALLBACK_IMAGE_BY_TYPE.
 function getEventImage(ev) {
   if (ev.type === 'baanevenement') return 'images/baanevenement.jpg';
+  if (!ev.image && ev.hondenloop) return 'images/hondenloop.jpg';
   if (!ev.image && FALLBACK_IMAGE_BY_TYPE[ev.type]) return FALLBACK_IMAGE_BY_TYPE[ev.type];
   return ev.image;
 }

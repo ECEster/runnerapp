@@ -41,10 +41,8 @@
   --badge-wandelen:            #2D6A4F;
   --badge-inclusief:           #3D7A6B;
   --badge-gecertificeerd:      #4A6E7F;
-  --badge-hondenloop:          #4A7A6B;
   --badge-swimrun:             #0E7490;
   --badge-urbanrun:            #334E68;
-  --badge-businessrun:         #1A5E6B;
   --badge-bikerun:             #2C6E8A;
 }
 
@@ -487,10 +485,8 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 .badge-sportief-wandelen  { background: var(--badge-wandelen); }
 .badge-inclusieve-runs    { background: var(--badge-inclusief); }
 .badge-gecertificeerd-parcours { background: var(--badge-gecertificeerd); }
-.badge-hondenloop         { background: var(--badge-hondenloop); }
 .badge-swimrun            { background: var(--badge-swimrun); }
 .badge-urbanrun           { background: var(--badge-urbanrun); }
-.badge-businessrun        { background: var(--badge-businessrun); }
 .badge-bikerun            { background: var(--badge-bikerun); }
 
 /* ── About section ──────────────────────────────────────────── */

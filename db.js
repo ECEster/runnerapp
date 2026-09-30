@@ -38,6 +38,7 @@ async function loadEventsFromDB() {
         image:            e.image     || '',
         registration_url: e.registration_url || '',
         kidsrun:          e.kidsrun   || false,
+        hondenloop:       e.hondenloop || false,
         paid:             true,
         atletiekunie:     false,
         capacity:         null,
