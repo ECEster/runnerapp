@@ -8,27 +8,43 @@ import { parseLoopjeLoopjeEvents } from './parseLoopjeLoopje.js'
 import { persistProvinceCache } from './resolveProvince.js'
 import { dedupeEvents } from './dedupe.js'
 
-const PROVINCES = ['groningen', 'friesland', 'drenthe']
+// Alle 12 provincies. De twee bronnen schrijven de URL-slug verschillend:
+// runphy.nl met koppelteken ("noord-brabant"), hardloopkalendernederland.nl
+// zonder ("noordbrabant"). 'naam' is de schrijfwijze die de rest van de site
+// gebruikt (zie REGIO_MAP in admin-panel.html).
+const PROVINCES = [
+  { naam: 'Groningen', runphy: 'groningen', hkn: 'groningen' },
+  { naam: 'Friesland', runphy: 'friesland', hkn: 'friesland' },
+  { naam: 'Drenthe', runphy: 'drenthe', hkn: 'drenthe' },
+  { naam: 'Overijssel', runphy: 'overijssel', hkn: 'overijssel' },
+  { naam: 'Flevoland', runphy: 'flevoland', hkn: 'flevoland' },
+  { naam: 'Gelderland', runphy: 'gelderland', hkn: 'gelderland' },
+  { naam: 'Utrecht', runphy: 'utrecht', hkn: 'utrecht' },
+  { naam: 'Noord-Holland', runphy: 'noord-holland', hkn: 'noordholland' },
+  { naam: 'Zuid-Holland', runphy: 'zuid-holland', hkn: 'zuidholland' },
+  { naam: 'Zeeland', runphy: 'zeeland', hkn: 'zeeland' },
+  { naam: 'Noord-Brabant', runphy: 'noord-brabant', hkn: 'noordbrabant' },
+  { naam: 'Limburg', runphy: 'limburg', hkn: 'limburg' },
+]
 
 export async function collectEvents({ year }) {
   const allEvents = []
 
-  for (const provinceSlug of PROVINCES) {
-    const runphyUrl = `https://runphy.nl/events/provinces/${provinceSlug}`
+  for (const { naam: provincie, runphy, hkn } of PROVINCES) {
+    const runphyUrl = `https://runphy.nl/events/provinces/${runphy}`
     const runphyHtml = await fetchHtml(runphyUrl)
     allEvents.push(...parseRunphyEvents(runphyHtml))
 
-    const hknUrl = `https://hardloopkalendernederland.nl/${provinceSlug}/`
+    const hknUrl = `https://hardloopkalendernederland.nl/${hkn}/`
     const hknHtml = await fetchHtml(hknUrl)
-    const provincie = provinceSlug.charAt(0).toUpperCase() + provinceSlug.slice(1)
     allEvents.push(
       ...parseHardloopkalenderEvents(hknHtml, { year, provincie, bronUrl: hknUrl }),
     )
   }
 
   // loopjeloopje.nl heeft geen aparte pagina per provincie (in tegenstelling
-  // tot de twee bronnen hierboven) — één keer ophalen, zelf filteren op
-  // Noord-Nederland (zie lib/parseLoopjeLoopje.js + lib/resolveProvince.js).
+  // tot de twee bronnen hierboven) — één keer ophalen, en via PDOK per plaats
+  // de provincie bepalen (zie lib/parseLoopjeLoopje.js + lib/resolveProvince.js).
   const loopjeLoopjeHtml = await fetchHtml('https://www.loopjeloopje.nl/')
   allEvents.push(...(await parseLoopjeLoopjeEvents(loopjeLoopjeHtml)))
   persistProvinceCache()

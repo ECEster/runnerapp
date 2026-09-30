@@ -1,6 +1,6 @@
 # Events-scraper
 
-Verzamelt hardloopevenementen in Noord-Nederland (Groningen, Friesland, Drenthe) van
+Verzamelt hardloopevenementen in alle 12 provincies van Nederland van
 runphy.nl, hardloopkalendernederland.nl en loopjeloopje.nl, en schrijft nieuwe events
 naar de Supabase `events`-tabel (altijd met `published: false` — jij publiceert
 handmatig in het admin-portaal).

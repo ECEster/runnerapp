@@ -1,4 +1,4 @@
-// Haalt beide bronnen op voor alle 3 provincies, parset, dedupliceert, en toont een
+// Haalt alle bronnen op voor alle 12 provincies, parset, dedupliceert, en toont een
 // dry-run samenvatting. Schrijft NIETS naar Supabase.
 import { collectEvents } from './lib/collectEvents.js'
 import { printDryRunSummary } from './lib/dryRunSummary.js'

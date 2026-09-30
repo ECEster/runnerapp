@@ -3,8 +3,8 @@
 // Anders dan runphy.nl en hardloopkalendernederland.nl heeft deze bron geen
 // aparte pagina per provincie — het is één landelijke lijst, netjes in een
 // HTML-<table> (naam, datum+tijd, plaats als Google Maps-link, afstanden).
-// Omdat lib/collectEvents.js alleen Noord-Nederland verzamelt, filteren we
-// hier zelf op provincie via lib/resolveProvince.js (PDOK Locatieserver,
+// Omdat we per provincie verzamelen, bepalen we
+// hier zelf de provincie via lib/resolveProvince.js (PDOK Locatieserver,
 // zie dat bestand voor waarom).
 
 import { resolveProvince } from './resolveProvince.js'
@@ -66,17 +66,16 @@ export function parseLoopjeLoopjeRows(html) {
 }
 
 // Haalt en parset alle rijen, en houdt alleen evenementen over waarvan de
-// plaats (via PDOK) in Groningen, Friesland of Drenthe ligt. Async omdat
-// resolveProvince() een netwerkopvraging kan zijn (met cache).
+// plaats (via PDOK) in een Nederlandse provincie ligt — plaatsen die PDOK niet
+// kent (bv. in België of Duitsland) vallen af. Async omdat resolveProvince()
+// een netwerkopvraging kan zijn (met cache).
 export async function parseLoopjeLoopjeEvents(html) {
   const candidates = parseLoopjeLoopjeRows(html)
   const result = []
   for (const event of candidates) {
     if (!event.plaats) continue
     const provincie = await resolveProvince(event.plaats)
-    if (provincie === 'Groningen' || provincie === 'Friesland' || provincie === 'Drenthe') {
-      result.push({ ...event, provincie })
-    }
+    if (provincie) result.push({ ...event, provincie })
   }
   return result
 }

@@ -9,14 +9,14 @@ en de `regio-*.html`-pagina's).
 | Regio | Provincies | Actief? | Bronnen |
 |---|---|---|---|
 | **Noord** | Groningen, Friesland, Drenthe | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl |
-| **Oost** | Overijssel, Gelderland, Flevoland | ❌ Nog niet | — |
-| **Zuid** | Noord-Brabant, Limburg | ❌ Nog niet | — |
-| **West** | Noord-Holland, Zuid-Holland, Utrecht, Zeeland | ❌ Nog niet | — |
+| **Oost** | Overijssel, Gelderland, Flevoland | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl |
+| **Zuid** | Noord-Brabant, Limburg | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl |
+| **West** | Noord-Holland, Zuid-Holland, Utrecht, Zeeland | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl |
 
-**Alleen Noord wordt op dit moment daadwerkelijk gescraped** — dat is de enige
-regio in `PROVINCES` in `lib/collectEvents.js`. Oost, Zuid en West staan er
-nog niet in; evenementen daar moeten voorlopig nog met de hand worden
-toegevoegd via het admin-paneel.
+**Sinds 2026-09-30 worden alle 12 provincies gescraped** — zie `PROVINCES` in
+`lib/collectEvents.js`. Let op: hardloopkalendernederland.nl schrijft de
+URL-slug zonder koppelteken (`noordbrabant`, `noordholland`, `zuidholland`),
+runphy.nl met (`noord-brabant`).
 
 ## Per bron, per provincie
 
@@ -52,7 +52,7 @@ landelijke tabel met alle evenementen in heel Nederland (372 op het moment van
 schrijven), netjes gestructureerd (naam, datum+tijd, plaats als Google
 Maps-link, afstanden — zie `lib/parseLoopjeLoopje.js`).
 
-Om daar toch alleen Noord-Nederland uit te halen, wordt élke plaatsnaam
+Om per evenement de provincie te bepalen, wordt élke plaatsnaam
 opgezocht bij de **PDOK Locatieserver** — de gratis, publieke geocodeservice
 van de Nederlandse overheid (gebaseerd op de BAG, dus officieel en
 authoritatief, in tegenstelling tot een handmatig getypte plaatsenlijst) —

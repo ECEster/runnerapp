@@ -7,8 +7,8 @@
 //
 // Waarom nodig: loopjeloopje.nl heeft, anders dan runphy.nl en
 // hardloopkalendernederland.nl, geen aparte pagina per provincie — het is
-// één landelijke lijst. lib/collectEvents.js verzamelt alleen
-// Groningen/Friesland/Drenthe, dus moeten we zelf per plaatsnaam de
+// één landelijke lijst. lib/collectEvents.js verzamelt per provincie,
+// dus moeten we zelf per plaatsnaam de
 // provincie bepalen om te kunnen filteren.
 //
 // Documentatie PDOK Locatieserver: https://www.pdok.nl/restful-api/-/article/locatieserver
