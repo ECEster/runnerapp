@@ -72,6 +72,20 @@ export async function fetchAllEventsForBackfill() {
   return res.json()
 }
 
+// Haalt alle events op waarvan de prijs nog "volgt" is (ongeacht hoofd-/
+// kleine letters) — voor check-pending-prices.js, de geplande herinnering
+// om zulke evenementen tegen het einde van het jaar opnieuw te checken.
+export async function fetchEventsWithPendingPrice() {
+  const res = await fetch(
+    `${baseUrl()}/rest/v1/events?price=ilike.*volgt*&select=id,name_nl,date,registration_url,source_url`,
+    { headers: headers() },
+  )
+  if (!res.ok) {
+    throw new Error(`Kon events met prijs "volgt" niet ophalen: HTTP ${res.status} — ${await res.text()}`)
+  }
+  return res.json()
+}
+
 // Voegt één event-rij toe. Verwacht de rij al in de vorm van de 'events'-tabel
 // (zie lib/mapToSupabaseShape.js).
 export async function insertEventRow(row) {

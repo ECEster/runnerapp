@@ -2,3 +2,4 @@ node_modules/
 *.html
 .env
 .cache/
+pending-prices-report.txt

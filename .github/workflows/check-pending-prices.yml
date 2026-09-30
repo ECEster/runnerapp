@@ -1,0 +1,56 @@
+name: Controleer evenementen met prijs "volgt"
+
+# Draait automatisch op 15 okt, 1 nov, 15 nov, 1 dec en 15 dec (elk jaar) —
+# precies de periode waarin organisatoren van jaarwisselingsevenementen
+# doorgaans hun prijs bekendmaken. Stuurt alleen een e-mail als er
+# daadwerkelijk iets te melden is. Ook handmatig te starten via de
+# Actions-tab ("Run workflow").
+on:
+  schedule:
+    - cron: "0 8 15 10 *"
+    - cron: "0 8 1 11 *"
+    - cron: "0 8 15 11 *"
+    - cron: "0 8 1 12 *"
+    - cron: "0 8 15 12 *"
+  workflow_dispatch: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: scraper
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Zoek evenementen met prijs "volgt"
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: node check-pending-prices.js
+
+      - name: Bepaal of er iets te mailen valt
+        id: report
+        run: |
+          if [ -s pending-prices-report.txt ]; then
+            echo "has_content=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_content=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Verstuur herinnerings-e-mail
+        if: steps.report.outputs.has_content == 'true'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.GMAIL_SENDER_ADDRESS }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          from: RunningNederland <${{ secrets.GMAIL_SENDER_ADDRESS }}>
+          to: runningnederland@gmail.com
+          subject: "Prijzen te controleren — RunningNederland"
+          body: file://scraper/pending-prices-report.txt

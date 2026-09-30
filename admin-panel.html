@@ -157,6 +157,14 @@
     .btn-unpub:hover { background: #5fa3c4; }
     .btn-del:hover   { background: #3d9085; }
     .no-events { text-align: center; color: #aaa; padding: 24px; font-size: .88rem; }
+    .price-reminder { border: 1.5px solid #ffd166; background: #fffbeb; }
+    .price-reminder h2 { border-bottom-color: #ffe8a3; }
+    .price-reminder li {
+      display: flex; justify-content: space-between; align-items: center; gap: 10px;
+      padding: 8px 0; border-bottom: 1px solid #ffe8a3;
+    }
+    .price-reminder li:last-child { border-bottom: none; }
+    .price-reminder li a { color: #4f7cff; font-size: .82rem; font-weight: 600; white-space: nowrap; }
     .year-divider td {
       padding: 6px 10px; font-size: .78rem; font-weight: 700; color: #888;
       background: #f0f0f0; border-bottom: 1.5px solid #ddd; border-top: 1.5px solid #ddd;
@@ -196,6 +204,16 @@
 </div>
 
 <div class="panel">
+
+  <!-- Herinnering: evenementen met prijs "volgt" die dichtbij komen -->
+  <div class="card price-reminder" id="price-reminder-card" hidden>
+    <h2>💬 Prijs nog niet bekend</h2>
+    <p style="font-size:.85rem;color:#666;margin-bottom:12px">
+      Deze evenementen hebben nog "volgt" als prijs en vinden over minder dan 4 maanden plaats —
+      tijd om even op de organisatorsite te kijken of de prijs inmiddels bekend is.
+    </p>
+    <ul id="price-reminder-list" style="list-style:none"></ul>
+  </div>
 
   <!-- Formulier: nieuw event toevoegen / bewerken -->
   <div class="card" id="form-card">
@@ -624,6 +642,7 @@ async function loadEventsTable() {
       return d !== 0 ? d : (a.name_nl || '').localeCompare(b.name_nl || '');
     });
     renderEventsTable();
+    renderPriceReminder();
   } catch (err) {
     const msg = `<tr><td colspan="8" class="no-events" style="color:#c0392b">Fout: ${err.message}</td></tr>`;
     tbody.innerHTML = msg;
@@ -711,6 +730,38 @@ function renderEventsTable() {
   tbodyPast.innerHTML = past.length
     ? renderRowsWithYearDividers(past)
     : '<tr><td colspan="8" class="no-events">Geen afgelopen evenementen gevonden.</td></tr>';
+}
+
+// Toont een herinneringsblok voor evenementen met prijs "volgt" die binnen
+// 4 maanden plaatsvinden — zelfde signaal als de geplande e-mail
+// (scraper/check-pending-prices.js), maar dan meteen zichtbaar zodra je
+// inlogt, zonder op een vaste datum te hoeven wachten.
+function renderPriceReminder() {
+  const card = document.getElementById('price-reminder-card');
+  const list = document.getElementById('price-reminder-list');
+  const cutoff = new Date();
+  cutoff.setMonth(cutoff.getMonth() + 4);
+  const todayStr = new Date().toISOString().split('T')[0];
+  const cutoffStr = cutoff.toISOString().split('T')[0];
+
+  const pending = allEvents
+    .filter(ev => (ev.price || '').toLowerCase().includes('volgt'))
+    .filter(ev => (ev.date || '') >= todayStr && (ev.date || '') <= cutoffStr)
+    .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+
+  if (!pending.length) {
+    card.hidden = true;
+    return;
+  }
+
+  card.hidden = false;
+  list.innerHTML = pending.map(ev => {
+    const link = ev.registration_url || ev.source_url;
+    return `<li>
+      <span><strong>${ev.name_nl || '—'}</strong> — ${ev.date || '—'}</span>
+      ${link ? `<a href="${link}" target="_blank" rel="noopener">Organisatorsite →</a>` : '<span style="color:#aaa;font-size:.8rem">geen link bekend</span>'}
+    </li>`;
+  }).join('');
 }
 
 async function togglePublish(id, currentlyPublished) {

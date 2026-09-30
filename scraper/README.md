@@ -163,6 +163,40 @@ service is publiek toegankelijk zonder sleutel. Wel start elke Actions-run met e
 een paar minuten door de ~350 opzoekingen, ook al is dat lokaal met een gevulde cache
 al eens sneller gegaan.
 
+## Herinnering "prijs volgt" (e-mail + admin-paneel)
+
+Sommige evenementen worden bewust met `prijs: "volgt"` gepubliceerd (bv.
+jaarwisselingsevenementen waarvan de organisator de prijs pas laat
+bekendmaakt). Twee signalen zorgen dat je dit niet vergeet:
+
+1. **Admin-paneel**: zodra je inlogt zie je bovenaan een geel blok "Prijs nog
+   niet bekend" met elk zo'n evenement dat binnen 4 maanden plaatsvindt, met
+   een link naar de organisatorsite. Geen instelling nodig, werkt meteen.
+2. **E-mail** (`check-pending-prices.js` +
+   `.github/workflows/check-pending-prices.yml`): draait automatisch op
+   **15 okt, 1 nov, 15 nov, 1 dec en 15 dec** (elk jaar) en mailt naar
+   `runningnederland@gmail.com` — maar alleen als er daadwerkelijk iets te
+   melden is. Schrijft nergens naar de database, puur een signalering.
+
+Eenmalig instellen voor de e-mail (naast de twee Supabase-secrets die al voor
+de scraper nodig zijn):
+1. Kies een Gmail-account om **vanaf** te versturen (mag hetzelfde
+   `runningnederland@gmail.com`-account zijn, of een ander account — het hoeft
+   niet het ontvangende adres te zijn).
+2. Zet 2-staps-verificatie aan op dat account (vereist voor App-wachtwoorden)
+   en maak een **App-wachtwoord** aan via
+   [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords)
+   — dit is een apart 16-tekens-wachtwoord, niet je normale Gmail-wachtwoord.
+3. Voeg in de GitHub-repo (**Settings → Secrets and variables → Actions**)
+   twee nieuwe **Repository secrets** toe:
+   - `GMAIL_SENDER_ADDRESS` — het volledige e-mailadres van het verzendende account
+   - `GMAIL_APP_PASSWORD` — het zojuist aangemaakte App-wachtwoord
+
+Handmatig testen (zonder op een geplande datum te wachten): ga naar de
+**Actions**-tab → "Controleer evenementen met prijs 'volgt'" → **Run
+workflow**. Is er op dat moment niets met prijs "volgt" binnen 4 maanden,
+dan wordt er ook geen e-mail verstuurd — dat is geen fout.
+
 ## Nog te bouwen / nog uit te voeren
 
 - **Serie/editie in productie zetten** (nieuw, nog niet gedaan): voer in deze volgorde uit in
