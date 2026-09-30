@@ -30,7 +30,7 @@ async function loadEventsFromDB() {
         type:             e.type      || '',
         city:             e.city      || '',
         province:         e.province  || '',
-        distances:        e.distances ? e.distances.replace(/(\d{1,2}),(\d)(?!\d)/g, '$1.$2').split(',').map(d => d.trim()).filter(Boolean) : [],
+        distances:        e.distances ? e.distances.replace(/(\d{1,2}),(\d{1,3})(?!\d)/g, '$1.$2').split(',').map(d => d.trim()).filter(Boolean) : [],
         price:            e.price     || '',
         organizer:        e.organizer || '',
         description_nl:   e.description_nl || '',
