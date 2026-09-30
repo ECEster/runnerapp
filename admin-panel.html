@@ -679,8 +679,8 @@ function renderEventsTable() {
   }
 
   const todayStr = new Date().toISOString().split('T')[0];
-  const upcoming = events.filter(ev => (ev.date || '') >= todayStr);
-  const past = events.filter(ev => (ev.date || '') < todayStr).reverse(); // meest recent verleden eerst
+  const upcoming = groupByNameMatch(events.filter(ev => (ev.date || '') >= todayStr), '4 mijl');
+  const past = groupByNameMatch(events.filter(ev => (ev.date || '') < todayStr).reverse(), '4 mijl'); // meest recent verleden eerst
 
   tbodyUpcoming.innerHTML = upcoming.length
     ? upcoming.map(renderEventRow).join('')

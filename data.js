@@ -57,6 +57,22 @@ function capitalizeFirst(str) {
   return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
 }
 
+// Zet events met een bepaalde tekst in de naam bij elkaar (achter elkaar),
+// zonder de bestaande onderlinge volgorde te verstoren — bv. alle "4 mijl"-
+// evenementen samen vooraan, elk onderling nog gewoon op datum. Werkt via
+// een stabiele sort (gegarandeerd stabiel sinds ES2019) op alleen de
+// wel/niet-match, dus de volgorde bínnen elke groep blijft exact zoals 'ie
+// binnenkwam.
+function groupByNameMatch(events, needle) {
+  var lowerNeedle = needle.toLowerCase();
+  return events.slice().sort(function(a, b) {
+    var aMatch = (a.name_nl || '').toLowerCase().indexOf(lowerNeedle) !== -1;
+    var bMatch = (b.name_nl || '').toLowerCase().indexOf(lowerNeedle) !== -1;
+    if (aMatch === bMatch) return 0;
+    return aMatch ? -1 : 1;
+  });
+}
+
 function formatPrice(price) {
   if (!price) return price;
   var p = String(price).trim();
