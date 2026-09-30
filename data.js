@@ -54,6 +54,16 @@ function formatPrice(price) {
   return '€' + p;
 }
 
+// Rondt het decimale deel van een afstand af op 1 cijfer na de punt, bv.
+// "6.437km" -> "6.4km", "42.195KM" -> "42.2KM". Afstanden zonder decimalen
+// (zoals "10km") blijven ongewijzigd. Bedoeld voor weergave — de brontekst in
+// de database (met volledige precisie) blijft ongemoeid.
+function roundDistanceLabel(distance) {
+  return distance.replace(/(\d+)\.(\d+)/, function(_, whole, decimals) {
+    return (Math.round(parseFloat(whole + '.' + decimals) * 10) / 10).toFixed(1);
+  });
+}
+
 // Geeft de juiste prijs-HTML terug voor een eventcard:
 // gratis → groene badge, prijs bekend → toon prijs, prijs onbekend → "Zie website"
 function makePriceHtml(ev, lang) {

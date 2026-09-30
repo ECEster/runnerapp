@@ -74,7 +74,7 @@ function renderList(lang) {
     var typeName = getTypeName(ev.type, lang);
     var priceHtml = ev.paid ? '<span class="event-card__price">'+formatPrice(ev.price)+'</span>' : '<span class="event-card__price free">Gratis</span>';
     var freeBadge = !ev.paid ? '<span class="event-card__free-badge">Gratis</span>' : '';
-    var distChips = ev.distances.map(function(d){ return '<span class="event-card__dist-chip">'+d+'</span>'; }).join('');
+    var distChips = '<span class="event-card__distances-text">' + ev.distances.join(' | ') + '</span>';
     var detailUrl = 'evenement.html?id='+ev.id;
     var moreInfoHref = ev.registration_url || detailUrl;
     var moreInfoAttrs = ev.registration_url ? ' target="_blank" rel="noopener"' : '';
