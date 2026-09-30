@@ -55,7 +55,7 @@ function applyFilters() {
   } else {
     filteredEvents.sort(function(a,b){ return new Date(a.date)-new Date(b.date); });
   }
-  filteredEvents = groupByNameMatch(filteredEvents, '4 mijl');
+  filteredEvents = groupMatchesTogether(filteredEvents, isFourMijlGroningenOrHaren);
   renderList(lang);
   renderCalendar();
   var countEl = document.getElementById('results-count');

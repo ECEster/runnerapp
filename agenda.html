@@ -369,7 +369,7 @@ function applyFilters() {
   } else {
     filteredEvents.sort(function(a,b){ var d=new Date(a.date)-new Date(b.date); return d!==0?d:(a.name_nl||'').localeCompare(b.name_nl||''); });
   }
-  filteredEvents = groupByNameMatch(filteredEvents, '4 mijl');
+  filteredEvents = groupMatchesTogether(filteredEvents, isFourMijlGroningenOrHaren);
 
   renderList(lang);
   renderCalendar();

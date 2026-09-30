@@ -57,20 +57,29 @@ function capitalizeFirst(str) {
   return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
 }
 
-// Zet events met een bepaalde tekst in de naam bij elkaar (achter elkaar),
-// zonder de bestaande onderlinge volgorde te verstoren — bv. alle "4 mijl"-
-// evenementen samen vooraan, elk onderling nog gewoon op datum. Werkt via
-// een stabiele sort (gegarandeerd stabiel sinds ES2019) op alleen de
-// wel/niet-match, dus de volgorde bínnen elke groep blijft exact zoals 'ie
-// binnenkwam.
-function groupByNameMatch(events, needle) {
-  var lowerNeedle = needle.toLowerCase();
-  return events.slice().sort(function(a, b) {
-    var aMatch = (a.name_nl || '').toLowerCase().indexOf(lowerNeedle) !== -1;
-    var bMatch = (b.name_nl || '').toLowerCase().indexOf(lowerNeedle) !== -1;
-    if (aMatch === bMatch) return 0;
-    return aMatch ? -1 : 1;
-  });
+// Zet events die aan 'matchFn' voldoen bij elkaar (achter elkaar), zonder de
+// oplopende (datum-)volgorde van de REST van de lijst te verstoren: alle
+// niet-matchende events behouden exact hun eigen onderlinge volgorde, en de
+// hele groep matches (ook onderling in hun oorspronkelijke volgorde) wordt in
+// zijn geheel ingevoegd op de plek waar de EERSTE match oorspronkelijk stond
+// — dus geen matches die naar voren/achteren springen in de tijdlijn, alleen
+// die ene plek waar ze samen komen te staan.
+function groupMatchesTogether(events, matchFn) {
+  var matches = events.filter(matchFn);
+  if (matches.length < 2) return events.slice();
+  var firstMatchIndex = events.findIndex(matchFn);
+  var rest = events.filter(function(ev) { return !matchFn(ev); });
+  var insertAt = events.slice(0, firstMatchIndex).filter(function(ev) { return !matchFn(ev); }).length;
+  return rest.slice(0, insertAt).concat(matches, rest.slice(insertAt));
+}
+
+// Match-functie voor de "4 Mijl"-editie die zowel als "...Groningen" als
+// "...Haren" wordt aangeduid (Haren is in 2019 bij de gemeente Groningen
+// gevoegd, en bronnen zijn het er niet altijd over eens welke naam ze tonen —
+// zie ook lib/nameSimilarity.js in de scraper).
+function isFourMijlGroningenOrHaren(ev) {
+  var name = (ev.name_nl || '').toLowerCase();
+  return name.indexOf('4 mijl') !== -1 && (name.indexOf('groningen') !== -1 || name.indexOf('haren') !== -1);
 }
 
 function formatPrice(price) {
