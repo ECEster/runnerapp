@@ -47,6 +47,16 @@ function titleCase(str) {
     .replace(/'[A-Z]/g, function(m) { return m.toLowerCase(); });
 }
 
+// Zet alleen de allereerste letter van een tekst in hoofdletters, de rest in
+// kleine letters (bv. "AMSTERDAM" of "amsterdam" -> "Amsterdam"). Anders dan
+// titleCase() hierboven (die per woord een hoofdletter zet) — bedoeld voor
+// het Stad/Plaats-veld in het admin-formulier.
+function capitalizeFirst(str) {
+  if (!str) return str;
+  var trimmed = str.trim();
+  return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
+}
+
 function formatPrice(price) {
   if (!price) return price;
   var p = String(price).trim();
