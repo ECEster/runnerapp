@@ -2,6 +2,7 @@ import { detectKidsrun } from './detectKidsrun.js'
 import { detectSurvivalrun } from './detectSurvivalrun.js'
 import { buildSerie } from './buildSerie.js'
 import { extractEditie } from './extractEditie.js'
+import { decodeHtmlEntities } from './decodeHtmlEntities.js'
 
 function titleCase(str) {
   if (!str) return str;
@@ -34,6 +35,9 @@ function normalizeerAfstand(afstand) {
 //   afstanden (zie lib/detectKidsrun.js). Kan een kidsrun missen die de bron niet vermeldt —
 //   controleer dit sowieso tijdens het reviewen, net als 'type'.
 // - organizer (organisatienaam, tekst) laten we leeg: we hebben alleen een URL, geen naam.
+// - registration_url/source_url: HTML-entiteiten (bv. '&amp;') worden teruggezet naar gewone
+//   tekens, voor alle bronnen (runphy.nl, hardloopkalendernederland.nl, loopjeloopje.nl) —
+//   zie lib/decodeHtmlEntities.js.
 // - distances: van array naar komma-string, zoals de rest van de tabel dat al doet.
 // - source_url: NIEUWE kolom (nog toe te voegen via migratie), alleen voor het admin-portaal —
 //   niet bedoeld om aan bezoekers te tonen.
@@ -46,8 +50,8 @@ export function mapToSupabaseShape(event) {
     city: titleCase(event.plaats),
     province: event.provincie,
     distances: event.afstanden.map(normalizeerAfstand).join(', '),
-    registration_url: event.organisator_url,
-    source_url: event.bron_url,
+    registration_url: decodeHtmlEntities(event.organisator_url),
+    source_url: decodeHtmlEntities(event.bron_url),
     image: event.afbeelding_url,
     type: detectSurvivalrun(event) ? 'survivalrun' : 'wegevenement',
     organizer: null,
