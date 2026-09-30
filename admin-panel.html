@@ -157,6 +157,10 @@
     .btn-unpub:hover { background: #5fa3c4; }
     .btn-del:hover   { background: #3d9085; }
     .no-events { text-align: center; color: #aaa; padding: 24px; font-size: .88rem; }
+    .year-divider td {
+      padding: 6px 10px; font-size: .78rem; font-weight: 700; color: #888;
+      background: #f0f0f0; border-bottom: 1.5px solid #ddd; border-top: 1.5px solid #ddd;
+    }
     .events-subheading {
       font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
       color: #888; margin: 4px 0 8px;
@@ -658,6 +662,23 @@ function renderEventRow(ev) {
   `;
 }
 
+// Rendert events als tabelrijen, met een jaar-scheidingsrij ertussen zodra
+// het jaartal verandert (bv. tussen 2026 en 2027) — puur visueel, heeft geen
+// invloed op de volgorde zelf.
+function renderRowsWithYearDividers(events) {
+  let html = '';
+  let lastYear = null;
+  for (const ev of events) {
+    const year = (ev.date || '').slice(0, 4);
+    if (year && year !== lastYear) {
+      html += `<tr class="year-divider"><td colspan="8">${year}</td></tr>`;
+      lastYear = year;
+    }
+    html += renderEventRow(ev);
+  }
+  return html;
+}
+
 // Splitst op datum in "aankomend" (altijd zichtbaar) en "afgelopen" (achter
 // het inklapmenu, dichtgevouwen — zo blijft het overzicht overzichtelijk
 // zonder oude evenementen kwijt te raken).
@@ -683,12 +704,12 @@ function renderEventsTable() {
   const past = groupMatchesTogether(events.filter(ev => (ev.date || '') < todayStr).reverse(), isFourMijlGroningenOrHaren); // meest recent verleden eerst
 
   tbodyUpcoming.innerHTML = upcoming.length
-    ? upcoming.map(renderEventRow).join('')
+    ? renderRowsWithYearDividers(upcoming)
     : '<tr><td colspan="8" class="no-events">Geen aankomende evenementen gevonden.</td></tr>';
 
   pastCount.textContent = past.length;
   tbodyPast.innerHTML = past.length
-    ? past.map(renderEventRow).join('')
+    ? renderRowsWithYearDividers(past)
     : '<tr><td colspan="8" class="no-events">Geen afgelopen evenementen gevonden.</td></tr>';
 }
 
