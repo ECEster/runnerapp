@@ -236,25 +236,19 @@ Op 30 september 2026 zijn de prijzen voor oktober–december 2026 gecontroleerd 
 (#36), Dorpsloop Nij Beets (#73) en Oliebollen cross (#220) zijn verwijderd omdat ze in 2026 niet
 doorgaan. Deze punten staan nog open:
 
-- **RLS staat uit op `events` (belangrijkste punt).** Iedereen met de anon-key uit `db.js` kan
-  evenementen wijzigen of verwijderen. Niet alleen RLS aanzetten: dan werkt `admin.html` niet
-  meer. En ook niet "ingelogd = mag schrijven", want via Mijn Runs kan iedereen een account
-  maken. Voer dit uit in de Supabase SQL Editor (scraper en herinneringsmail gebruiken de
-  service_role key en blijven werken):
+- **RLS op `events`: bijna klaar (belangrijkste punt).** RLS staat sinds 2026-09-30 aan, met
+  een `admins`-tabel en de policies "Lezen" en "Admin schrijft". Maar er staan nog drie oude
+  policies die elke ingelogde gebruiker laten schrijven (en via Mijn Runs kan iedereen een
+  account maken). Omdat policies elkaar aanvullen, maakt dat "Admin schrijft" zinloos. Voer uit
+  in de Supabase SQL Editor:
   ```sql
-  create table if not exists public.admins (user_id uuid primary key references auth.users(id));
-  alter table public.admins enable row level security;
-  insert into public.admins select id from auth.users where lower(email) = 'ej.liest@gmail.com';
-
-  alter table public.events enable row level security;
-  create policy "Lezen" on public.events for select
-    using (published or auth.uid() in (select user_id from public.admins));
-  create policy "Admin schrijft" on public.events for all to authenticated
-    using (auth.uid() in (select user_id from public.admins))
-    with check (auth.uid() in (select user_id from public.admins));
+  drop policy "Allow authenticated delete" on public.events;
+  drop policy "Allow authenticated insert" on public.events;
+  drop policy "Allow authenticated update" on public.events;
   ```
-  Controleer daarna: de site toont nog evenementen, het adminpaneel kan nog opslaan, en een
-  update met alleen de anon-key wordt geweigerd.
+  Laat "Allow public read" (anon, alleen `published = true`) staan. Controleer daarna: alleen
+  "Admin schrijft", "Allow public read" en "Lezen" staan nog op `events`, en opslaan in het
+  adminpaneel werkt nog.
 - **#60 Menzis 4 Mijl van Groningen:** prijs moet waarschijnlijk `10,25 - 24,25` worden
   (ingevuld was `10,25 - 24,24`, de site noemt 24,25). Nu staat er `24,25`.
 - **#136 DTSV Decemberloop Peize:** staat offline, nog niet besloten of hij weer gepubliceerd moet.
