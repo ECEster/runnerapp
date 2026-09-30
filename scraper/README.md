@@ -208,3 +208,23 @@ dan wordt er ook geen e-mail verstuurd — dat is geen fout.
   3. Pas dán `migrations/0003_unique_serie_date.sql` (de unique constraint faalt als er op
      dat moment nog dubbele (serie, date)-combinaties bestaan).
 - Afbeeldingen ophalen (Unsplash API).
+
+## Herinnering voor de volgende sessie: kapotte links (linkcheck 2026-09-30)
+
+Bij de linkcheck van 30 september 2026 zijn 7 links al gerepareerd. Deze punten staan nog open:
+
+- **Geen nieuwe evenementpagina gevonden.** De oude link geeft een 404, de homepage van de
+  organisator werkt wel. Kies per evenement: homepage invullen, zelf een betere pagina
+  zoeken, of wachten tot de organisator een nieuwe pagina online zet (alle drie concept,
+  datum in 2027).
+  - #139 Stadtmüller-Udikloop (2027-01-16): `udik.nl/index.php/udikloop/` is weg.
+  - #307 Poptimaal Run (2027-06-11): `poptimaal.nl/run` is weg; de site heeft nu `/run-1`,
+    `/run-2` en `/run-3`, niet duidelijk welke erbij hoort.
+  - #285 Ten Poster Meul'n Loop (2027-05-20): `svteo.nl/nieuws.html` is weg.
+- **#31 DSW Bruggenloop Rotterdam (gepubliceerd):** de Unsplash-afbeelding bestaat niet meer,
+  er is een nieuwe foto nodig.
+- **#53 Artemisrun:** het SSL-certificaat van `artemisrun.nl` is verlopen (browserwaarschuwing).
+- **#104/#275 Loop Leeuwarden:** de site toont een "Binnenkort terug"-pagina.
+- **Niet automatisch te controleren, even zelf in de browser openen:** alle `avhorror.nl`-links
+  (10 evenementen, gaf steeds 429), de Facebook-links (Mjitte Run, Wintertrimloop Makkum,
+  Fytris Crosstrailloop, Heiderun Noardburgum) en `triatlonleeuwarden.nl` (403).
