@@ -228,3 +228,41 @@ Bij de linkcheck van 30 september 2026 zijn 7 links al gerepareerd. Deze punten 
 - **Niet automatisch te controleren, even zelf in de browser openen:** alle `avhorror.nl`-links
   (10 evenementen, gaf steeds 429), de Facebook-links (Mjitte Run, Wintertrimloop Makkum,
   Fytris Crosstrailloop, Heiderun Noardburgum) en `triatlonleeuwarden.nl` (403).
+
+## Herinnering voor de volgende sessie: prijzen en beveiliging (2026-09-30)
+
+Op 30 september 2026 zijn de prijzen voor oktober–december 2026 gecontroleerd en aangevuld
+(49 automatisch gevonden, de rest handmatig via twee Claude-artifacts). Lauwersmeer Najaarstocht
+(#36), Dorpsloop Nij Beets (#73) en Oliebollen cross (#220) zijn verwijderd omdat ze in 2026 niet
+doorgaan. Deze punten staan nog open:
+
+- **RLS staat uit op `events` (belangrijkste punt).** Iedereen met de anon-key uit `db.js` kan
+  evenementen wijzigen of verwijderen. Niet alleen RLS aanzetten: dan werkt `admin.html` niet
+  meer. En ook niet "ingelogd = mag schrijven", want via Mijn Runs kan iedereen een account
+  maken. Voer dit uit in de Supabase SQL Editor (scraper en herinneringsmail gebruiken de
+  service_role key en blijven werken):
+  ```sql
+  create table if not exists public.admins (user_id uuid primary key references auth.users(id));
+  alter table public.admins enable row level security;
+  insert into public.admins select id from auth.users where lower(email) = 'ej.liest@gmail.com';
+
+  alter table public.events enable row level security;
+  create policy "Lezen" on public.events for select
+    using (published or auth.uid() in (select user_id from public.admins));
+  create policy "Admin schrijft" on public.events for all to authenticated
+    using (auth.uid() in (select user_id from public.admins))
+    with check (auth.uid() in (select user_id from public.admins));
+  ```
+  Controleer daarna: de site toont nog evenementen, het adminpaneel kan nog opslaan, en een
+  update met alleen de anon-key wordt geweigerd.
+- **#60 Menzis 4 Mijl van Groningen:** prijs moet waarschijnlijk `10,25 - 24,25` worden
+  (ingevuld was `10,25 - 24,24`, de site noemt 24,25). Nu staat er `24,25`.
+- **#136 DTSV Decemberloop Peize:** staat offline, nog niet besloten of hij weer gepubliceerd moet.
+- **#28 Berenloop Marathon:** prijs in afwijkende notatie (`€36.50–€41`), wordt `36,50 - 41`.
+- **Prijzen op "volgt"** (organisator had nog geen 2026-prijs): 1e GPI Winterloop, Sint Thomas
+  Trailrun, Santa Run, Kerstcross Vlieland, sv Friesland Oudejaarscross, Sylvesterloop Glimmen,
+  Silvesterloop Poppenwier, Sinterklaasloop Bolsward, Oliebollenloop (inschrijving opent 1 okt).
+  De geplande herinnering (`check-pending-prices.js`) pikt deze vanzelf op.
+- **Prijzen 2027** zijn nog niet gecontroleerd (±220 evenementen zonder prijs).
+- Het commentaar in `check-pending-prices.js` zegt dat `price` niet in de anon-selectie zit,
+  maar anon kan `price` wel lezen. Commentaar bijwerken of kolomrechten aanpassen.
