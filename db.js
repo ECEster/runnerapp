@@ -14,7 +14,8 @@ async function loadEventsFromDB() {
         .from('events')
         .select('*')
         .eq('published', true)
-        .order('date', { ascending: true });
+        .order('date', { ascending: true })
+        .order('name_nl', { ascending: true });
 
     if (error) {
         console.warn('Supabase fout, gebruik lokale data:', error.message);
@@ -49,7 +50,7 @@ async function loadEventsFromDB() {
     EVENTS = STATIC_EVENTS
         .filter(e => !dbIds.has(e.id))
         .concat(dbEvents)
-        .sort((a, b) => new Date(a.date) - new Date(b.date));
+        .sort((a, b) => new Date(a.date) - new Date(b.date) || (a.name_nl || '').localeCompare(b.name_nl || ''));
 
     return true;
 }

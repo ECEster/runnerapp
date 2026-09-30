@@ -53,7 +53,7 @@ function applyFilters() {
   if (sort === 'name') {
     filteredEvents.sort(function(a,b){ return (lang==='en'?a.name_en:a.name_nl).localeCompare(lang==='en'?b.name_en:b.name_nl); });
   } else {
-    filteredEvents.sort(function(a,b){ return new Date(a.date)-new Date(b.date); });
+    filteredEvents.sort(function(a,b){ var d=new Date(a.date)-new Date(b.date); return d!==0?d:(a.name_nl||'').localeCompare(b.name_nl||''); });
   }
   filteredEvents = groupMatchesTogether(filteredEvents, isFourMijlGroningenOrHaren);
   renderList(lang);
