@@ -1,4 +1,5 @@
 import { detectKidsrun } from './detectKidsrun.js'
+import { detectSurvivalrun } from './detectSurvivalrun.js'
 import { buildSerie } from './buildSerie.js'
 import { extractEditie } from './extractEditie.js'
 
@@ -24,10 +25,11 @@ function normalizeerAfstand(afstand) {
 // Aannames / bewuste keuzes:
 // - published: altijd false — nieuwe events komen in een wachtrij, jij publiceert handmatig
 //   vanuit het admin-portaal.
-// - type: we kunnen dit niet betrouwbaar afleiden uit de bronnen, dus krijgt voorlopig altijd
-//   de placeholder 'wegevenement'. Omdat published:false is, staat dit nooit ongecontroleerd
-//   live — je corrigeert dit (bv. naar 'trail' voor de Gaasterland Trail/Drenthe Trail Run)
-//   tijdens het reviewen.
+// - type: we kunnen dit meestal niet betrouwbaar afleiden uit de bronnen, dus krijgt het
+//   voorlopig de placeholder 'wegevenement' — BEHALVE als de naam zelf al een obstakel-/
+//   survivalrun verraadt (zie lib/detectSurvivalrun.js), dan wordt dat 'survivalrun'. Omdat
+//   published:false is, staat dit nooit ongecontroleerd live — je corrigeert dit (bv. naar
+//   'trail' voor de Gaasterland Trail/Drenthe Trail Run) tijdens het reviewen.
 // - kidsrun: alleen true als de bron zelf al iets kids-achtigs noemt in de naam of de
 //   afstanden (zie lib/detectKidsrun.js). Kan een kidsrun missen die de bron niet vermeldt —
 //   controleer dit sowieso tijdens het reviewen, net als 'type'.
@@ -47,7 +49,7 @@ export function mapToSupabaseShape(event) {
     registration_url: event.organisator_url,
     source_url: event.bron_url,
     image: event.afbeelding_url,
-    type: 'wegevenement',
+    type: detectSurvivalrun(event) ? 'survivalrun' : 'wegevenement',
     organizer: null,
     published: false,
     kidsrun: detectKidsrun(event),
