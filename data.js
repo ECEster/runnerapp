@@ -133,11 +133,28 @@ var FALLBACK_IMAGE_BY_TYPE = {
   'bikerun':   'images/bikerun.jpg',
 };
 
+// Fallback-foto op basis van de naam, voor events die (nog) een ander type
+// hebben, bv. een "Bosloop" die door de scraper als 'wegevenement' is
+// binnengekomen. 'bosch' wordt uitgesloten zodat "Den Bosch" niet matcht.
+var FALLBACK_IMAGE_BY_NAME = [
+  { re: /bos(?!ch)|cross/i, image: 'images/cross.jpg' },
+  { re: /swim|\bdip\b/i,    image: 'images/swimrun.jpg' },
+];
+
+function getImageByName(ev) {
+  var name = (ev.name_nl || '') + ' ' + (ev.name_en || '');
+  for (var i = 0; i < FALLBACK_IMAGE_BY_NAME.length; i++) {
+    if (FALLBACK_IMAGE_BY_NAME[i].re.test(name)) return FALLBACK_IMAGE_BY_NAME[i].image;
+  }
+  return '';
+}
+
 // 'hondenloop' is geen type (kan bij elk type event aangevinkt worden, net als
 // kidsrun), dus die fallback-foto wordt los gecheckt i.p.v. via FALLBACK_IMAGE_BY_TYPE.
 function getEventImage(ev) {
   if (ev.type === 'baanevenement') return 'images/baanevenement.jpg';
   if (!ev.image && ev.hondenloop) return 'images/hondenloop.jpg';
+  if (!ev.image && getImageByName(ev)) return getImageByName(ev);
   if (!ev.image && FALLBACK_IMAGE_BY_TYPE[ev.type]) return FALLBACK_IMAGE_BY_TYPE[ev.type];
   return ev.image;
 }
