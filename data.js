@@ -127,7 +127,7 @@ var FALLBACK_IMAGE_BY_TYPE = {
   'parkloop': 'images/parkloop.jpg',
   'gemengd parcours': 'images/gemengd-parcours.png',
   'cross': 'images/cross.jpg',
-  'trail': 'images/cross.jpg',
+  'trail': 'images/trail.jpg',
   'swimrun':   'images/swimrun.jpg',
   'ultrarun':  'images/ultrarun.jpg',
   'urbanrun':  'images/urbanrun.jpg',
@@ -138,7 +138,8 @@ var FALLBACK_IMAGE_BY_TYPE = {
 // hebben, bv. een "Bosloop" die door de scraper als 'wegevenement' is
 // binnengekomen. 'bosch' wordt uitgesloten zodat "Den Bosch" niet matcht.
 var FALLBACK_IMAGE_BY_NAME = [
-  { re: /bos(?!ch)|cross|trail/i, image: 'images/cross.jpg' },
+  { re: /trail/i,           image: 'images/trail.jpg' },
+  { re: /bos(?!ch)|cross/i, image: 'images/cross.jpg' },
   { re: /swim|\bdip\b/i,    image: 'images/swimrun.jpg' },
 ];
 
