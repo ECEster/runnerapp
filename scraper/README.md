@@ -234,21 +234,15 @@ Bij de linkcheck van 30 september 2026 zijn 7 links al gerepareerd. Deze punten 
 Op 30 september 2026 zijn de prijzen voor oktober–december 2026 gecontroleerd en aangevuld
 (49 automatisch gevonden, de rest handmatig via twee Claude-artifacts). Lauwersmeer Najaarstocht
 (#36), Dorpsloop Nij Beets (#73) en Oliebollen cross (#220) zijn verwijderd omdat ze in 2026 niet
-doorgaan. Deze punten staan nog open:
+doorgaan.
 
-- **RLS op `events`: bijna klaar (belangrijkste punt).** RLS staat sinds 2026-09-30 aan, met
-  een `admins`-tabel en de policies "Lezen" en "Admin schrijft". Maar er staan nog drie oude
-  policies die elke ingelogde gebruiker laten schrijven (en via Mijn Runs kan iedereen een
-  account maken). Omdat policies elkaar aanvullen, maakt dat "Admin schrijft" zinloos. Voer uit
-  in de Supabase SQL Editor:
-  ```sql
-  drop policy "Allow authenticated delete" on public.events;
-  drop policy "Allow authenticated insert" on public.events;
-  drop policy "Allow authenticated update" on public.events;
-  ```
-  Laat "Allow public read" (anon, alleen `published = true`) staan. Controleer daarna: alleen
-  "Admin schrijft", "Allow public read" en "Lezen" staan nog op `events`, en opslaan in het
-  adminpaneel werkt nog.
+RLS op `events` is op 2026-10-01 afgerond: alleen "Admin schrijft", "Allow public read" en
+"Lezen" staan nog. Die eerste en laatste kijken in de `admins`-tabel, die zelf ook RLS heeft;
+daarom staat daar de policy "Eigen admin-rij lezen" (`user_id = auth.uid()`). Zonder die policy
+ziet de controle een lege tabel en weigert Supabase stil elke wijziging vanuit het adminpaneel.
+
+Deze punten staan nog open:
+
 - **#60 Menzis 4 Mijl van Groningen:** prijs moet waarschijnlijk `10,25 - 24,25` worden
   (ingevuld was `10,25 - 24,24`, de site noemt 24,25). Nu staat er `24,25`.
 - **#136 DTSV Decemberloop Peize:** staat offline, nog niet besloten of hij weer gepubliceerd moet.
