@@ -289,3 +289,34 @@ al als concept in de database staan.
    ```
    Ververs daarna `regio-oost.html` en controleer de kalender en de cards.
 5. Daarna geldt hetzelfde voor **West** en **Zuid** (op 1 oktober 2026: 2 gepubliceerd in West, 0 in Zuid).
+
+## Herinnering voor de volgende sessie: types en foto's (2026-10-01)
+
+Op 1 oktober 2026 gedaan: de typebadge staat in alle eventkaarten rechtsonder in de foto
+(transparant, lichtgrijze letters); trails, swimruns en bikeruns hebben een eigen fallback-foto
+(`images/trail.jpg`, `swimrun.jpg`, `bikerun.jpg`, verkleind naar ±250 KB); de scraper geeft
+events met "trail" in de naam voortaan type `trail`; RUN-BIKE-FUN Sneek (#180) is `bikerun`.
+
+Deze punten staan nog open:
+
+- **Trimlopen Assen (#183, #194, #206) → wegevenement met de crossfoto.** Nog niet uitgevoerd
+  (kidsrun stond al aan). In de Supabase SQL Editor:
+  ```sql
+  update public.events
+  set image = 'images/cross.jpg', type = 'wegevenement', kidsrun = true
+  where id in (183, 194, 206)
+  returning id, name_nl, type, kidsrun, image;
+  ```
+- **Bestaande trails → type trail.** Gaasterland Trail, Devil's Night Trail, Devil's Trail,
+  Sytze Wettingtrail en Schutrups Sperwerstrail staan nog op `wegevenement` (de trailfoto
+  krijgen ze al via hun naam):
+  ```sql
+  update public.events set type = 'trail'
+  where name_nl ilike '%trail%'
+  returning id, name_nl, type;
+  ```
+- **Grote foto's verkleinen** (maken de site traag op mobiel): `urbanrun.jpg` (3,5 MB),
+  `hero.png` (2,8 MB), `ultrarun.jpg` (2,7 MB), `gemengd-parcours.png` (2,1 MB). Naar ±1200 px
+  breed, JPG-kwaliteit ±82, zoals bij trail/swimrun/bikerun.
+- **`.env` in `scraper/`** met `SUPABASE_SERVICE_ROLE_KEY` (zie `.env.example`): zonder die
+  sleutel kan Claude geen database-wijzigingen doen en moet alles via de SQL Editor.
