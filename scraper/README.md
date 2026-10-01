@@ -254,3 +254,38 @@ Deze punten staan nog open:
 - **Prijzen 2027** zijn nog niet gecontroleerd (±220 evenementen zonder prijs).
 - Het commentaar in `check-pending-prices.js` zegt dat `price` niet in de anon-selectie zit,
   maar anon kan `price` wel lezen. Commentaar bijwerken of kolomrechten aanpassen.
+
+## Herinnering voor de volgende sessie: Oost-evenementen publiceren (2026-10-01)
+
+De regiopagina Oost (`regio-oost.html`) toont bijna niets: op 1 oktober 2026 stond er maar
+1 gepubliceerd evenement in Gelderland en 0 in Overijssel en Flevoland (Noord: 80). De code
+is in orde (Oost gebruikt dezelfde `regio.js` als Noord); het ligt aan de data. De scraper
+schrijft nieuwe events met `published: false`, en de website toont alleen gepubliceerde events.
+Met de anon-sleutel zijn concepten niet te zien, dus het is nog onbekend of de Oost-evenementen
+al als concept in de database staan.
+
+1. **Kijken wat er als concept staat.** In Supabase → SQL Editor → New query → Run (verandert niets):
+   ```sql
+   select id, name_nl, date, city, province, price, registration_url
+   from public.events
+   where published = false
+     and province in ('Overijssel', 'Gelderland', 'Flevoland')
+     and date >= current_date
+   order by date;
+   ```
+2. **Lege lijst?** Dan is de scraper voor Oost nog niet live gedraaid. Eerst `node run-dry-run.js`,
+   daarna `node write-events.js --live` (dit vereist een `.env` met de Supabase-sleutels; die staat niet op de laptop).
+   Minder rijen dan verwacht? Controleer de provincienamen:
+   `select province, count(*) from public.events group by province order by 2 desc;`
+3. **Lijst nalopen** op foute links, dubbelen, prijzen en evenementen die in 2026 niet doorgaan
+   (bij Noord bleek dat nodig).
+4. **Publiceren** (eventueel met `and id not in (…)` voor evenementen die je wilt overslaan):
+   ```sql
+   update public.events
+   set published = true
+   where published = false
+     and province in ('Overijssel', 'Gelderland', 'Flevoland')
+     and date >= current_date;
+   ```
+   Ververs daarna `regio-oost.html` en controleer de kalender en de cards.
+5. Daarna geldt hetzelfde voor **West** en **Zuid** (op 1 oktober 2026: 2 gepubliceerd in West, 0 in Zuid).
