@@ -36,7 +36,7 @@ function filterEvents() {
     if (ev.date < todayStr) return false;
     // Always restrict to this regio's provinces
     if (REGIO_PROVINCES.indexOf(ev.province) === -1) return false;
-    if (f.type && ev.type !== f.type) return false;
+    if (f.type && ev.type !== f.type && ev.type2 !== f.type) return false;
     if (f.province && ev.province !== f.province) return false;
     if (f.distance && ev.distances.indexOf(f.distance) === -1) return false;
     if (f.dateFrom && ev.date < f.dateFrom) return false;
@@ -82,13 +82,16 @@ function renderList(lang) {
     return '<div class="event-card">'+
       '<a class="event-card__img" href="'+detailUrl+'">'+
         '<img src="'+getEventImage(ev)+'" alt="'+name+'" loading="lazy">'+freeBadge+
+        '<span class="event-card__photo-badges">'+
+          '<span class="event-card__photo-badge">'+typeName+'</span>'+
+          (ev.type2 ? '<span class="event-card__photo-badge">'+getTypeName(ev.type2, lang)+'</span>' : '')+
+        '</span>'+
       '</a>'+
       '<div class="event-card__body">'+
         '<div class="event-card__date">📅 '+dateStr+'</div>'+
         '<a class="event-card__title" href="'+detailUrl+'">'+name+'</a>'+
         '<div class="event-card__meta"><span>'+ev.city+'</span><span>'+ev.province+'</span></div>'+
         '<div class="event-card__distances">'+distChips+'</div>'+
-        '<span class="event-card__type '+badgeClass+'">'+typeName+'</span>'+
         '<div class="event-card__footer">'+priceHtml+'<a href="'+moreInfoHref+'" class="btn btn--ghost btn--sm"'+moreInfoAttrs+'>Meer info</a></div>'+
       '</div>'+
     '</div>';

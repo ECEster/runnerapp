@@ -178,13 +178,16 @@ function renderEventCard(ev, lang) {
     '<a class="event-card__img" href="' + detailUrl + '">' +
       '<img src="' + getEventImage(ev) + '" alt="' + name + '" loading="lazy">' +
       freeBadge +
+      '<span class="event-card__photo-badges">' +
+        '<span class="event-card__photo-badge">' + typeName + '</span>' +
+        (ev.type2 ? '<span class="event-card__photo-badge">' + getTypeName(ev.type2, lang) + '</span>' : '') +
+      '</span>' +
     '</a>' +
     '<div class="event-card__body">' +
       '<div class="event-card__date">' + dateStr + '</div>' +
       '<a class="event-card__title" href="' + detailUrl + '">' + name + '</a>' +
       '<div class="event-card__meta"><span>' + titleCase(ev.city) + '</span></div>' +
       '<div class="event-card__distances">' + distChips + '</div>' +
-      '<span class="event-card__type ' + badgeClass + '">' + typeName + '</span>' +
       '<div class="event-card__footer">' +
         priceHtml +
         '<a href="' + moreInfoHref + '" class="btn btn--ghost btn--sm"' + moreInfoAttrs + ' data-i18n="meer_info">' + t('meer_info') + '</a>' +

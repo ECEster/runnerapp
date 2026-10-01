@@ -400,16 +400,17 @@ function renderList(lang) {
     return '<div class="event-card">'+
       '<a class="event-card__img" href="'+detailUrl+'">'+
         '<img src="'+getEventImage(ev)+'" alt="'+name+'" loading="lazy">'+freeBadge+
-        (ev.photoBadge ? '<span class="event-card__photo-badge event-card__photo-badge--'+ev.photoBadge+'">'+typeName+'</span>' : '')+
+        '<span class="event-card__photo-badges">'+
+          '<span class="event-card__photo-badge">'+typeName+'</span>'+
+          (ev.type2 ? '<span class="event-card__photo-badge">'+getTypeName(ev.type2, lang)+'</span>' : '')+
+        '</span>'+
       '</a>'+
       '<div class="event-card__body">'+
         '<div class="event-card__date">'+dateStr+'</div>'+
         '<a class="event-card__title" href="'+detailUrl+'">'+name+'</a>'+
         '<div class="event-card__meta"><span>'+titleCase(ev.city)+'</span><span>'+ev.province+'</span></div>'+
         '<div class="event-card__distances">'+distChips+'</div>'+
-        (ev.photoBadge ? '' : '<span class="event-card__type '+badgeClass+'">'+typeName+'</span>')+
-        (ev.type2 ? '<span class="event-card__type '+getBadgeClass(ev.type2)+'" style="margin-left:4px">'+getTypeName(ev.type2, lang)+'</span>' : '')+
-        (ev.estafette ? '<span class="event-card__type badge-estafette" style="margin-left:4px">Estafette</span>' : '')+
+        (ev.estafette ? '<span class="event-card__type badge-estafette">Estafette</span>' : '')+
         '<div class="event-card__footer">'+priceHtml+'<a href="'+moreInfoHref+'" class="btn btn--ghost btn--sm"'+moreInfoAttrs+'>'+t('meer_info')+'</a>'+
         '</div>'+
       '</div>'+
@@ -619,12 +620,6 @@ function toggleMobileNav() { document.getElementById('mobile-nav').classList.tog
   if (btnM) btnM.textContent = I18N[lang].nav_language;
   // Haal ook evenementen op die via het admin-paneel zijn toegevoegd
   await loadEventsFromDB().catch(function(){ return false; });
-  // Vormgevingsproef: kopieën met het type als badge in de foto
-  // (218 = Sylvesterloop, 216 = sv Friesland Oudejaarscross/loop)
-  [[218, 'bottom'], [218, 'top'], [216, 'top-right']].forEach(function(proef) {
-    var ev = EVENTS.find(function(e){ return e.id === proef[0]; });
-    if (ev) EVENTS.push(Object.assign({}, ev, { photoBadge: proef[1] }));
-  });
   loadFiltersFromHash();
   applyFilters();
 })();

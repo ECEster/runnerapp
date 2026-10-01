@@ -467,12 +467,12 @@ function renderFavorites() {
     return '<div class="event-card">'+
       '<a class="event-card__img" href="'+detailUrl+'">'+
         '<img src="'+getEventImage(ev)+'" alt="'+name+'" loading="lazy">'+
+        '<span class="event-card__photo-badges"><span class="event-card__photo-badge">'+typeName+'</span></span>'+
       '</a>'+
       '<div class="event-card__body">'+
         '<div class="event-card__date">'+dateStr+'</div>'+
         '<a class="event-card__title" href="'+detailUrl+'">'+name+'</a>'+
         '<div class="event-card__meta"><span>'+titleCase(ev.city)+'</span></div>'+
-        '<span class="event-card__type '+badgeClass+'">'+typeName+'</span>'+
         '<div class="event-card__footer">'+
           makePriceHtml(ev, lang)+
           '<a href="'+moreInfoHref+'" class="btn btn--ghost btn--sm"'+moreInfoAttrs+'>'+t('meer_info')+'</a>'+
