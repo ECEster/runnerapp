@@ -400,7 +400,7 @@ function renderList(lang) {
     return '<div class="event-card">'+
       '<a class="event-card__img" href="'+detailUrl+'">'+
         '<img src="'+getEventImage(ev)+'" alt="'+name+'" loading="lazy">'+freeBadge+
-        (ev.photoBadge ? '<span class="event-card__photo-badge">'+typeName+'</span>' : '')+
+        (ev.photoBadge ? '<span class="event-card__photo-badge event-card__photo-badge--'+ev.photoBadge+'">'+typeName+'</span>' : '')+
       '</a>'+
       '<div class="event-card__body">'+
         '<div class="event-card__date">'+dateStr+'</div>'+
@@ -621,7 +621,10 @@ function toggleMobileNav() { document.getElementById('mobile-nav').classList.tog
   await loadEventsFromDB().catch(function(){ return false; });
   // Vormgevingsproef: kopie van de Sylvesterloop met het type als badge in de foto
   var sylvester = EVENTS.find(function(e){ return e.id === 218; });
-  if (sylvester) EVENTS.push(Object.assign({}, sylvester, { photoBadge: true }));
+  if (sylvester) EVENTS.push(
+    Object.assign({}, sylvester, { photoBadge: 'bottom' }),
+    Object.assign({}, sylvester, { photoBadge: 'top' })
+  );
   loadFiltersFromHash();
   applyFilters();
 })();

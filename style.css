@@ -388,7 +388,6 @@ p:last-child { margin-bottom: 0; }
 .event-card__photo-badge {
   position: absolute;
   left: 10px;
-  bottom: 10px;
   padding: 3px 10px;
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.6);
@@ -400,6 +399,8 @@ p:last-child { margin-bottom: 0; }
   letter-spacing: 0.06em;
   backdrop-filter: blur(2px);
 }
+.event-card__photo-badge--bottom { bottom: 10px; }
+.event-card__photo-badge--top    { top: 10px; }
 .event-card__free-badge {
   position: absolute;
   top: 10px;
