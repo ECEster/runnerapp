@@ -320,3 +320,9 @@ Deze punten staan nog open:
   breed, JPG-kwaliteit ±82, zoals bij trail/swimrun/bikerun.
 - **`.env` in `scraper/`** met `SUPABASE_SERVICE_ROLE_KEY` (zie `.env.example`): zonder die
   sleutel kan Claude geen database-wijzigingen doen en moet alles via de SQL Editor.
+- **Tweede type (`type2`) afmaken.** Een andere sessie is hieraan begonnen, maar het is nog niet
+  gecommit: `scraper/migrations/0005_add_type2.sql` (nieuw) en een tweede typebadge op de
+  detailpagina in `evenement.html`. De kolom `type2` bestaat op 2026-10-01 nog niet in de
+  database, en het adminpaneel heeft er nog geen veld voor. De kaarten, de filters en `db.js`
+  houden al rekening met `type2`. Nog te doen: de migratie in de SQL Editor draaien, een
+  `type2`-keuzelijst in `admin-panel.html` toevoegen, en daarna alles samen committen.
