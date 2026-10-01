@@ -29,6 +29,7 @@ async function loadEventsFromDB() {
         name_en:          e.name_en   || '',
         date:             e.date      || '',
         type:             e.type      || '',
+        type2:            e.type2     || '',
         city:             e.city      || '',
         province:         e.province  || '',
         distances:        e.distances ? e.distances.replace(/(\d{1,2}),(\d{1,3})(?!\d)/g, '$1.$2').split(',').map(d => d.trim()).filter(Boolean).map(roundDistanceLabel) : [],
@@ -64,8 +65,10 @@ async function addEvent(event) {
 
 // Verwijder een event op id (voor de admin-pagina)
 async function deleteEvent(id) {
-    const { error } = await db.from('events').delete().eq('id', id);
+    const { data, error } = await db.from('events').delete().eq('id', id).select('id');
     if (error) throw error;
+    if (!data || data.length === 0)
+        throw new Error('Niet verwijderd — geen schrijfrechten (staat dit account in de admins-tabel?)');
 }
 
 // Upload een afbeelding naar Supabase Storage
@@ -93,8 +96,11 @@ async function uploadImage(file) {
 
 // Update een event (voor de admin-pagina)
 async function updateEvent(id, updates) {
-    const { error } = await db.from('events').update(updates).eq('id', id);
+    const { data, error } = await db.from('events').update(updates).eq('id', id).select('id');
     if (error) throw error;
+    // RLS weigert stilletjes: geen fout, maar 0 rijen aangepast
+    if (!data || data.length === 0)
+        throw new Error('Niet opgeslagen — geen schrijfrechten (staat dit account in de admins-tabel?)');
 }
 
 // Haal ALLE events op (ook ongepubliceerde) — alleen voor admin
