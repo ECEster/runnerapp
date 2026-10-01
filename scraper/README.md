@@ -243,7 +243,7 @@ ziet de controle een lege tabel en weigert Supabase stil elke wijziging vanuit h
 
 Deze punten staan nog open:
 
-- **#60 Menzis 4 Mijl van Groningen:** prijs moet waarschijnlijk `10,25 - 24,25` worden
+- **#60 Menzis 4 Mijl van Groningen:** prijs moet `10,25 - 24,25` worden
   (ingevuld was `10,25 - 24,24`, de site noemt 24,25). Nu staat er `24,25`.
 - **#136 DTSV Decemberloop Peize:** staat offline, nog niet besloten of hij weer gepubliceerd moet.
 - **#28 Berenloop Marathon:** prijs in afwijkende notatie (`€36.50–€41`), wordt `36,50 - 41`.
