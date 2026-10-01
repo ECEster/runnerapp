@@ -28,9 +28,9 @@ function normalizeerAfstand(afstand) {
 //   vanuit het admin-portaal.
 // - type: we kunnen dit meestal niet betrouwbaar afleiden uit de bronnen, dus krijgt het
 //   voorlopig de placeholder 'wegevenement' — BEHALVE als de naam zelf al een obstakel-/
-//   survivalrun verraadt (zie lib/detectSurvivalrun.js), dan wordt dat 'survivalrun'. Omdat
-//   published:false is, staat dit nooit ongecontroleerd live — je corrigeert dit (bv. naar
-//   'trail' voor de Gaasterland Trail/Drenthe Trail Run) tijdens het reviewen.
+//   survivalrun verraadt (zie lib/detectSurvivalrun.js), dan wordt dat 'survivalrun', of
+//   als er "trail" in de naam staat, dan wordt dat 'trail'. Omdat published:false is, staat
+//   dit nooit ongecontroleerd live — je corrigeert het type zo nodig tijdens het reviewen.
 // - kidsrun: alleen true als de bron zelf al iets kids-achtigs noemt in de naam of de
 //   afstanden (zie lib/detectKidsrun.js). Kan een kidsrun missen die de bron niet vermeldt —
 //   controleer dit sowieso tijdens het reviewen, net als 'type'.
@@ -53,7 +53,7 @@ export function mapToSupabaseShape(event) {
     registration_url: decodeHtmlEntities(event.organisator_url),
     source_url: decodeHtmlEntities(event.bron_url),
     image: event.afbeelding_url,
-    type: detectSurvivalrun(event) ? 'survivalrun' : 'wegevenement',
+    type: detectSurvivalrun(event) ? 'survivalrun' : /trail/i.test(event.naam) ? 'trail' : 'wegevenement',
     organizer: null,
     published: false,
     kidsrun: detectKidsrun(event),
