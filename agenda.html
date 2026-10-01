@@ -619,12 +619,12 @@ function toggleMobileNav() { document.getElementById('mobile-nav').classList.tog
   if (btnM) btnM.textContent = I18N[lang].nav_language;
   // Haal ook evenementen op die via het admin-paneel zijn toegevoegd
   await loadEventsFromDB().catch(function(){ return false; });
-  // Vormgevingsproef: kopie van de Sylvesterloop met het type als badge in de foto
-  var sylvester = EVENTS.find(function(e){ return e.id === 218; });
-  if (sylvester) EVENTS.push(
-    Object.assign({}, sylvester, { photoBadge: 'bottom' }),
-    Object.assign({}, sylvester, { photoBadge: 'top' })
-  );
+  // Vormgevingsproef: kopieën met het type als badge in de foto
+  // (218 = Sylvesterloop, 216 = sv Friesland Oudejaarscross/loop)
+  [[218, 'bottom'], [218, 'top'], [216, 'top']].forEach(function(proef) {
+    var ev = EVENTS.find(function(e){ return e.id === proef[0]; });
+    if (ev) EVENTS.push(Object.assign({}, ev, { photoBadge: proef[1] }));
+  });
   loadFiltersFromHash();
   applyFilters();
 })();
