@@ -621,7 +621,7 @@ function toggleMobileNav() { document.getElementById('mobile-nav').classList.tog
   await loadEventsFromDB().catch(function(){ return false; });
   // Vormgevingsproef: kopieën met het type als badge in de foto
   // (218 = Sylvesterloop, 216 = sv Friesland Oudejaarscross/loop)
-  [[218, 'bottom'], [218, 'top'], [216, 'top']].forEach(function(proef) {
+  [[218, 'bottom'], [218, 'top'], [216, 'top-right']].forEach(function(proef) {
     var ev = EVENTS.find(function(e){ return e.id === proef[0]; });
     if (ev) EVENTS.push(Object.assign({}, ev, { photoBadge: proef[1] }));
   });

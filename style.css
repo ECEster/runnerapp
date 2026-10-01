@@ -401,6 +401,7 @@ p:last-child { margin-bottom: 0; }
 }
 .event-card__photo-badge--bottom { bottom: 10px; }
 .event-card__photo-badge--top    { top: 10px; }
+.event-card__photo-badge--top-right { top: 10px; left: auto; right: 10px; }
 .event-card__free-badge {
   position: absolute;
   top: 10px;
