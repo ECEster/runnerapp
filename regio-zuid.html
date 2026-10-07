@@ -109,10 +109,12 @@
         <label>Afstand</label>
         <select id="f-distance" onchange="applyFilters()">
           <option value="">— Alle afstanden —</option>
-          <option value="5km">5 km</option>
-          <option value="10km">10 km</option>
-          <option value="21km">Halve marathon</option>
-          <option value="42km">Marathon</option>
+          <option value="max:5">t/m 5 km</option>
+          <option value="max:10">t/m 10 km</option>
+          <option value="max:15">t/m 15 km</option>
+          <option value="max:21.1">t/m halve marathon (21,1 km)</option>
+          <option value="max:42.2">t/m marathon (42,2 km)</option>
+          <option value="min:42.2">Langer dan een marathon</option>
         </select>
       </div>
       <div class="filter-group filter-group--row">

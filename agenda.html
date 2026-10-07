@@ -130,13 +130,12 @@
         <label data-i18n="filter_distance">Afstand</label>
         <select id="f-distance" onchange="applyFilters()">
           <option value="">— Alle afstanden —</option>
-          <option value="5km">5 km</option>
-          <option value="10km">10 km</option>
-          <option value="15km">15 km</option>
-          <option value="21km">Halve marathon</option>
-          <option value="42km">Marathon</option>
-          <option value="50km">50 km</option>
-          <option value="100km">100 km</option>
+          <option value="max:5">t/m 5 km</option>
+          <option value="max:10">t/m 10 km</option>
+          <option value="max:15">t/m 15 km</option>
+          <option value="max:21.1">t/m halve marathon (21,1 km)</option>
+          <option value="max:42.2">t/m marathon (42,2 km)</option>
+          <option value="min:42.2">Langer dan een marathon</option>
         </select>
       </div>
 
@@ -332,7 +331,7 @@ function filterEvents() {
     if (ev.date < todayStr) return false;
     if (f.type && ev.type !== f.type && ev.type2 !== f.type) return false;
     if (f.province && ev.province !== f.province) return false;
-    if (f.distance && !ev.distances.includes(f.distance)) return false;
+    if (f.distance && !matchesDistanceFilter(ev, f.distance)) return false;
     if (f.dateFrom && ev.date < f.dateFrom) return false;
     if (f.dateTo && ev.date > f.dateTo) return false;
     if (f.kidsrun && !ev.kidsrun) return false;
@@ -371,10 +370,13 @@ function applyFilters() {
 }
 
 // De kaarten onder de kalender tonen alleen de maand die de kalender laat
-// zien — behalve bij zoeken of een datumfilter, dan alle resultaten.
+// zien — behalve als er een filter aan staat, dan alle resultaten.
 function listEvents() {
   var f = getFilters();
-  if (f.search || f.dateFrom || f.dateTo) return filteredEvents;
+  var anyFilter = f.type || f.province || f.distance || f.dateFrom || f.dateTo ||
+    f.kidsrun || f.estafette || f.freeOnly || f.atletiekunie ||
+    (f.postal.length === 4 && f.radius) || f.search;
+  if (anyFilter) return filteredEvents;
   return filteredEvents.filter(function(ev) {
     var d = new Date(ev.date);
     return d.getFullYear()===calYear && d.getMonth()===calMonth;
@@ -526,7 +528,7 @@ function renderFilterChips(f, lang) {
   var chips = [];
   if (f.type) chips.push({key:'type', label: getTypeName(f.type, lang)});
   if (f.province) chips.push({key:'province', label: f.province});
-  if (f.distance) chips.push({key:'distance', label: f.distance});
+  if (f.distance) { var dSel = document.getElementById('f-distance'); chips.push({key:'distance', label: dSel.options[dSel.selectedIndex].text}); }
   if (f.dateFrom) chips.push({key:'dateFrom', label: t('filter_date_from')+': '+f.dateFrom});
   if (f.dateTo) chips.push({key:'dateTo', label: t('filter_date_to')+': '+f.dateTo});
   if (f.estafette) chips.push({key:'estafette', label: 'Estafette'});

@@ -38,7 +38,7 @@ function filterEvents() {
     if (REGIO_PROVINCES.indexOf(ev.province) === -1) return false;
     if (f.type && ev.type !== f.type && ev.type2 !== f.type) return false;
     if (f.province && ev.province !== f.province) return false;
-    if (f.distance && ev.distances.indexOf(f.distance) === -1) return false;
+    if (f.distance && !matchesDistanceFilter(ev, f.distance)) return false;
     if (f.dateFrom && ev.date < f.dateFrom) return false;
     if (f.dateTo && ev.date > f.dateTo) return false;
     if (f.search && !(ev.name_nl.toLowerCase().indexOf(f.search) !== -1 || ev.city.toLowerCase().indexOf(f.search) !== -1)) return false;
@@ -61,10 +61,10 @@ function applyFilters() {
 }
 
 // De kaarten onder de kalender tonen alleen de maand die de kalender laat
-// zien — behalve bij zoeken of een datumfilter, dan alle resultaten.
+// zien — behalve als er een filter aan staat, dan alle resultaten.
 function listEvents() {
   var f = getFilters();
-  if (f.search || f.dateFrom || f.dateTo) return filteredEvents;
+  if (f.type || f.province || f.distance || f.dateFrom || f.dateTo || f.search) return filteredEvents;
   return filteredEvents.filter(function(ev) {
     var d = new Date(ev.date);
     return d.getFullYear()===calYear && d.getMonth()===calMonth;

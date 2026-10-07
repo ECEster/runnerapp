@@ -99,6 +99,33 @@ function roundDistanceLabel(distance) {
   });
 }
 
+// Zet een afstandslabel om naar kilometers. De labels zijn rommelig
+// ("5KM", "5 km", "21,1KM", "4 mi", "10km - 40km"), dus elk getal telt.
+function distanceKmValues(label) {
+  var s = String(label).toLowerCase().replace(/(\d),(\d)/g, '$1.$2');
+  var nums = s.match(/\d+(\.\d+)?/g);
+  if (!nums) {
+    if (/halve marathon|half marathon/.test(s)) return [21.1];
+    if (/marathon/.test(s)) return [42.2];
+    return [];
+  }
+  var factor = /\bmi\b|mijl|mile/.test(s) ? 1.609 : 1;
+  return nums.map(function(n) { return parseFloat(n) * factor; });
+}
+
+// Afstandsfilter: 'max:10' = minstens één afstand t/m 10 km,
+// 'min:42.2' = minstens één afstand langer dan 42,2 km.
+function matchesDistanceFilter(ev, filter) {
+  var parts = String(filter).split(':');
+  var limit = parseFloat(parts[1]);
+  if (isNaN(limit)) return true;
+  return (ev.distances || []).some(function(d) {
+    return distanceKmValues(d).some(function(km) {
+      return parts[0] === 'min' ? km > limit : km <= limit + 0.05;
+    });
+  });
+}
+
 // Geeft de juiste prijs-HTML terug voor een eventcard:
 // gratis → groene badge, prijs bekend → toon prijs, prijs onbekend → "Zie website"
 function makePriceHtml(ev, lang) {
