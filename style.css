@@ -921,7 +921,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   color: var(--white);
 }
 .calendar-nav button {
-  background: rgba(192,48,8,0.85);
+  background: rgba(232,64,12,0.85);
   color: var(--white);
   border: none;
   border-radius: 6px;
@@ -932,7 +932,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   letter-spacing: 0.03em;
   transition: all var(--transition);
 }
-.calendar-nav button:hover { background: var(--btn); }
+.calendar-nav button:hover { background: var(--accent); }
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
