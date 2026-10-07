@@ -86,7 +86,7 @@
           <option value="trail">Trail</option>
           <option value="cross">Crossloop</option>
           <option value="gemengd parcours">Gemengd parcours</option>
-          <option value="wegevenement">Road</option>
+          <option value="wegevenement">Wegevenement</option>
           <option value="parkloop">Parkloop</option>
           <option value="funrun">Fun Run</option>
           <option value="swimrun">SwimRun</option>
@@ -281,7 +281,7 @@ var DAYS_EN = ['Mo','Tu','We','Th','Fr','Sa','Su'];
 function getBadgeClass(type) { return 'badge-' + type.toLowerCase().replace(/\s+/g, '-'); }
 function getTypeName(type, lang) {
   var names = {
-    nl: { 'marathon':'Marathon','trail':'Trail','bosloop':'Trail','cross':'Cross','gemengd parcours':'Gemengd parcours','wegevenement':'Road','parkloop':'Parkloop','funrun':'Fun Run','survivalrun':'Survival Run','swimrun':'SwimRun','urbanrun':'Urban Run','ultrarun':'Ultrarun','virtuele run':'Virtuele Run','estafette':'Estafette','coopertest':'Coopertest','baanevenement':'Baanevenement','studentenevenement':'Studentenevenement','sportief wandelen':'Sportief Wandelen','inclusieve runs':'Inclusieve Run','gecertificeerd parcours':'Gecert. Parcours','bikerun':'Bike Run' },
+    nl: { 'marathon':'Marathon','trail':'Trail','bosloop':'Trail','cross':'Cross','gemengd parcours':'Gemengd parcours','wegevenement':'Wegevenement','parkloop':'Parkloop','funrun':'Fun Run','survivalrun':'Survival Run','swimrun':'SwimRun','urbanrun':'Urban Run','ultrarun':'Ultrarun','virtuele run':'Virtuele Run','estafette':'Estafette','coopertest':'Coopertest','baanevenement':'Baanevenement','studentenevenement':'Studentenevenement','sportief wandelen':'Sportief Wandelen','inclusieve runs':'Inclusieve Run','gecertificeerd parcours':'Gecert. Parcours','bikerun':'Bike Run' },
     en: { 'marathon':'Marathon','trail':'Trail','bosloop':'Trail','cross':'Cross Country','gemengd parcours':'Mixed Terrain','wegevenement':'Road','parkloop':'Park Run','funrun':'Fun Run','survivalrun':'Survival Run','swimrun':'SwimRun','urbanrun':'Urban Run','ultrarun':'Ultra Run','virtuele run':'Virtual Run','estafette':'Relay','coopertest':'Cooper Test','baanevenement':'Track Event','studentenevenement':'Student Event','sportief wandelen':'Sports Walking','inclusieve runs':'Inclusive Run','gecertificeerd parcours':'Certified Course','bikerun':'Bike Run' }
   };
   return (names[lang]||names.nl)[type]||type;
@@ -374,18 +374,29 @@ function applyFilters() {
   renderCalendar();
   renderFilterChips(f, lang);
   saveFiltersToHash(f);
+}
 
-  var countEl = document.getElementById('results-count');
-  if (countEl) countEl.textContent = filteredEvents.length + ' ' + t('results_count');
+// De kaarten onder de kalender tonen alleen de maand die de kalender laat
+// zien — behalve bij zoeken of een datumfilter, dan alle resultaten.
+function listEvents() {
+  var f = getFilters();
+  if (f.search || f.dateFrom || f.dateTo) return filteredEvents;
+  return filteredEvents.filter(function(ev) {
+    var d = new Date(ev.date);
+    return d.getFullYear()===calYear && d.getMonth()===calMonth;
+  });
 }
 
 function renderList(lang) {
   var el = document.getElementById('events-list');
-  if (!filteredEvents.length) {
+  var events = listEvents();
+  var countEl = document.getElementById('results-count');
+  if (countEl) countEl.textContent = events.length + ' ' + t('results_count');
+  if (!events.length) {
     el.innerHTML = '<div class="no-events-msg" style="grid-column:1/-1"><div class="no-events-msg__icon">🏃</div><h3 data-i18n="no_events">' + t('no_events') + '</h3><p>' + t('no_events_sub') + '</p></div>';
     return;
   }
-  el.innerHTML = filteredEvents.map(function(ev) {
+  el.innerHTML = events.map(function(ev) {
     var name = lang==='en'?ev.name_en:ev.name_nl;
     var dateStr = formatDate(ev.date, lang);
     var badgeClass = getBadgeClass(ev.type);
@@ -508,11 +519,13 @@ function calPrev() {
   calMonth--;
   if (calMonth < 0) { calMonth = 11; calYear--; }
   renderCalendar();
+  renderList(getLang());
 }
 function calNext() {
   calMonth++;
   if (calMonth > 11) { calMonth = 0; calYear++; }
   renderCalendar();
+  renderList(getLang());
 }
 
 function renderFilterChips(f, lang) {
