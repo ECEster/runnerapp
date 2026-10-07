@@ -961,6 +961,8 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   flex-shrink: 0;
 }
 .cal-dot--accent { background: var(--accent); }
+/* Alle stipjes in één kleur: net iets lichter blauw dan de kalenderkop (--dark) */
+.cal-dots .cal-dot { background: #2A3B5E; }
 
 /* Day panel */
 .day-panel {
