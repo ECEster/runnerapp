@@ -298,30 +298,6 @@ function getFilters() {
   };
 }
 
-function getPostalCoords(postal4) {
-  var key = postal4;
-  if (POSTAL_CODES[key]) return POSTAL_CODES[key];
-  // try rounding down to nearest known prefix
-  for (var k in POSTAL_CODES) {
-    if (Math.abs(parseInt(k) - parseInt(key)) < 100) return POSTAL_CODES[k];
-  }
-  return null;
-}
-
-function cityCoords(city) {
-  var map = {
-    'Groningen': {lat:53.2194,lng:6.5665}, 'Utrecht': {lat:52.0907,lng:5.1214},
-    'Rotterdam': {lat:51.9225,lng:4.4792}, 'Leiden': {lat:52.1601,lng:4.4970},
-    '(online)': null, 'Delft': {lat:52.0116,lng:4.3571}, 'Arnhem': {lat:51.9851,lng:5.8987},
-    'Haarlem': {lat:52.3874,lng:4.6462}, 'Eindhoven': {lat:51.4416,lng:5.4697},
-    'Zwolle': {lat:52.5168,lng:6.0830}, 'Amsterdam': {lat:52.3676,lng:4.9041},
-    'Middelburg': {lat:51.4988,lng:3.6136}, 'Maastricht': {lat:50.8514,lng:5.6910},
-    'Den Haag': {lat:52.0705,lng:4.3007}, 'Assen': {lat:52.9926,lng:6.5611},
-    'Nijmegen': {lat:51.8126,lng:5.8372}, 'Leeuwarden': {lat:53.2012,lng:5.7999},
-    'Almere': {lat:52.3508,lng:5.2647}
-  };
-  return map[city] || null;
-}
 
 function filterEvents() {
   var f = getFilters();

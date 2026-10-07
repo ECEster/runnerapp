@@ -71,11 +71,13 @@
   <div class="agenda-layout">
     <aside class="filter-panel">
       <div class="filter-panel__title">
-        <span>Filteren</span>
-        <button onclick="clearFilters()">Filters wissen</button>
+        <span data-i18n="filter_title">Filteren</span>
+        <button onclick="clearFilters()" data-i18n="clear_filters">Filters wissen</button>
       </div>
+
+      <!-- Type -->
       <div class="filter-group">
-        <label>Soort evenement</label>
+        <label data-i18n="filter_type">Soort evenement</label>
         <select id="f-type">
           <option value="">— Alle types —</option>
           <option value="marathon">Marathon</option>
@@ -85,6 +87,8 @@
           <option value="wegevenement">Wegevenement</option>
           <option value="parkloop">Parkloop</option>
           <option value="funrun">Fun Run</option>
+          <option value="swimrun">SwimRun</option>
+          <option value="urbanrun">Urban Run</option>
           <option value="survivalrun">Survival Run</option>
           <option value="ultrarun">Ultrarun</option>
           <option value="virtuele run">Virtuele Run</option>
@@ -95,10 +99,13 @@
           <option value="sportief wandelen">Sportief Wandelen</option>
           <option value="inclusieve runs">Inclusieve Run</option>
           <option value="gecertificeerd parcours">Gecertificeerd Parcours</option>
+          <option value="bikerun">Bike Run</option>
         </select>
       </div>
+
+      <!-- Province -->
       <div class="filter-group">
-        <label>Provincie</label>
+        <label data-i18n="filter_province">Provincie</label>
         <select id="f-province">
           <option value="">— Alle provincies —</option>
           <option value="Overijssel">Overijssel</option>
@@ -106,8 +113,10 @@
           <option value="Flevoland">Flevoland</option>
         </select>
       </div>
+
+      <!-- Distance -->
       <div class="filter-group">
-        <label>Afstand</label>
+        <label data-i18n="filter_distance">Afstand</label>
         <select id="f-distance">
           <option value="">— Alle afstanden —</option>
           <option value="max:5">t/m 5 km</option>
@@ -118,16 +127,68 @@
           <option value="min:42.2">Langer dan een marathon</option>
         </select>
       </div>
+
+      <!-- Date range -->
       <div class="filter-group filter-group--row">
         <div>
-          <label>Datum vanaf</label>
+          <label data-i18n="filter_date_from">Datum vanaf</label>
           <input type="date" id="f-date-from">
         </div>
         <div>
-          <label>Datum t/m</label>
+          <label data-i18n="filter_date_to">Datum t/m</label>
           <input type="date" id="f-date-to">
         </div>
       </div>
+
+      <!-- Kids runs -->
+      <div class="filter-group">
+        <label class="filter-checkbox filter-checkbox--kids">
+          <input type="checkbox" id="f-kidsrun">
+          <span>Kids Runs</span>
+        </label>
+      </div>
+
+      <!-- Estafette -->
+      <div class="filter-group">
+        <label class="filter-checkbox">
+          <input type="checkbox" id="f-estafette">
+          <span>Estafette</span>
+        </label>
+      </div>
+
+      <!-- Free only -->
+      <div class="filter-group">
+        <label class="filter-checkbox">
+          <input type="checkbox" id="f-free">
+          <span data-i18n="filter_free_only">Alleen gratis</span>
+        </label>
+      </div>
+
+      <!-- Atletiekunie -->
+      <div class="filter-group">
+        <label class="filter-checkbox">
+          <input type="checkbox" id="f-atletiekunie">
+          <span data-i18n="filter_atletiekunie">Atletiekunie gecertificeerd</span>
+        </label>
+      </div>
+
+      <!-- Postal code + radius -->
+      <div class="filter-group">
+        <label data-i18n="filter_postal">Postcode</label>
+        <input type="text" id="f-postal" maxlength="4" placeholder="bijv. 1000">
+      </div>
+      <div class="filter-group">
+        <label data-i18n="filter_radius">Straal (km)</label>
+        <select id="f-radius">
+          <option value="">— Geen limiet —</option>
+          <option value="25">25 km</option>
+          <option value="50">50 km</option>
+          <option value="100">100 km</option>
+          <option value="150">150 km</option>
+        </select>
+      </div>
+
+      <!-- Search -->
       <div class="filter-group">
         <label data-i18n="filter_search">Naam of plaats</label>
         <input type="text" id="f-search" placeholder="bijv. Assen of Bosloop">
