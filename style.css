@@ -765,9 +765,9 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   scrollbar-width: thin;
 }
 /* Chrome, Edge, Safari */
-.filter-panel::-webkit-scrollbar { width: 8px; }
+.filter-panel::-webkit-scrollbar { width: 4px; }
 .filter-panel::-webkit-scrollbar-track { background: transparent; }
-.filter-panel::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+.filter-panel::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
 .filter-panel__title {
   font-family: var(--font-head);
   font-size: 1.1rem;
