@@ -13,7 +13,8 @@ var I18N = {
     nav_language: "EN",
 
     // Homepage
-    hero_title: "Vind jouw volgende loop",
+    hero_title: "Vind jouw volgende",
+    hero_title_accent: "loop",
     hero_subtitle: "Het complete overzicht van hardloopevenementen in Nederland — van parkloop tot marathon",
     hero_cta: "Bekijk alle evenementen",
     featured_title: "Uitgelichte evenementen",
@@ -177,7 +178,8 @@ var I18N = {
     nav_language: "NL",
 
     // Homepage
-    hero_title: "Find your next run",
+    hero_title: "Find your next",
+    hero_title_accent: "run",
     hero_subtitle: "The complete overview of running events in the Netherlands — from park runs to marathons",
     hero_cta: "Browse all events",
     featured_title: "Featured events",
