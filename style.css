@@ -294,6 +294,7 @@ p:last-child { margin-bottom: 0; }
   justify-content: center;
   background: var(--dark) url('images/hero.png') center 60%/cover no-repeat;
   overflow: hidden;
+  border-bottom: 3px solid var(--accent);
 }
 .hero::before {
   content: '';
