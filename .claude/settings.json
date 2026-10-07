@@ -32,5 +32,8 @@
       "WebFetch(domain:www.ttcityrun.nl)",
       "WebFetch(domain:www.hunebedloop.nl)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "supabase"
+  ]
 }
