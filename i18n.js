@@ -1,4 +1,4 @@
-// i18n.js — translations for runningnederland.nl
+// i18n.js — translations for RunningNederland.nl
 
 var I18N = {
   nl: {
@@ -18,9 +18,9 @@ var I18N = {
     hero_cta: "Bekijk alle evenementen",
     featured_title: "Uitgelichte evenementen",
     featured_subtitle: "De komende hardloopevenementen in jouw buurt",
-    about_title: "Over runningnederland.nl",
-    about_text1: "Runningnederland.nl is het centrale platform voor hardloopevenementen in Nederland. Wij brengen alle evenementen samen op één plek, zodat jij altijd jouw volgende loop kunt vinden.",
-    about_text2: "Runningnederland.nl is het centrale platform waar alle hardloopevenementen worden gebundeld. Of je nu een beginner bent die zijn eerste 5km wil lopen, of een doorgewinterde loper die toe is aan een ultralooputdaging — hier vind je jouw volgende evenement.",
+    about_title: "Over RunningNederland.nl",
+    about_text1: "RunningNederland.nl is het centrale platform voor hardloopevenementen in Nederland. Wij brengen alle evenementen samen op één plek, zodat jij altijd jouw volgende loop kunt vinden.",
+    about_text2: "RunningNederland.nl is het centrale platform waar alle hardloopevenementen worden gebundeld. Of je nu een beginner bent die zijn eerste 5km wil lopen, of een doorgewinterde loper die toe is aan een ultralooputdaging — hier vind je jouw volgende evenement.",
     about_text3: "Ons team van enthousiaste hardlopers en ervaren eventorganisatoren zorgt ervoor dat elk evenement een onvergetelijke ervaring wordt. Veiligheid, gezelligheid en sportiviteit staan altijd voorop.",
 
     // Agenda
@@ -131,7 +131,7 @@ var I18N = {
 
     // Over ons
     overons_title: "Over ons",
-    overons_sub: "Wij zijn runningnederland.nl",
+    overons_sub: "Wij zijn RunningNederland.nl",
     overons_intro: "RunningNederland.nl is ontstaan uit de wens voor één volledig overzicht van alle runs in Nederland. We hebben deze ingedeeld in regio's zodat je direct kan zien of er in jouw omgeving nog leuke runs zijn!",
     overons_p1: "Of je nu jezelf wilt uitdagen, verbinding wilt zoeken met andere hardlopers, of je kinderen wilt aanmoedigen bij hun runs, je vindt hier genoeg mogelijkheden!",
     overons_p2: "Onze website biedt een overzicht van alle hardloopevenementen — van parklopen tot marathons en van kidsruns tot estafettes. Krijg jij al zin?",
@@ -155,7 +155,7 @@ var I18N = {
 
     // Footer
     footer_tagline: "Het complete platform voor hardlopers in Nederland",
-    footer_copyright: "© 2026 runningnederland.nl",
+    footer_copyright: "© 2026 RunningNederland.nl",
 
     // General
     loading: "Laden...",
@@ -181,9 +181,9 @@ var I18N = {
     hero_cta: "Browse all events",
     featured_title: "Featured events",
     featured_subtitle: "Upcoming running events near you",
-    about_title: "About runningnederland.nl",
-    about_text1: "Runningnederland.nl is the central platform for running events in the Netherlands. We bring all events together in one place, so you can always find your next run.",
-    about_text2: "Runningnederland.nl is the central platform where all running events are brought together. Whether you are a beginner wanting to run your first 5km, or a seasoned runner ready for an ultra running challenge — find your next event here.",
+    about_title: "About RunningNederland.nl",
+    about_text1: "RunningNederland.nl is the central platform for running events in the Netherlands. We bring all events together in one place, so you can always find your next run.",
+    about_text2: "RunningNederland.nl is the central platform where all running events are brought together. Whether you are a beginner wanting to run your first 5km, or a seasoned runner ready for an ultra running challenge — find your next event here.",
     about_text3: "Our team of enthusiastic runners and experienced event organisers ensures that every event becomes an unforgettable experience. Safety, fun and sportsmanship always come first.",
 
     // Agenda
@@ -294,7 +294,7 @@ var I18N = {
 
     // Over ons
     overons_title: "About us",
-    overons_sub: "We are runningnederland.nl",
+    overons_sub: "We are RunningNederland.nl",
     overons_intro: "RunningNederland.nl was born from the wish for one complete overview of all runs in the Netherlands. We have divided them into regions, so you can see right away whether there are fun runs near you!",
     overons_p1: "Whether you want to challenge yourself, connect with other runners, or cheer on your children at their runs, you will find plenty of options here!",
     overons_p2: "Our website offers an overview of all running events — from park runs to marathons and from kids' runs to relays. Feeling like it yet?",
@@ -318,7 +318,7 @@ var I18N = {
 
     // Footer
     footer_tagline: "The complete platform for runners in the Netherlands",
-    footer_copyright: "© 2026 runningnederland.nl",
+    footer_copyright: "© 2026 RunningNederland.nl",
 
     // General
     loading: "Loading...",

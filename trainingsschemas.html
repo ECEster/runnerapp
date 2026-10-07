@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trainingsschema's — runningnederland.nl</title>
+  <title>Trainingsschema's — RunningNederland.nl</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -87,7 +87,7 @@
       <img src="images/logo.svg" alt="RunningNederland" class="footer__logo-img">
     </div>
     <p class="footer__tagline" data-i18n="footer_tagline">Het complete platform voor hardlopers in Nederland</p>
-    <p class="footer__copy" data-i18n="footer_copyright">© 2026 runningnederland.nl</p>
+    <p class="footer__copy" data-i18n="footer_copyright">© 2026 RunningNederland.nl</p>
   </div>
 </footer>
 
@@ -276,7 +276,7 @@ function buildPrintHTML(id) {
   var warmup = (WARMUP_TIPS[lang]||WARMUP_TIPS.nl).map(function(t){ return '<li>'+t+'</li>'; }).join('');
   var stretch = (STRETCH_TIPS[lang]||STRETCH_TIPS.nl).map(function(t){ return '<li>'+t+'</li>'; }).join('');
   return '<!DOCTYPE html><html><head><meta charset="UTF-8">'+
-    '<title>Trainingsschema '+label+' — runningnederland.nl</title>'+
+    '<title>Trainingsschema '+label+' — RunningNederland.nl</title>'+
     '<style>'+
       'body{font-family:Arial,sans-serif;font-size:11pt;margin:2cm;color:#111;}'+
       'h1{font-size:18pt;margin-bottom:4px;}'+
@@ -297,7 +297,7 @@ function buildPrintHTML(id) {
     '</tr></thead><tbody>'+tableRows+'</tbody></table>'+
     '<h3>🔥 Warming-up tips</h3><ul>'+warmup+'</ul>'+
     '<h3>🧘 Stretch tips</h3><ul>'+stretch+'</ul>'+
-    '<p class="footer">runningnederland.nl — trainingsschema '+label+'</p>'+
+    '<p class="footer">RunningNederland.nl — trainingsschema '+label+'</p>'+
     '</body></html>';
 }
 

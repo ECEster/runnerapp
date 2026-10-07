@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Evenement — runningnederland.nl</title>
+  <title>Evenement — RunningNederland.nl</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -57,7 +57,7 @@
       <img src="images/logo.svg" alt="RunningNederland" class="footer__logo-img">
     </div>
     <p class="footer__tagline" data-i18n="footer_tagline">Het complete platform voor hardlopers in Nederland</p>
-    <p class="footer__copy" data-i18n="footer_copyright">© 2026 runningnederland.nl</p>
+    <p class="footer__copy" data-i18n="footer_copyright">© 2026 RunningNederland.nl</p>
   </div>
 </footer>
 
@@ -241,7 +241,7 @@ async function init() {
   var root = document.getElementById('event-detail-root');
   if (ev) {
     root.innerHTML = renderEvent(ev, lang);
-    document.title = (lang==='en' ? ev.name_en : ev.name_nl) + ' — runningnederland.nl';
+    document.title = (lang==='en' ? ev.name_en : ev.name_nl) + ' — RunningNederland.nl';
     refreshFavButton(ev.id);
   } else {
     root.innerHTML = renderNotFound();
