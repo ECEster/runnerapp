@@ -41,6 +41,8 @@ async function loadEventsFromDB() {
         registration_url: e.registration_url || '',
         kidsrun:          e.kidsrun   || false,
         hondenloop:       e.hondenloop || false,
+        lat:              e.lat,
+        lng:              e.lng,
         estafette:        e.estafette || false,
         businessrun:      e.businessrun || false,
         // Gratis als de prijs 'gratis'/'free' of 0 is; anders betaald

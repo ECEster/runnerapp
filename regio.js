@@ -54,8 +54,8 @@ function filterEvents() {
     if (f.atletiekunie && !ev.atletiekunie) return false;
     // Postcode zonder gekozen straal: standaard 25 km
     if (postalCoords) {
-      var ec = cityCoords(ev.city);
-      if (ec && haversineKm(postalCoords.lat, postalCoords.lng, ec.lat, ec.lng) > parseFloat(f.radius || '25')) return false;
+      var ec = eventCoords(ev);
+      if (!ec || haversineKm(postalCoords.lat, postalCoords.lng, ec.lat, ec.lng) > parseFloat(f.radius || '25')) return false;
     }
     if (f.search && !(ev.name_nl.toLowerCase().indexOf(f.search) !== -1 || ev.city.toLowerCase().indexOf(f.search) !== -1)) return false;
     return true;
@@ -64,6 +64,7 @@ function filterEvents() {
 
 function applyFilters() {
   var lang = getLang();
+  if (needsPostalLookup(document.getElementById('f-postal').value.trim(), applyFilters)) return;
   var sort = document.getElementById('sort-select').value;
   filteredEvents = filterEvents();
   if (sort === 'name') {

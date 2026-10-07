@@ -30,6 +30,8 @@ jobs:
         run: |
           if [ "${{ github.event.inputs.live }}" = "true" ]; then
             node write-events.js --live
+            # Nieuwe evenementen meteen coördinaten geven (postcodefilter)
+            node geocode-events.js --live
           else
             node write-events.js
           fi

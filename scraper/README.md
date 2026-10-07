@@ -325,3 +325,11 @@ Deze punten staan nog open:
   de Trimloop-reeks in Assen staat op trail + baanevenement, en het adminpaneel heeft een
   keuzelijst "Tweede type". Nog te doen: een tweede typebadge op de detailpagina
   (`evenement.html`).
+
+## Coördinaten (postcodefilter)
+
+Events hebben `lat`/`lng` (migratie `0006_add_lat_lng.sql`) voor het postcode/straal-filter.
+`geocode-events.js` vult ze in op basis van plaats + provincie via de PDOK Locatieserver
+(gratis, geen sleutel). De GitHub Action draait het na elke live scrape; handmatig:
+`node geocode-events.js` (dry-run) of `node geocode-events.js --live`. Events die via het
+adminpaneel worden toegevoegd krijgen pas coördinaten als dit script weer draait.

@@ -192,8 +192,37 @@ function getEventImage(ev) {
 }
 
 // Postcode- en plaatscoördinaten voor het postcode/straal-filter (agenda + regio's)
+// Postcodes worden opgezocht bij PDOK (lookupPostal) en hier bewaard.
+var POSTAL_CACHE = {};
+
+function lookupPostal(postal4) {
+  var url = 'https://api.pdok.nl/bzk/locatieserver/search/v3_1/free?q=postcode:' +
+    postal4 + '*&fq=type:postcode&rows=1&fl=centroide_ll';
+  return fetch(url).then(function(r) { return r.json(); }).then(function(data) {
+    var doc = data.response && data.response.docs && data.response.docs[0];
+    var m = doc && /POINT\(([-\d.]+) ([-\d.]+)\)/.exec(doc.centroide_ll);
+    POSTAL_CACHE[postal4] = m ? { lat: parseFloat(m[2]), lng: parseFloat(m[1]) } : null;
+  }).catch(function() { POSTAL_CACHE[postal4] = null; });
+}
+
+// Zoekt de postcode eerst op (async) en roept daarna callback opnieuw aan.
+// Geeft true terug als er nog gewacht wordt.
+function needsPostalLookup(postal4, callback) {
+  if (!/^\d{4}$/.test(postal4) || postal4 in POSTAL_CACHE) return false;
+  lookupPostal(postal4).then(callback);
+  return true;
+}
+
+// Coördinaten van een evenement: uit de database (lat/lng), anders de
+// vaste lijst grote steden hieronder.
+function eventCoords(ev) {
+  if (ev.lat != null && ev.lng != null) return { lat: ev.lat, lng: ev.lng };
+  return cityCoords(titleCase(ev.city || ''));
+}
+
 function getPostalCoords(postal4) {
   var key = postal4;
+  if (key in POSTAL_CACHE) return POSTAL_CACHE[key];
   if (POSTAL_CODES[key]) return POSTAL_CODES[key];
   // try rounding down to nearest known prefix
   for (var k in POSTAL_CODES) {

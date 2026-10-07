@@ -318,11 +318,10 @@ function filterEvents() {
     if (f.search && !(ev.name_nl.toLowerCase().includes(f.search) || ev.name_en.toLowerCase().includes(f.search) || ev.city.toLowerCase().includes(f.search))) return false;
     // Postcode zonder gekozen straal: standaard 25 km
     if (postalCoords) {
-      var ec = cityCoords(ev.city);
-      if (ec) {
-        var dist = haversineKm(postalCoords.lat, postalCoords.lng, ec.lat, ec.lng);
-        if (dist > parseFloat(f.radius || '25')) return false;
-      }
+      var ec = eventCoords(ev);
+      if (!ec) return false;
+      var dist = haversineKm(postalCoords.lat, postalCoords.lng, ec.lat, ec.lng);
+      if (dist > parseFloat(f.radius || '25')) return false;
     }
     return true;
   });
@@ -330,6 +329,7 @@ function filterEvents() {
 
 function applyFilters() {
   var lang = getLang();
+  if (needsPostalLookup(document.getElementById('f-postal').value.trim(), applyFilters)) return;
   var f = getFilters();
   var sort = document.getElementById('sort-select').value;
   filteredEvents = filterEvents();

@@ -86,6 +86,17 @@ export async function fetchEventsWithPendingPrice() {
   return res.json()
 }
 
+// Haalt events zonder coördinaten op — voor geocode-events.js.
+export async function fetchEventsMissingCoords() {
+  const res = await fetch(`${baseUrl()}/rest/v1/events?lat=is.null&select=id,city,province`, {
+    headers: headers(),
+  })
+  if (!res.ok) {
+    throw new Error(`Kon events zonder coördinaten niet ophalen: HTTP ${res.status} — ${await res.text()}`)
+  }
+  return res.json()
+}
+
 // Voegt één event-rij toe. Verwacht de rij al in de vorm van de 'events'-tabel
 // (zie lib/mapToSupabaseShape.js).
 export async function insertEventRow(row) {
