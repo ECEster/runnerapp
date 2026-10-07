@@ -136,10 +136,11 @@ var FALLBACK_IMAGE_BY_TYPE = {
 
 // Fallback-foto op basis van de naam, voor events die (nog) een ander type
 // hebben, bv. een "Bosloop" die door de scraper als 'wegevenement' is
-// binnengekomen. 'bosch' wordt uitgesloten zodat "Den Bosch" niet matcht.
+// binnengekomen. Een bosloop telt als trail. 'bosch' wordt uitgesloten zodat
+// "Den Bosch" niet matcht.
 var FALLBACK_IMAGE_BY_NAME = [
-  { re: /trail/i,           image: 'images/trail.jpg' },
-  { re: /bos(?!ch)|cross/i, image: 'images/cross.jpg' },
+  { re: /trail|bos(?!ch)/i, image: 'images/trail.jpg' },
+  { re: /cross/i,           image: 'images/cross.jpg' },
   { re: /swim|\bdip\b/i,    image: 'images/swimrun.jpg' },
 ];
 
@@ -156,6 +157,7 @@ function getImageByName(ev) {
 function getEventImage(ev) {
   if (ev.type === 'baanevenement') return 'images/baanevenement.jpg';
   if (!ev.image && ev.hondenloop) return 'images/hondenloop.jpg';
+  if (!ev.image && (ev.type === 'trail' || ev.type2 === 'trail')) return 'images/trail.jpg';
   if (!ev.image && getImageByName(ev)) return getImageByName(ev);
   if (!ev.image && FALLBACK_IMAGE_BY_TYPE[ev.type]) return FALLBACK_IMAGE_BY_TYPE[ev.type];
   return ev.image;
