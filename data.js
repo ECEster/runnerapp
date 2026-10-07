@@ -181,8 +181,20 @@ function getImageByName(ev) {
 
 // 'hondenloop' is geen type (kan bij elk type event aangevinkt worden, net als
 // kidsrun), dus die fallback-foto wordt los gecheckt i.p.v. via FALLBACK_IMAGE_BY_TYPE.
+// Alleen-kids-evenement: 'kids'/'kinder'/'jeugd' in de naam, of alle
+// afstanden t/m 3 km. (Er is geen apart veld voor in de database.)
+function isKidsOnlyEvent(ev) {
+  var name = (ev.name_nl || '') + ' ' + (ev.name_en || '');
+  if (/kids|kinder|jeugd/i.test(name)) return true;
+  var kms = [];
+  (ev.distances || []).forEach(function(d) { kms = kms.concat(distanceKmValues(d)); });
+  kms = kms.filter(function(km) { return km > 0; });
+  return kms.length > 0 && kms.every(function(km) { return km <= 3; });
+}
+
 function getEventImage(ev) {
   if (ev.type === 'baanevenement') return 'images/baanevenement.jpg';
+  if (!ev.image && isKidsOnlyEvent(ev)) return 'images/kidsrun.jpg';
   if (!ev.image && ev.hondenloop) return 'images/hondenloop.jpg';
   if (!ev.image && (ev.type === 'cross' || ev.type2 === 'cross')) return 'images/cross.jpg';
   if (!ev.image && (ev.type === 'trail' || ev.type2 === 'trail')) return 'images/trail.jpg';
