@@ -339,11 +339,12 @@ function filterEvents() {
     if (f.freeOnly && ev.paid) return false;
     if (f.atletiekunie && !ev.atletiekunie) return false;
     if (f.search && !(ev.name_nl.toLowerCase().includes(f.search) || ev.name_en.toLowerCase().includes(f.search) || ev.city.toLowerCase().includes(f.search))) return false;
-    if (postalCoords && f.radius) {
+    // Postcode zonder gekozen straal: standaard 25 km
+    if (postalCoords) {
       var ec = cityCoords(ev.city);
       if (ec) {
         var dist = haversineKm(postalCoords.lat, postalCoords.lng, ec.lat, ec.lng);
-        if (dist > parseFloat(f.radius)) return false;
+        if (dist > parseFloat(f.radius || '25')) return false;
       }
     }
     return true;
@@ -375,7 +376,7 @@ function listEvents() {
   var f = getFilters();
   var anyFilter = f.type || f.province || f.distance || f.dateFrom || f.dateTo ||
     f.kidsrun || f.estafette || f.freeOnly || f.atletiekunie ||
-    (f.postal.length === 4 && f.radius) || f.search;
+    f.postal.length === 4 || f.search;
   if (anyFilter) return filteredEvents;
   return filteredEvents.filter(function(ev) {
     var d = new Date(ev.date);

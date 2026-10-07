@@ -41,7 +41,10 @@ async function loadEventsFromDB() {
         registration_url: e.registration_url || '',
         kidsrun:          e.kidsrun   || false,
         hondenloop:       e.hondenloop || false,
-        paid:             true,
+        estafette:        e.estafette || false,
+        businessrun:      e.businessrun || false,
+        // Gratis als de prijs 'gratis'/'free' of 0 is; anders betaald
+        paid:             !/^\s*(gratis|free|€?\s*0([.,]0+)?)\s*$/i.test(e.price || ''),
         atletiekunie:     false,
         capacity:         null,
         youtube_url:      ''
