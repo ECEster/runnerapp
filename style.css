@@ -842,12 +842,12 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   border-radius: 6px;
   padding: 4px 8px;
   font-weight: 600;
-  color: #e65100;
+  color: var(--accent);
   font-size: 0.88rem;
   margin-left: -8px;
 }
 .filter-checkbox--kids input[type="checkbox"] {
-  accent-color: #e65100;
+  accent-color: var(--accent);
 }
 
 /* Active filter chips */
