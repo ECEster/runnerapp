@@ -667,6 +667,9 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   position: relative;
   z-index: 1;
 }
+/* Kop zonder ondertitel: ruimte van de ondertitel (0.5rem marge + 1.05rem x
+   1.6) aanvullen, zodat alle fotokoppen even hoog blijven */
+.page-header--photo h1:last-child { margin-bottom: calc(0.5rem + 1.05rem * 1.6); }
 
 /* ── Agenda page ─────────────────────────────────────────────── */
 .agenda-layout {
