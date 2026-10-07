@@ -928,9 +928,10 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   color: var(--white);
 }
 .calendar-nav button {
-  background: rgba(232,64,12,0.85);
+  /* Transparante tint van het donkerblauw van de kalenderkop */
+  background: rgba(96,130,200,0.22);
   color: var(--white);
-  border: none;
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: 6px;
   padding: 0.25rem 0.75rem;
   font-family: var(--font-head);
@@ -939,7 +940,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   letter-spacing: 0.03em;
   transition: all var(--transition);
 }
-.calendar-nav button:hover { background: var(--accent); }
+.calendar-nav button:hover { background: rgba(96,130,200,0.38); }
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
