@@ -221,7 +221,7 @@
     <form id="event-form" autocomplete="off">
       <div class="form-grid">
 
-        <div class="full">
+        <div>
           <label for="f-name-nl">Naam evenement</label>
           <input type="text" id="f-name-nl" placeholder="bijv. Dam tot Damloop" required>
         </div>
@@ -235,10 +235,9 @@
           <select id="f-type">
             <option value="marathon">Marathon</option>
             <option value="trail">Trail</option>
-            <option value="bosloop">Bosloop</option>
             <option value="cross">Crossloop</option>
             <option value="gemengd parcours">Gemengd parcours</option>
-            <option value="wegevenement">Wegevenement</option>
+            <option value="wegevenement">Road</option>
             <option value="parkloop">Parkloop</option>
             <option value="funrun">Fun Run</option>
             <option value="swimrun">SwimRun</option>
@@ -254,6 +253,12 @@
             <option value="inclusieve runs">Inclusieve Run</option>
             <option value="gecertificeerd parcours">Gecertificeerd Parcours</option>
             <option value="bikerun">Bike Run</option>
+          </select>
+        </div>
+        <div>
+          <label for="f-type2">Tweede type (optioneel)</label>
+          <select id="f-type2">
+            <option value="">— geen —</option>
           </select>
         </div>
 
@@ -480,6 +485,11 @@ async function translateToEnglish(nlText) {
 let editingId = null;
 let existingImageUrl = '';
 
+// Tweede type: zelfde opties als Type, plus "— geen —"
+document.querySelectorAll('#f-type option').forEach(o => {
+  document.getElementById('f-type2').appendChild(o.cloneNode(true));
+});
+
 function startEdit(ev) {
   editingId = ev.id;
   existingImageUrl = ev.image || '';
@@ -492,6 +502,7 @@ function startEdit(ev) {
   document.getElementById('f-name-nl').value   = ev.name_nl || '';
   document.getElementById('f-date').value       = ev.date || '';
   document.getElementById('f-type').value       = ev.type || 'wegevenement';
+  document.getElementById('f-type2').value      = ev.type2 || '';
   document.getElementById('f-city').value       = ev.city || '';
   document.getElementById('f-province').value   = ev.province || '';
   document.getElementById('f-distances').value  = ev.distances || '';
@@ -559,6 +570,7 @@ document.getElementById('event-form').addEventListener('submit', async e => {
       name_en:          nameEn,
       date:             document.getElementById('f-date').value,
       type:             document.getElementById('f-type').value,
+      type2:            document.getElementById('f-type2').value || null,
       city:             capitalizeFirst(document.getElementById('f-city').value),
       province:         document.getElementById('f-province').value || null,
       distances:        document.getElementById('f-distances').value.trim().replace(/(\d{1,2}),(\d{1,3})(?!\d)/g, '$1.$2'),
