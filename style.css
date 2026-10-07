@@ -887,6 +887,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 .calendar-nav h3 {
   font-family: var(--font-head);
   font-size: 1rem;
+  letter-spacing: 0.08em;
   color: var(--white);
 }
 .calendar-nav button {
