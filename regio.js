@@ -211,6 +211,11 @@ function toggleLang() {
 }
 function toggleMobileNav() { document.getElementById('mobile-nav').classList.toggle('open'); }
 
+// Filters worden pas toegepast met de knop Zoeken, of met Enter in een tekstveld
+document.querySelectorAll('aside input').forEach(function(el) {
+  el.addEventListener('keydown', function(e) { if (e.key === 'Enter') applyFilters(); });
+});
+
 // Init
 (async function() {
   var now = new Date();

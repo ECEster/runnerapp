@@ -875,6 +875,9 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   font-size: 0.85rem;
 }
 
+/* Zoekknop onder de filters */
+.filter-search-btn { width: 100%; justify-content: center; margin-top: 0.5rem; }
+
 /* Calendar */
 .calendar-wrapper {
   background: var(--white);

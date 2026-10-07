@@ -80,7 +80,7 @@
       <!-- Type -->
       <div class="filter-group">
         <label data-i18n="filter_type">Soort evenement</label>
-        <select id="f-type" onchange="applyFilters()">
+        <select id="f-type">
           <option value="">— Alle types —</option>
           <option value="marathon">Marathon</option>
           <option value="trail">Trail</option>
@@ -108,7 +108,7 @@
       <!-- Province -->
       <div class="filter-group">
         <label data-i18n="filter_province">Provincie</label>
-        <select id="f-province" onchange="applyFilters()">
+        <select id="f-province">
           <option value="">— Alle provincies —</option>
           <option value="Groningen">Groningen</option>
           <option value="Friesland">Friesland</option>
@@ -128,7 +128,7 @@
       <!-- Distance -->
       <div class="filter-group">
         <label data-i18n="filter_distance">Afstand</label>
-        <select id="f-distance" onchange="applyFilters()">
+        <select id="f-distance">
           <option value="">— Alle afstanden —</option>
           <option value="max:5">t/m 5 km</option>
           <option value="max:10">t/m 10 km</option>
@@ -143,18 +143,18 @@
       <div class="filter-group filter-group--row">
         <div>
           <label data-i18n="filter_date_from">Datum vanaf</label>
-          <input type="date" id="f-date-from" onchange="applyFilters()">
+          <input type="date" id="f-date-from">
         </div>
         <div>
           <label data-i18n="filter_date_to">Datum t/m</label>
-          <input type="date" id="f-date-to" onchange="applyFilters()">
+          <input type="date" id="f-date-to">
         </div>
       </div>
 
       <!-- Kids runs -->
       <div class="filter-group">
         <label class="filter-checkbox filter-checkbox--kids">
-          <input type="checkbox" id="f-kidsrun" onchange="applyFilters()">
+          <input type="checkbox" id="f-kidsrun">
           <span>Kids Runs</span>
         </label>
       </div>
@@ -162,7 +162,7 @@
       <!-- Estafette -->
       <div class="filter-group">
         <label class="filter-checkbox">
-          <input type="checkbox" id="f-estafette" onchange="applyFilters()">
+          <input type="checkbox" id="f-estafette">
           <span>Estafette</span>
         </label>
       </div>
@@ -170,7 +170,7 @@
       <!-- Free only -->
       <div class="filter-group">
         <label class="filter-checkbox">
-          <input type="checkbox" id="f-free" onchange="applyFilters()">
+          <input type="checkbox" id="f-free">
           <span data-i18n="filter_free_only">Alleen gratis</span>
         </label>
       </div>
@@ -178,7 +178,7 @@
       <!-- Atletiekunie -->
       <div class="filter-group">
         <label class="filter-checkbox">
-          <input type="checkbox" id="f-atletiekunie" onchange="applyFilters()">
+          <input type="checkbox" id="f-atletiekunie">
           <span data-i18n="filter_atletiekunie">Atletiekunie gecertificeerd</span>
         </label>
       </div>
@@ -186,11 +186,11 @@
       <!-- Postal code + radius -->
       <div class="filter-group">
         <label data-i18n="filter_postal">Postcode</label>
-        <input type="text" id="f-postal" maxlength="4" placeholder="bijv. 1000" oninput="applyFilters()">
+        <input type="text" id="f-postal" maxlength="4" placeholder="bijv. 1000">
       </div>
       <div class="filter-group">
         <label data-i18n="filter_radius">Straal (km)</label>
-        <select id="f-radius" onchange="applyFilters()">
+        <select id="f-radius">
           <option value="">— Geen limiet —</option>
           <option value="25">25 km</option>
           <option value="50">50 km</option>
@@ -201,9 +201,10 @@
 
       <!-- Search -->
       <div class="filter-group">
-        <label data-i18n="filter_search">Zoeken</label>
-        <input type="text" id="f-search" placeholder="Naam of stad..." oninput="applyFilters()">
+        <label data-i18n="filter_search">Naam of plaats</label>
+        <input type="text" id="f-search" placeholder="bijv. Assen of Bosloop">
       </div>
+      <button type="button" class="btn btn--primary filter-search-btn" onclick="applyFilters()" data-i18n="search_button">Zoeken</button>
     </aside>
 
     <!-- RESULTS -->
@@ -615,6 +616,11 @@ function toggleLang() {
   applyFilters();
 }
 function toggleMobileNav() { document.getElementById('mobile-nav').classList.toggle('open'); }
+
+// Filters worden pas toegepast met de knop Zoeken, of met Enter in een tekstveld
+document.querySelectorAll('aside input').forEach(function(el) {
+  el.addEventListener('keydown', function(e) { if (e.key === 'Enter') applyFilters(); });
+});
 
 // Init
 (async function() {

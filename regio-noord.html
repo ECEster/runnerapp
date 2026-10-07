@@ -76,7 +76,7 @@
       </div>
       <div class="filter-group">
         <label>Soort evenement</label>
-        <select id="f-type" onchange="applyFilters()">
+        <select id="f-type">
           <option value="">— Alle types —</option>
           <option value="marathon">Marathon</option>
           <option value="trail">Trail</option>
@@ -99,7 +99,7 @@
       </div>
       <div class="filter-group">
         <label>Provincie</label>
-        <select id="f-province" onchange="applyFilters()">
+        <select id="f-province">
           <option value="">— Alle provincies —</option>
           <option value="Groningen">Groningen</option>
           <option value="Friesland">Friesland</option>
@@ -108,7 +108,7 @@
       </div>
       <div class="filter-group">
         <label>Afstand</label>
-        <select id="f-distance" onchange="applyFilters()">
+        <select id="f-distance">
           <option value="">— Alle afstanden —</option>
           <option value="max:5">t/m 5 km</option>
           <option value="max:10">t/m 10 km</option>
@@ -121,17 +121,18 @@
       <div class="filter-group filter-group--row">
         <div>
           <label>Datum vanaf</label>
-          <input type="date" id="f-date-from" onchange="applyFilters()">
+          <input type="date" id="f-date-from">
         </div>
         <div>
           <label>Datum t/m</label>
-          <input type="date" id="f-date-to" onchange="applyFilters()">
+          <input type="date" id="f-date-to">
         </div>
       </div>
       <div class="filter-group">
-        <label>Zoeken</label>
-        <input type="text" id="f-search" placeholder="Naam of stad..." oninput="applyFilters()">
+        <label data-i18n="filter_search">Naam of plaats</label>
+        <input type="text" id="f-search" placeholder="bijv. Assen of Bosloop">
       </div>
+      <button type="button" class="btn btn--primary filter-search-btn" onclick="applyFilters()" data-i18n="search_button">Zoeken</button>
     </aside>
 
     <div class="agenda-results">
