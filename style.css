@@ -6,6 +6,9 @@
 :root {
   --accent:      #E8400C;
   --accent-dark: #C03008;
+  /* Knoppen: donkerder oranje voor genoeg contrast met witte tekst (5,7:1) */
+  --btn:         #C03008;
+  --btn-hover:   #9E2706;
   --dark:        #111827;
   --dark2:       #1F2937;
   --dark3:       #374151;
@@ -22,28 +25,35 @@
   --font-head:   'Barlow Condensed', sans-serif;
   --font-body:   'Inter', sans-serif;
 
-  /* badge colors — blauwgroene tintfamilie */
-  --badge-marathon:            #0F766E;
-  --badge-trail:               #166534;
-  --badge-bosloop:              #065F46;
-  --badge-gemengd:              #5A7F74;
-  --badge-baanevenement:        #0C6E8C;
-  --badge-cross:               #1A4E6B;
-  --badge-wegevenement:        #3B7A9E;
-  --badge-parkloop:            #1E8A6A;
-  --badge-funrun:              #0891B2;
-  --badge-survivalrun:         #1E5F72;
-  --badge-ultrarun:            #155E75;
-  --badge-virtuele:            #0369A1;
-  --badge-estafette:           #0C5173;
-  --badge-coopertest:          #116975;
-  --badge-studentenevenement:  #1D4E89;
-  --badge-wandelen:            #2D6A4F;
-  --badge-inclusief:           #3D7A6B;
-  --badge-gecertificeerd:      #4A6E7F;
-  --badge-swimrun:             #0E7490;
-  --badge-urbanrun:            #334E68;
-  --badge-bikerun:             #2C6E8A;
+  /* Badgekleuren: vijf duidelijk verschillende groepen, alle met wit
+     contrast >= 5,3:1 */
+  --badge-weg:       #1D4E89; /* blauw: weg, stad, marathon */
+  --badge-natuur:    #2D6A4F; /* groen: trail, cross, natuur */
+  --badge-baan:      #6B3FA0; /* paars: baan, coopertest, estafette */
+  --badge-multi:     #0E7490; /* petrol: swim/bike-run */
+  --badge-recreatief:#A21C5A; /* framboos: fun, wandelen, park, inclusief */
+
+  --badge-marathon:            var(--badge-weg);
+  --badge-wegevenement:        var(--badge-weg);
+  --badge-urbanrun:            var(--badge-weg);
+  --badge-gecertificeerd:      var(--badge-weg);
+  --badge-virtuele:            var(--badge-weg);
+  --badge-studentenevenement:  var(--badge-weg);
+  --badge-trail:               var(--badge-natuur);
+  --badge-bosloop:             var(--badge-natuur);
+  --badge-cross:               var(--badge-natuur);
+  --badge-gemengd:             var(--badge-natuur);
+  --badge-survivalrun:         var(--badge-natuur);
+  --badge-ultrarun:            var(--badge-natuur);
+  --badge-baanevenement:       var(--badge-baan);
+  --badge-coopertest:          var(--badge-baan);
+  --badge-estafette:           var(--badge-baan);
+  --badge-swimrun:             var(--badge-multi);
+  --badge-bikerun:             var(--badge-multi);
+  --badge-funrun:              var(--badge-recreatief);
+  --badge-parkloop:            var(--badge-recreatief);
+  --badge-wandelen:            var(--badge-recreatief);
+  --badge-inclusief:           var(--badge-recreatief);
 }
 
 /* ── Reset ─────────────────────────────────────────────────── */
@@ -101,10 +111,10 @@ p:last-child { margin-bottom: 0; }
   transition: all var(--transition);
 }
 .btn--primary {
-  background: var(--accent);
+  background: var(--btn);
   color: var(--white);
 }
-.btn--primary:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(232,64,12,0.35); }
+.btn--primary:hover { background: var(--btn-hover); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(192,48,8,0.35); }
 .btn--outline {
   background: transparent;
   color: var(--white);
@@ -118,10 +128,10 @@ p:last-child { margin-bottom: 0; }
 .btn--dark:hover { background: var(--dark2); }
 .btn--ghost {
   background: transparent;
-  color: var(--accent);
-  border-color: var(--accent);
+  color: var(--btn);
+  border-color: var(--btn);
 }
-.btn--ghost:hover { background: var(--accent); color: var(--white); }
+.btn--ghost:hover { background: var(--btn); color: var(--white); }
 .btn--sm { padding: 0.4rem 0.9rem; font-size: 0.82rem; }
 .btn--share {
   display: inline-flex;
@@ -709,8 +719,8 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   border: 2px solid transparent;
   transition: all var(--transition);
 }
-.regio-nav__btn:hover { background: var(--accent); color: var(--white); }
-.regio-nav__btn.active { background: var(--accent); color: var(--white); border-color: var(--accent); }
+.regio-nav__btn:hover { background: var(--btn); color: var(--white); }
+.regio-nav__btn.active { background: var(--btn); color: var(--white); border-color: var(--btn); }
 
 /* Regio richtingicoon — pijl in een rechthoek, gedraaid per windrichting */
 .regio-nav__icon {
@@ -737,7 +747,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 .regio-nav__btn:hover .regio-nav__icon,
 .regio-nav__btn.active .regio-nav__icon { background: var(--white); }
 .regio-nav__btn:hover .regio-nav__icon svg,
-.regio-nav__btn.active .regio-nav__icon svg { fill: var(--accent); }
+.regio-nav__btn.active .regio-nav__icon svg { fill: var(--btn); }
 
 /* Filter panel */
 .filter-panel {
@@ -911,7 +921,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   color: var(--white);
 }
 .calendar-nav button {
-  background: rgba(232,64,12,0.85);
+  background: rgba(192,48,8,0.85);
   color: var(--white);
   border: none;
   border-radius: 6px;
@@ -922,7 +932,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   letter-spacing: 0.03em;
   transition: all var(--transition);
 }
-.calendar-nav button:hover { background: var(--accent); }
+.calendar-nav button:hover { background: var(--btn); }
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -1086,7 +1096,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   text-align: center;
   width: 100%;
   padding: 0.9rem;
-  background: var(--accent);
+  background: var(--btn);
   color: var(--white);
   border-radius: var(--radius);
   font-weight: 700;
@@ -1094,7 +1104,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   border: none;
   transition: all var(--transition);
 }
-.event-detail__register:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(232,64,12,0.35); }
+.event-detail__register:hover { background: var(--btn-hover); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(192,48,8,0.35); }
 .atletiekunie-badge {
   display: inline-flex;
   align-items: center;
