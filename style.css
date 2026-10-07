@@ -463,8 +463,12 @@ p:last-child { margin-bottom: 0; }
   font-size: 0.82rem;
   color: var(--mid);
   margin-bottom: 0.8rem;
+  /* Plaats links, provincie rechts */
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
 }
-.event-card__meta span { margin-right: 0.6rem; }
+.event-card__meta span:last-child:not(:first-child) { text-align: right; }
 .event-card__distances {
   margin-bottom: 0.7rem;
 }
@@ -488,7 +492,10 @@ p:last-child { margin-bottom: 0; }
 }
 .event-card__footer {
   display: flex;
-  align-items: center;
+  /* Altijd onderaan de kaart en knoppen op één lijn, ook als de prijs of
+     de afstanden over twee regels lopen */
+  margin-top: auto;
+  align-items: flex-end;
   gap: 0.6rem;
   padding-top: 0.8rem;
   border-top: 1px solid var(--surface2);

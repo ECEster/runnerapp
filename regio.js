@@ -120,7 +120,7 @@ function renderList(lang) {
       '<div class="event-card__body">'+
         '<div class="event-card__date">📅 '+dateStr+'</div>'+
         '<a class="event-card__title" href="'+detailUrl+'">'+name+'</a>'+
-        '<div class="event-card__meta"><span>'+ev.city+'</span><span>'+ev.province+'</span></div>'+
+        '<div class="event-card__meta"><span>'+titleCase(ev.city)+'</span><span>'+(ev.province||'')+'</span></div>'+
         '<div class="event-card__distances">'+distChips+'</div>'+
         '<div class="event-card__footer">'+priceHtml+'<a href="'+moreInfoHref+'" class="btn btn--ghost btn--sm"'+moreInfoAttrs+'>Meer info</a></div>'+
       '</div>'+
