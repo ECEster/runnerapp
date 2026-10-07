@@ -747,6 +747,10 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   padding: 1.5rem;
   position: sticky;
   top: 80px;
+  /* Eigen scrollbalk: het filtermenu scrollt los van de eventcards */
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 .filter-panel__title {
   font-family: var(--font-head);
@@ -1504,7 +1508,7 @@ body.page-overons { background: var(--dark); }
   .events-grid { grid-template-columns: repeat(2, 1fr); }
 
   .agenda-layout { grid-template-columns: 1fr; }
-  .filter-panel { position: static; }
+  .filter-panel { position: static; max-height: none; overflow: visible; }
   .regio-nav-row { grid-template-columns: 1fr; gap: 0; }
   .regio-nav-row > .regio-nav-spacer { display: none; }
 
