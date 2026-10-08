@@ -95,6 +95,8 @@ function renderList(lang) {
   el.classList.toggle('events-grid--compact', calMonth === 10);
   // Proef: in oktober eventnamen in het lettertype van het logo
   el.classList.toggle('events-grid--logofont', calMonth === 9);
+  // Proef: in november de maandtitel weer in het oude lettertype
+  document.body.classList.toggle('maand-november', calMonth === 10);
   var events = listEvents();
   var countEl = document.getElementById('results-count');
   if (countEl) countEl.textContent = events.length + ' evenementen';

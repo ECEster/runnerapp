@@ -1029,6 +1029,13 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
   letter-spacing: 0.02em;
   color: var(--white);
 }
+/* Proef: in november de maandtitel in het oude lettertype (Barlow Condensed) */
+body.maand-november .calendar-nav h3 {
+  font-family: var(--font-head);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
 .calendar-nav button {
   /* Transparante tint van het donkerblauw van de kalenderkop */
   background: rgba(96,130,200,0.22);
