@@ -1070,9 +1070,8 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
 .calendar-day:hover { background: var(--surface); }
 .calendar-day.other-month { background: #FDF9F2; }
 .calendar-day.other-month .cal-day-num { color: #C4B57B; }
-.calendar-day.today { background: var(--btn); }
-.calendar-day.today .cal-day-num { color: var(--white); font-weight: 700; }
-.calendar-day.today .cal-dot { background: var(--white); }
+.calendar-day.today { background: #DCE4D6; } /* lichte grijsgroene tint */
+.calendar-day.today .cal-day-num { color: var(--dark); font-weight: 700; }
 .calendar-day.has-events { cursor: pointer; }
 .calendar-day.selected { background: #FFF1EB; outline: 2px solid var(--accent); }
 .cal-day-num {
