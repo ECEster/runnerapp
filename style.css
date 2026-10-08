@@ -834,13 +834,14 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   max-height: calc(100vh - 100px);
   overflow-y: auto;
   overscroll-behavior: contain;
-  scrollbar-color: var(--btn) transparent; /* Firefox */
+  scrollbar-color: #B8BCC4 transparent; /* Firefox */
   scrollbar-width: thin;
 }
 /* Chrome, Edge, Safari */
 .filter-panel::-webkit-scrollbar { width: 4px; }
 .filter-panel::-webkit-scrollbar-track { background: transparent; }
-.filter-panel::-webkit-scrollbar-thumb { background: var(--btn); border-radius: 2px; }
+.filter-panel::-webkit-scrollbar-thumb { background: #B8BCC4; border-radius: 2px; }
+.filter-panel::-webkit-scrollbar-thumb:hover { background: var(--mid); }
 .filter-panel__title {
   font-family: var(--font-head);
   font-size: 1.1rem;
