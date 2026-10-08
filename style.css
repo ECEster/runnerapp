@@ -183,15 +183,16 @@ p:last-child { margin-bottom: 0; }
 .nav__logo-link {
   display: flex;
   align-items: center;
+  margin-right: 1.25rem;
   text-decoration: none;
 }
 .nav__logo-img {
-  height: 33px;
+  height: 24px;
   width: auto;
   display: block;
 }
 .footer__logo-img {
-  height: 33px;
+  height: 26px;
   width: auto;
   display: block;
   margin: 0 auto 0.5rem;
@@ -468,7 +469,7 @@ p:last-child { margin-bottom: 0; }
   display: block;
   text-decoration: none;
 }
-.event-card__title:hover { color: var(--accent); }
+a.event-card__title:hover { color: var(--accent); }
 .event-card__meta {
   font-size: 0.82rem;
   color: var(--mid);

@@ -106,23 +106,20 @@ function renderList(lang) {
     var priceHtml = ev.paid ? '<span class="event-card__price">'+formatPrice(ev.price)+'</span>' : '<span class="event-card__price free">Gratis</span>';
     var freeBadge = !ev.paid ? '<span class="event-card__free-badge">Gratis</span>' : '';
     var distChips = '<span class="event-card__distances-text">' + ev.distances.join(' | ') + '</span>';
-    var detailUrl = 'evenement.html?id='+ev.id;
-    var moreInfoHref = ev.registration_url || detailUrl;
-    var moreInfoAttrs = ev.registration_url ? ' target="_blank" rel="noopener"' : '';
     return '<div class="event-card">'+
-      '<a class="event-card__img" href="'+detailUrl+'">'+
+      '<div class="event-card__img">'+
         '<img src="'+getEventImage(ev)+'" alt="'+name+'" loading="lazy">'+freeBadge+
         '<span class="event-card__photo-badges">'+
           '<span class="event-card__photo-badge">'+typeName+'</span>'+
           (ev.type2 ? '<span class="event-card__photo-badge">'+getTypeName(ev.type2, lang)+'</span>' : '')+
         '</span>'+
-      '</a>'+
+      '</div>'+
       '<div class="event-card__body">'+
         '<div class="event-card__date">📅 '+dateStr+'</div>'+
-        '<a class="event-card__title" href="'+detailUrl+'">'+name+'</a>'+
+        '<span class="event-card__title">'+name+'</span>'+
         '<div class="event-card__meta"><span>'+titleCase(ev.city)+'</span><span>'+(ev.province||'')+'</span></div>'+
         '<div class="event-card__distances">'+distChips+'</div>'+
-        '<div class="event-card__footer">'+priceHtml+'<a href="'+moreInfoHref+'" class="btn btn--ghost btn--sm"'+moreInfoAttrs+'>Meer info</a></div>'+
+        '<div class="event-card__footer">'+priceHtml+(ev.registration_url ? '<a href="'+ev.registration_url+'" class="btn btn--ghost btn--sm" target="_blank" rel="noopener">Meer info</a>' : '')+'</div>'+
       '</div>'+
     '</div>';
   }).join('');
@@ -221,14 +218,11 @@ function openDayPanel(year, month, day) {
     var name = lang==='en'?ev.name_en:ev.name_nl;
     var badgeClass = getBadgeClass(ev.type);
     var typeName = getTypeName(ev.type, lang);
-    var detailUrl = 'evenement.html?id='+ev.id;
-    var moreInfoHref = ev.registration_url || detailUrl;
-    var moreInfoAttrs = ev.registration_url ? ' target="_blank" rel="noopener"' : '';
     return '<div style="display:flex;align-items:center;gap:1rem;padding:0.6rem 0;border-bottom:1px solid var(--surface2)">'+
       '<span class="event-card__badge '+badgeClass+'" style="position:static;font-size:0.72rem;padding:3px 10px;">'+typeName+'</span>'+
-      '<a href="'+detailUrl+'" style="font-weight:600;flex:1;color:inherit;text-decoration:none">'+name+'</a>'+
+      '<span style="font-weight:600;flex:1;color:inherit;text-decoration:none">'+name+'</span>'+
       '<span style="color:var(--mid);font-size:0.82rem">'+ev.city+'</span>'+
-      '<a href="'+moreInfoHref+'" class="btn btn--ghost btn--sm"'+moreInfoAttrs+'>Meer info</a>'+
+      (ev.registration_url ? '<a href="' + ev.registration_url + '" class="btn btn--ghost btn--sm" target="_blank" rel="noopener">Meer info</a>' : '')+
     '</div>';
   }).join('');
   panel.classList.remove('hidden');
