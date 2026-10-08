@@ -726,7 +726,8 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   border: 2px solid transparent;
   transition: all var(--transition);
 }
-.regio-nav__btn:hover { background: var(--btn); color: var(--white); }
+/* Rustig grijs met donkerblauw; alleen de actieve regio krijgt de accentkleur */
+.regio-nav__btn:hover { background: #E5E9F0; color: #2A3B5E; }
 .regio-nav__btn.active { background: var(--btn); color: var(--white); border-color: var(--btn); }
 
 /* Regio richtingicoon — pijl in een rechthoek, gedraaid per windrichting */
@@ -738,7 +739,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   height: 26px;
   margin-right: 0.6rem;
   border-radius: 6px;
-  background: var(--accent);
+  background: #2A3B5E;
   flex-shrink: 0;
   transition: background var(--transition);
 }
@@ -751,9 +752,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 .regio-nav__icon--oost svg { transform: rotate(90deg); }
 .regio-nav__icon--zuid svg { transform: rotate(180deg); }
 .regio-nav__icon--west svg { transform: rotate(270deg); }
-.regio-nav__btn:hover .regio-nav__icon,
 .regio-nav__btn.active .regio-nav__icon { background: var(--white); }
-.regio-nav__btn:hover .regio-nav__icon svg,
 .regio-nav__btn.active .regio-nav__icon svg { fill: var(--btn); }
 
 /* Filter panel */
