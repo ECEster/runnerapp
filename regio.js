@@ -110,7 +110,7 @@ function renderList(lang) {
     var name = lang==='en' ? ev.name_en : ev.name_nl;
     var dateStr = formatDate(ev.date, lang);
     var badgeClass = getBadgeClass(ev.type);
-    var typeName = getTypeName(ev.type, lang);
+    var typeName = cardTypeName(ev, lang);
     var priceHtml = ev.paid ? '<span class="event-card__price">'+formatPrice(ev.price)+'</span>' : '<span class="event-card__price free">Gratis</span>';
     var freeBadge = !ev.paid ? '<span class="event-card__free-badge">Gratis</span>' : '';
     var distChips = '<span class="event-card__distances-text">' + ev.distances.join(' | ') + '</span>';
@@ -195,7 +195,7 @@ function openDayPanel(year, month, day) {
   document.getElementById('day-panel-list').innerHTML = evs.map(function(ev){
     var name = lang==='en'?ev.name_en:ev.name_nl;
     var badgeClass = getBadgeClass(ev.type);
-    var typeName = getTypeName(ev.type, lang);
+    var typeName = cardTypeName(ev, lang);
     return '<div style="display:flex;align-items:center;gap:1rem;padding:0.6rem 0;border-bottom:1px solid var(--surface2)">'+
       '<span class="event-card__badge '+badgeClass+'" style="position:static;font-size:0.72rem;padding:3px 10px;">'+typeName+'</span>'+
       '<span style="font-weight:600;flex:1;color:inherit;text-decoration:none">'+name+'</span>'+

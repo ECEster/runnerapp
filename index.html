@@ -118,7 +118,7 @@ function renderEventCard(ev, lang) {
   var name = lang === 'en' ? ev.name_en : ev.name_nl;
   var dateStr = formatDate(ev.date, lang);
   var badgeClass = getBadgeClass(ev.type);
-  var typeName = getTypeName(ev.type, lang);
+  var typeName = cardTypeName(ev, lang);
   var priceHtml = makePriceHtml(ev, lang);
   var freeBadge = !ev.paid ? '<span class="event-card__free-badge">' + t('free') + '</span>' : '';
   var distChips = '<span class="event-card__distances-text">' + ev.distances.join(' | ') + '</span>';

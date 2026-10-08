@@ -454,7 +454,7 @@ function renderFavorites() {
     var name = lang==='en'?ev.name_en:ev.name_nl;
     var dateStr = formatDate(ev.date, lang);
     var badgeClass = getBadgeClass(ev.type);
-    var typeName = getTypeName(ev.type, lang);
+    var typeName = cardTypeName(ev, lang);
     return cardOpen('event-card', ev)+
       '<div class="event-card__img">'+
         '<img src="'+getEventImage(ev)+'" alt="'+name+'" loading="lazy">'+

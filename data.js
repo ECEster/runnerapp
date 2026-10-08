@@ -194,7 +194,8 @@ function isKidsOnlyEvent(ev) {
 
 function getEventImage(ev) {
   if (ev.type === 'baanevenement') return 'images/baanevenement.jpg';
-  if (!ev.image && isKidsOnlyEvent(ev)) return 'images/kidsrun.jpg';
+  // Alleen-kids-evenementen altijd met de kidsfoto, ook als er een eigen foto is
+  if (isKidsOnlyEvent(ev)) return 'images/kidsrun.jpg';
   if (!ev.image && ev.hondenloop) return 'images/hondenloop.jpg';
   if (!ev.image && (ev.type === 'cross' || ev.type2 === 'cross')) return 'images/cross.jpg';
   if (!ev.image && (ev.type === 'trail' || ev.type2 === 'trail')) return 'images/trail.jpg';
@@ -358,3 +359,10 @@ function initFilterToggle() {
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initFilterToggle);
 else initFilterToggle();
+
+// Label in de foto van een eventkaart: "Kidsrun" voor alleen-kids-evenementen,
+// anders de naam van het type (getTypeName staat per pagina).
+function cardTypeName(ev, lang) {
+  if (isKidsOnlyEvent(ev)) return 'Kidsrun';
+  return getTypeName(ev.type, lang);
+}
