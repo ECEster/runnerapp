@@ -1082,6 +1082,12 @@ body.maand-november .calendar-nav h3 {
 .calendar-day.today { background: #DCE4D6; } /* lichte grijsgroene tint */
 .calendar-day.today .cal-day-num { color: var(--dark); font-weight: 700; }
 .calendar-day.has-events { cursor: pointer; }
+/* Proef: in oktober een kleurloze kalender (stipjes blijven) */
+body.maand-oktober .calendar-dow { background: var(--white); color: var(--mid); }
+body.maand-oktober .calendar-day.other-month { background: var(--white); }
+body.maand-oktober .calendar-day.other-month .cal-day-num { color: var(--light); }
+body.maand-oktober .calendar-day.today { background: var(--white); }
+body.maand-oktober .calendar-day.today .cal-day-num { color: var(--dark); font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
 .calendar-day.selected { background: #FFF1EB; outline: 2px solid var(--accent); }
 .cal-day-num {
   font-size: 0.75rem;
