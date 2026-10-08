@@ -321,6 +321,23 @@ Deze punten staan nog open:
 - **`.env` in `scraper/`** met `SUPABASE_SERVICE_ROLE_KEY` (zie `.env.example`): zonder die
   sleutel kan Claude geen database-wijzigingen doen en moet alles via de SQL Editor.
 
+## Herinnering voor de volgende sessie: repository op privé zetten (2026-10-08)
+
+De repository `github.com/ECEster/runnerapp` staat nog op **public**; Ester wil niet dat anderen
+het project kunnen inzien. Op 8 oktober 2026 gecontroleerd: er staan geen geheime sleutels in de
+geschiedenis (alleen de openbare anon-sleutel in `db.js`, die hoort openbaar te zijn; het in
+commit `ce3cf03` gecommitte `scraper/.env` was leeg en is in `de32a0e` weer verwijderd).
+
+1. **Op privé zetten:** github.com/ECEster/runnerapp/settings → helemaal onderaan *Danger Zone*
+   → *Change visibility* → *Change to private*. (Claude kan dit niet zelf: `gh` is op deze laptop
+   niet ingelogd.)
+2. **Netlify controleren:** na het omzetten een kleine wijziging pushen en in Netlify
+   (site *nl-running*) kijken of de deploy op *Published* komt. Zo niet: in Netlify →
+   *Site configuration → Build & deploy → Repository* de GitHub-koppeling opnieuw autoriseren.
+3. **GitHub Actions:** de scraper-Action (en de geocodering daarna) blijft werken, maar telt
+   bij een privé-repository mee voor de gratis minuten (2000 per maand). Even nakijken in
+   GitHub → *Settings → Billing* na de eerste maand.
+
 ## Coördinaten (postcodefilter)
 
 Events hebben `lat`/`lng` (migratie `0006_add_lat_lng.sql`) voor het postcode/straal-filter.
