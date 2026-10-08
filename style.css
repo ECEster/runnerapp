@@ -913,7 +913,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 }
 .filter-checkbox--kids {
   background: transparent;
-  border: 1.5px dashed #ffb74d;
+  border: 1.5px dashed #D9CE96;
   border-radius: 6px;
   padding: 4px 8px;
   font-weight: 600;
