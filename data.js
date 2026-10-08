@@ -151,6 +151,7 @@ function makePriceHtml(ev, lang) {
 // worden.
 var FALLBACK_IMAGE_BY_TYPE = {
   'wegevenement': 'images/wegevenement.jpg',
+  'marathon':  'images/marathon.jpg',
   'parkloop': 'images/parkloop.jpg',
   'gemengd parcours': 'images/gemengd-parcours.png',
   'cross': 'images/cross.jpg',
