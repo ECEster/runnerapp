@@ -270,3 +270,33 @@ function haversineKm(lat1, lon1, lat2, lon2) {
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
+
+// Eventkaarten verschijnen pas (omhoog glijdend) als ze in beeld scrollen. Kaarten
+// die tegelijk in beeld komen, verschijnen kort na elkaar. Na de animatie gaan
+// de klassen eraf, zodat het hover-effect van de kaart gewoon blijft werken.
+var revealObserver = null;
+function revealOnScroll(cards) {
+  if (!('IntersectionObserver' in window)) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (revealObserver) revealObserver.disconnect();
+  revealObserver = new IntersectionObserver(function(entries) {
+    var batch = 0;
+    entries.forEach(function(entry) {
+      if (!entry.isIntersecting) return;
+      var card = entry.target;
+      revealObserver.unobserve(card);
+      card.style.transitionDelay = (batch++ * 90) + 'ms';
+      card.classList.add('reveal--in');
+      card.addEventListener('transitionend', function done(e) {
+        if (e.propertyName !== 'transform') return;
+        card.removeEventListener('transitionend', done);
+        card.classList.remove('reveal', 'reveal--in');
+        card.style.transitionDelay = '';
+      });
+    });
+  }, { rootMargin: '0px 0px -40px 0px', threshold: 0.1 });
+  Array.prototype.forEach.call(cards, function(card) {
+    card.classList.add('reveal');
+    revealObserver.observe(card);
+  });
+}

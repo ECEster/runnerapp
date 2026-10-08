@@ -162,6 +162,7 @@ function renderFeatured(lang) {
     grid.innerHTML = featured.map(function(ev) {
       return renderEventCard(ev, lang);
     }).join('');
+    revealOnScroll(grid.querySelectorAll('.event-card'));
   }
 }
 
