@@ -360,15 +360,15 @@ function initFilterToggle() {
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initFilterToggle);
 else initFilterToggle();
 
-// Label in de foto van een eventkaart: "Kidsrun" voor alleen-kids-evenementen,
+// Label in de foto van een eventkaart: "Kids" voor alleen-kids-evenementen,
 // anders de naam van het type (getTypeName staat per pagina).
 function cardTypeName(ev, lang) {
-  if (isKidsOnlyEvent(ev)) return 'Kidsrun';
+  if (isKidsOnlyEvent(ev)) return 'Kids';
   return badgeTypeName(ev.type, lang);
 }
 // Korte namen voor de labels in de foto ("Baan" i.p.v. "Baanevenement")
 function badgeTypeName(type, lang) {
-  var short = { baanevenement: { nl: 'Baan', en: 'Track' }, wegevenement: { nl: 'Weg', en: 'Road' } };
+  var short = { baanevenement: { nl: 'Baan', en: 'Track' }, wegevenement: { nl: 'Weg', en: 'Road' }, ultrarun: { nl: 'Ultra', en: 'Ultra' } };
   if (short[type]) return short[type][lang === 'en' ? 'en' : 'nl'];
   return getTypeName(type, lang);
 }
