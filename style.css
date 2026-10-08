@@ -734,6 +734,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 }
 /* Agenda: hogere banner, uitsnede naar beneden zodat beide voeten in beeld zijn */
 .page-header--agenda {
+  border-bottom: none; /* geen lijn onder de banner op de agenda */
   background-position: center 78%;
   padding-top: 8rem;
   padding-bottom: 7rem;
