@@ -126,7 +126,7 @@ function renderEventCard(ev, lang) {
       '<img src="' + getEventImage(ev) + '" alt="' + name + '" loading="lazy">' +
       '<span class="event-card__photo-badges">' +
         '<span class="event-card__photo-badge">' + typeName + '</span>' +
-        (ev.type2 ? '<span class="event-card__photo-badge">' + getTypeName(ev.type2, lang) + '</span>' : '') +
+        (ev.type2 ? '<span class="event-card__photo-badge">' + badgeTypeName(ev.type2, lang) + '</span>' : '') +
       '</span>' +
     '</div>' +
     '<div class="event-card__body">' +

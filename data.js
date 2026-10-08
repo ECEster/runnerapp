@@ -364,5 +364,11 @@ else initFilterToggle();
 // anders de naam van het type (getTypeName staat per pagina).
 function cardTypeName(ev, lang) {
   if (isKidsOnlyEvent(ev)) return 'Kidsrun';
-  return getTypeName(ev.type, lang);
+  return badgeTypeName(ev.type, lang);
+}
+// Korte namen voor de labels in de foto ("Baan" i.p.v. "Baanevenement")
+function badgeTypeName(type, lang) {
+  var short = { baanevenement: { nl: 'Baan', en: 'Track' }, wegevenement: { nl: 'Weg', en: 'Road' } };
+  if (short[type]) return short[type][lang === 'en' ? 'en' : 'nl'];
+  return getTypeName(type, lang);
 }
