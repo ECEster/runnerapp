@@ -119,7 +119,7 @@ function renderList(lang) {
         '<span class="event-card__title">'+name+'</span>'+
         '<div class="event-card__meta"><span>'+titleCase(ev.city)+'</span></div>'+
         '<div class="event-card__distances">'+distChips+'</div>'+
-        '<div class="event-card__footer">'+priceHtml+(ev.registration_url ? CARD_GO : '')+'</div>'+
+        '<div class="event-card__footer">'+priceHtml+'</div>'+
       '</div>'+
     cardClose(ev);
   }).join('');

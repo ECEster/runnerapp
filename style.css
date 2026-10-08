@@ -522,19 +522,6 @@ a.event-card__title:hover { color: var(--accent); }
 /* Hele kaart is een link naar de website van het evenement */
 a.event-card, a.kids-event-card { color: inherit; text-decoration: none; cursor: pointer; }
 a.event-card:focus-visible, a.kids-event-card:focus-visible { outline: 2px solid var(--dark); outline-offset: 3px; }
-.event-card__go {
-  margin-left: auto;
-  flex-shrink: 0;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  color: var(--mid);
-  border: 1px solid var(--light);
-  transition: background var(--transition), color var(--transition), border-color var(--transition);
-}
-a.event-card:hover .event-card__go { background: var(--dark); border-color: var(--dark); color: var(--white); }
 .event-card__footer {
   display: flex;
   /* Altijd onderaan de kaart en knoppen op één lijn, ook als de prijs of

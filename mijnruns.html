@@ -466,7 +466,6 @@ function renderFavorites() {
         '<div class="event-card__meta"><span>'+titleCase(ev.city)+'</span></div>'+
         '<div class="event-card__footer">'+
           makePriceHtml(ev, lang)+
-          (ev.registration_url ? CARD_GO : '')+
         '</div>'+
       '</div>'+
     cardClose(ev);
