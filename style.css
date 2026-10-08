@@ -1039,6 +1039,13 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 .calendar-day.other-month .cal-day-num { color: var(--light); }
 .calendar-day.today { background: #D9CE96; }
 .calendar-day.today .cal-day-num { color: var(--dark); font-weight: 700; }
+/* Proef: in oktober blauwgrijs (#55748D) i.p.v. zand (#D9CE96) */
+body.maand-oktober .calendar-day.today { background: #55748D; }
+body.maand-oktober .calendar-day.today .cal-day-num { color: var(--white); }
+body.maand-oktober .calendar-day.today .cal-dot { background: var(--white); }
+body.maand-oktober .filter-panel { scrollbar-color: #55748D transparent; }
+body.maand-oktober .filter-panel::-webkit-scrollbar-thumb { background: #55748D; }
+body.maand-oktober .filter-checkbox--kids { border-color: #55748D; }
 .calendar-day.has-events { cursor: pointer; }
 .calendar-day.selected { background: #FFF1EB; outline: 2px solid var(--accent); }
 .cal-day-num {
