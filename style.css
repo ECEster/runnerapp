@@ -434,6 +434,7 @@ p:last-child { margin-bottom: 0; }
 .event-card__img img[src*="gemengd-parcours"] { object-position: center 35%; }
 .event-card__img img[src*="wegevenement"] { object-position: center 25%; }
 .event-card__img img[src*="baanevenement"] { object-position: center 70%; }
+.event-card__img img[src*="kidsrun"] { object-position: center 30%; }
 .event-card__img img[src*="swimrun"] { object-position: center 15%; }
 .event-card__badge {
   position: absolute;
