@@ -320,11 +320,6 @@ Deze punten staan nog open:
   breed, JPG-kwaliteit ±82, zoals bij trail/swimrun/bikerun.
 - **`.env` in `scraper/`** met `SUPABASE_SERVICE_ROLE_KEY` (zie `.env.example`): zonder die
   sleutel kan Claude geen database-wijzigingen doen en moet alles via de SQL Editor.
-- **Tweede type (`type2`) afmaken.** De kolom `type2` bestaat sinds 2026-10-07 in de database
-  (`scraper/migrations/0005_add_type2.sql`). De kaarten, de filters en `db.js` gebruiken hem al;
-  de Trimloop-reeks in Assen staat op trail + baanevenement, en het adminpaneel heeft een
-  keuzelijst "Tweede type". Nog te doen: een tweede typebadge op de detailpagina
-  (`evenement.html`).
 
 ## Coördinaten (postcodefilter)
 

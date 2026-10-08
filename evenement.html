@@ -114,6 +114,7 @@ function renderEvent(ev, lang) {
       '<img src="'+getEventImage(ev)+'" alt="'+name+'">'+
       '<div class="event-detail__hero-overlay">'+
         '<span class="event-card__badge '+badgeClass+'" style="position:static;display:inline-block;margin-bottom:0.5rem;font-size:0.82rem;padding:4px 12px;">'+typeName+'</span>'+
+        (ev.type2 ? '<span class="event-card__badge '+getBadgeClass(ev.type2)+'" style="position:static;display:inline-block;margin-bottom:0.5rem;margin-left:4px;font-size:0.82rem;padding:4px 12px;">'+getTypeName(ev.type2, lang)+'</span>' : '')+
         '<h1 class="event-detail__title">'+name+'</h1>'+
       '</div>'+
     '</div>'+
