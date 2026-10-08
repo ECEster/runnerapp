@@ -1022,7 +1022,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   color: var(--mid);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  background: var(--surface2);
+  background: #FDF9F2;
   border-bottom: 1px solid var(--light);
 }
 .calendar-day {
@@ -1036,7 +1036,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 }
 .calendar-day:nth-child(7n) { border-right: none; }
 .calendar-day:hover { background: var(--surface); }
-.calendar-day.other-month { background: var(--surface2); }
+.calendar-day.other-month { background: #FDF9F2; }
 .calendar-day.other-month .cal-day-num { color: var(--light); }
 .calendar-day.today { background: var(--btn); }
 .calendar-day.today .cal-day-num { color: var(--white); font-weight: 700; }
