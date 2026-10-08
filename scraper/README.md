@@ -338,6 +338,32 @@ commit `ce3cf03` gecommitte `scraper/.env` was leeg en is in `de32a0e` weer verw
    bij een privé-repository mee voor de gratis minuten (2000 per maand). Even nakijken in
    GitHub → *Settings → Billing* na de eerste maand.
 
+## Herinnering voor de volgende sessie: vormgeving (2026-10-08)
+
+Op 8 oktober 2026 is veel aan de vormgeving gedaan (menubalk, kalender, eventkaarten, foto's).
+Deze punten staan nog open:
+
+- **Proeven per kalendermaand afronden.** In `agenda.html` en `regio.js` (in `renderList`)
+  staan proeven die alleen in één maand gelden. Kies per proef: overal of weg.
+  - Oktober: eventnamen in Montserrat (`events-grid--logofont`) en een kleurloze kalender
+    (`body.maand-oktober`).
+  - November: compacte liggende kaarten (`events-grid--compact`, optie D) en de maandtitel in
+    Barlow Condensed (`body.maand-november`).
+- **Logo kiezen.** Opties A–L (Bebas Neue, Inter, Barlow Condensed) staan op
+  https://claude.ai/artifact/HkQK5Rod2Pqz3rNaefMoez. Nu op de site: Montserrat (RUNNING
+  ExtraBold, Nederland Light), ook gebruikt in het menu en de kalenderkop.
+- **Nieuwe trailfoto** in dezelfde stijl als `images/marathon.jpg` (bewolkt, gedempt, groep
+  lopers naar de camera). Ester maakt hem zelf; de prompt staat in het gesprek van 8 oktober.
+  Daarna bijsnijden, verkleinen en `images/trail.jpg` vervangen.
+- **Marathonfoto breder inzetten?** `images/marathon.jpg` geldt nu alleen voor type
+  `marathon`. Nog beslissen: ook voor "marathon" in de naam (zoals bij trails), en ook voor
+  de TCS Amsterdam Marathon, die een eigen foto heeft.
+- **Twee knoppen "Zoeken".** De inklapknop van het filtermenu en de knop onderaan het
+  filterblok heten allebei Zoeken. Voorstel: de onderste "Toon resultaten" noemen.
+- **Ontwerpvoorstellen** (alleen ter inspiratie, niet op de site): lichte agenda
+  https://claude.ai/artifact/MC1aqVfJLBhDzNswtjYZ5U en kaartopties
+  https://claude.ai/artifact/AumUb5VnqPv3LrQaB9qX6p.
+
 ## Coördinaten (postcodefilter)
 
 Events hebben `lat`/`lng` (migratie `0006_add_lat_lng.sql`) voor het postcode/straal-filter.
