@@ -91,6 +91,8 @@ function listEvents() {
 
 function renderList(lang) {
   var el = document.getElementById('events-list');
+  // Proef: in november compacte, liggende kaarten (optie D)
+  el.classList.toggle('events-grid--compact', calMonth === 10);
   var events = listEvents();
   var countEl = document.getElementById('results-count');
   if (countEl) countEl.textContent = events.length + ' evenementen';
