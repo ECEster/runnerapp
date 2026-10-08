@@ -309,3 +309,51 @@ function cardOpen(cls, ev) {
     : '<div class="'+cls+'">';
 }
 function cardClose(ev) { return ev.registration_url ? '</a>' : '</div>'; }
+
+// Op de telefoon staat het filterblok standaard ingeklapt achter een knop
+// "Filters" (met het aantal actieve filters erachter). Na "Zoeken" klapt het
+// weer in en springt de pagina naar de resultaten. Op een groter scherm
+// verbergt de CSS de knop en is het filterblok gewoon zichtbaar.
+function initFilterToggle() {
+  var panel = document.querySelector('.filter-panel');
+  if (!panel || document.querySelector('.filter-toggle')) return;
+  if (!panel.id) panel.id = 'filter-panel';
+  var btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'filter-toggle';
+  btn.setAttribute('aria-controls', panel.id);
+  btn.setAttribute('aria-expanded', 'false');
+  btn.innerHTML = '<span>Filters<span class="filter-toggle__count"></span></span>' +
+    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+  panel.parentNode.insertBefore(btn, panel);
+  panel.classList.add('is-collapsed');
+
+  function isMobile() { return window.matchMedia && window.matchMedia('(max-width: 768px)').matches; }
+  function setOpen(open) {
+    panel.classList.toggle('is-collapsed', !open);
+    btn.setAttribute('aria-expanded', String(open));
+  }
+  function countActive() {
+    var n = 0;
+    panel.querySelectorAll('select, input').forEach(function(el) {
+      if (el.type === 'checkbox') { if (el.checked) n++; }
+      else if (el.value && el.value.trim() !== '') n++;
+    });
+    btn.querySelector('.filter-toggle__count').textContent = n ? ' (' + n + ')' : '';
+  }
+  btn.addEventListener('click', function() { setOpen(panel.classList.contains('is-collapsed')); });
+  panel.addEventListener('change', countActive);
+  panel.addEventListener('input', countActive);
+  var search = panel.querySelector('.filter-search-btn');
+  if (search) search.addEventListener('click', function() {
+    countActive();
+    if (!isMobile()) return;
+    setOpen(false);
+    var target = document.getElementById('results-count') || document.getElementById('events-list');
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  // Filters uit de URL (bv. een gedeelde link) tellen ook mee
+  setTimeout(countActive, 0);
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initFilterToggle);
+else initFilterToggle();

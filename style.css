@@ -810,6 +810,10 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 .regio-nav__btn.active .regio-nav__icon { background: var(--white); }
 .regio-nav__btn.active .regio-nav__icon svg { fill: var(--btn); }
 
+/* Knop om de filters op de telefoon in/uit te klappen (zie initFilterToggle in data.js) */
+.filter-toggle { display: none; }
+.filter-toggle:focus-visible { outline: 2px solid var(--dark); outline-offset: 2px; }
+
 /* Filter panel */
 .filter-panel {
   background: var(--white);
@@ -1589,6 +1593,25 @@ body.page-overons { background: var(--white); }
 
   .agenda-layout { grid-template-columns: 1fr; }
   .filter-panel { position: static; max-height: none; overflow: visible; }
+  .filter-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.85rem 1.1rem;
+    background: var(--white);
+    border: 1px solid var(--light);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    color: var(--dark);
+    font: inherit;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  .filter-toggle svg { transition: transform var(--transition); }
+  .filter-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+  .filter-panel.is-collapsed { display: none; }
   .regio-nav-row { grid-template-columns: 1fr; gap: 0; }
   .regio-nav-row > .regio-nav-spacer { display: none; }
 
