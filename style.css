@@ -990,9 +990,10 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   color: var(--white);
 }
 .calendar-nav h3 {
-  font-family: var(--font-head);
-  font-size: 1.25rem;
-  letter-spacing: 0.08em;
+  font-family: 'Montserrat', var(--font-body); /* lettertype van het logo */
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   color: var(--white);
 }
 .calendar-nav button {
@@ -1002,10 +1003,10 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 6px;
   padding: 0.25rem 0.75rem;
-  font-family: var(--font-head);
-  font-size: 0.95rem;
+  font-family: 'Montserrat', var(--font-body);
+  font-size: 0.82rem;
   font-weight: 600;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.01em;
   transition: all var(--transition);
 }
 .calendar-nav button:hover { background: rgba(96,130,200,0.38); }
