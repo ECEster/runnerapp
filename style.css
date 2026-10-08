@@ -834,13 +834,13 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   max-height: calc(100vh - 100px);
   overflow-y: auto;
   overscroll-behavior: contain;
-  scrollbar-color: var(--accent) transparent; /* Firefox */
+  scrollbar-color: #D9CE96 transparent; /* Firefox */
   scrollbar-width: thin;
 }
 /* Chrome, Edge, Safari */
 .filter-panel::-webkit-scrollbar { width: 4px; }
 .filter-panel::-webkit-scrollbar-track { background: transparent; }
-.filter-panel::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+.filter-panel::-webkit-scrollbar-thumb { background: #D9CE96; border-radius: 2px; }
 .filter-panel__title {
   font-family: var(--font-head);
   font-size: 1.1rem;
@@ -1037,8 +1037,8 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 .calendar-day:hover { background: var(--surface); }
 .calendar-day.other-month { background: var(--surface2); }
 .calendar-day.other-month .cal-day-num { color: var(--light); }
-.calendar-day.today { background: #FFF7ED; }
-.calendar-day.today .cal-day-num { color: var(--accent); font-weight: 700; }
+.calendar-day.today { background: #D9CE96; }
+.calendar-day.today .cal-day-num { color: var(--dark); font-weight: 700; }
 .calendar-day.has-events { cursor: pointer; }
 .calendar-day.selected { background: #FFF1EB; outline: 2px solid var(--accent); }
 .cal-day-num {
