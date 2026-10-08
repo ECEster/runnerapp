@@ -567,7 +567,6 @@ a.event-card:focus-visible, a.kids-event-card:focus-visible { outline: 2px solid
   font-weight: 700;
   color: var(--dark);
 }
-.event-card__price.free { color: #059669; }
 .event-card__price--ext { color: var(--mid); font-weight: 500; font-size: 0.82rem; text-decoration: none; }
 a.event-card__price--ext:hover { color: var(--accent); text-decoration: underline; }
 
