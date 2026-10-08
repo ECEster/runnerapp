@@ -310,10 +310,9 @@ function cardOpen(cls, ev) {
 }
 function cardClose(ev) { return ev.registration_url ? '</a>' : '</div>'; }
 
-// Op de telefoon staat het filterblok standaard ingeklapt achter een knop
-// "Filters" (met het aantal actieve filters erachter). Na "Zoeken" klapt het
-// weer in en springt de pagina naar de resultaten. Op een groter scherm
-// verbergt de CSS de knop en is het filterblok gewoon zichtbaar.
+// Het filterblok staat standaard ingeklapt achter een knop "Filters" (met het
+// aantal actieve filters erachter). Op de telefoon klapt het na "Zoeken" weer
+// in en springt de pagina naar de resultaten.
 function initFilterToggle() {
   var panel = document.querySelector('.filter-panel');
   if (!panel || document.querySelector('.filter-toggle')) return;
@@ -331,6 +330,8 @@ function initFilterToggle() {
   function isMobile() { return window.matchMedia && window.matchMedia('(max-width: 768px)').matches; }
   function setOpen(open) {
     panel.classList.toggle('is-collapsed', !open);
+    panel.parentNode.classList.toggle('filters-open', open);
+    document.body.classList.toggle('filters-open', open);
     btn.setAttribute('aria-expanded', String(open));
   }
   function countActive() {

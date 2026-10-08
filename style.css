@@ -819,8 +819,38 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 .regio-nav__btn.active .regio-nav__icon { background: var(--white); }
 .regio-nav__btn.active .regio-nav__icon svg { fill: var(--btn); }
 
-/* Knop om de filters op de telefoon in/uit te klappen (zie initFilterToggle in data.js) */
-.filter-toggle { display: none; }
+/* Inklapbaar filtermenu (zie initFilterToggle in data.js). Dicht: één knop
+   "Filters" boven de kalender en de resultaten over de volle breedte.
+   Open: knop en filterblok links, resultaten rechts. */
+.filter-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  width: 100%;
+  padding: 0.75rem 1.1rem;
+  background: var(--white);
+  border: 1px solid var(--light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  color: var(--dark);
+  font: inherit;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.filter-toggle svg { transition: transform var(--transition); }
+.filter-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+.filter-panel.is-collapsed { display: none; }
+.agenda-layout > .filter-toggle { grid-column: 1; grid-row: 1; }
+.agenda-layout > .filter-panel { grid-column: 1; grid-row: 2; }
+.agenda-layout > .agenda-results { grid-column: 2; grid-row: 1 / span 2; }
+.agenda-layout.filters-open { row-gap: 0.75rem; grid-template-rows: auto 1fr; }
+.agenda-layout:not(.filters-open) { grid-template-columns: 1fr; row-gap: 1rem; }
+.agenda-layout:not(.filters-open) > .filter-toggle { width: auto; justify-self: start; }
+.agenda-layout:not(.filters-open) > .agenda-results { grid-column: 1; grid-row: 2; }
+body:not(.filters-open) .regio-nav-row { grid-template-columns: 1fr; }
+body:not(.filters-open) .regio-nav-spacer { display: none; }
 .filter-toggle:focus-visible { outline: 2px solid var(--dark); outline-offset: 2px; }
 
 /* Filter panel */
@@ -1605,25 +1635,11 @@ body.page-overons { background: var(--white); }
 
   .agenda-layout { grid-template-columns: 1fr; }
   .filter-panel { position: static; max-height: none; overflow: visible; }
-  .filter-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 0.85rem 1.1rem;
-    background: var(--white);
-    border: 1px solid var(--light);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow);
-    color: var(--dark);
-    font: inherit;
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-  }
-  .filter-toggle svg { transition: transform var(--transition); }
-  .filter-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
-  .filter-panel.is-collapsed { display: none; }
+  /* Telefoon: alles onder elkaar, knop over de volle breedte */
+  .agenda-layout > .filter-toggle,
+  .agenda-layout > .filter-panel,
+  .agenda-layout > .agenda-results { grid-column: auto; grid-row: auto; }
+  .agenda-layout > .filter-toggle { width: 100%; justify-self: stretch; }
   .regio-nav-row { grid-template-columns: 1fr; gap: 0; }
   .regio-nav-row > .regio-nav-spacer { display: none; }
 
