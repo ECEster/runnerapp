@@ -300,3 +300,14 @@ function revealOnScroll(cards) {
     revealObserver.observe(card);
   });
 }
+
+// Eventkaart als geheel klikbaar naar de website van het evenement (nieuw
+// tabblad). Zonder registratielink blijft het een gewone, niet-klikbare kaart.
+function cardOpen(cls, ev) {
+  return ev.registration_url
+    ? '<a class="'+cls+'" href="'+ev.registration_url+'" target="_blank" rel="noopener">'
+    : '<div class="'+cls+'">';
+}
+function cardClose(ev) { return ev.registration_url ? '</a>' : '</div>'; }
+// Klein pijltje rechtsonder op de kaart: "gaat naar een andere site"
+var CARD_GO = '<span class="event-card__go" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span>';

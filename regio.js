@@ -106,7 +106,7 @@ function renderList(lang) {
     var priceHtml = ev.paid ? '<span class="event-card__price">'+formatPrice(ev.price)+'</span>' : '<span class="event-card__price free">Gratis</span>';
     var freeBadge = !ev.paid ? '<span class="event-card__free-badge">Gratis</span>' : '';
     var distChips = '<span class="event-card__distances-text">' + ev.distances.join(' | ') + '</span>';
-    return '<div class="event-card">'+
+    return cardOpen('event-card', ev)+
       '<div class="event-card__img">'+
         '<img src="'+getEventImage(ev)+'" alt="'+name+'" loading="lazy">'+freeBadge+
         '<span class="event-card__photo-badges">'+
@@ -119,9 +119,9 @@ function renderList(lang) {
         '<span class="event-card__title">'+name+'</span>'+
         '<div class="event-card__meta"><span>'+titleCase(ev.city)+'</span></div>'+
         '<div class="event-card__distances">'+distChips+'</div>'+
-        '<div class="event-card__footer">'+priceHtml+(ev.registration_url ? '<a href="'+ev.registration_url+'" class="btn btn--ghost btn--sm" target="_blank" rel="noopener">Meer info</a>' : '')+'</div>'+
+        '<div class="event-card__footer">'+priceHtml+(ev.registration_url ? CARD_GO : '')+'</div>'+
       '</div>'+
-    '</div>';
+    cardClose(ev);
   }).join('');
   revealOnScroll(el.querySelectorAll('.event-card'));
 }
