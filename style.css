@@ -786,12 +786,14 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 }
 .filter-panel__title button {
   font-size: 0.78rem;
-  color: var(--accent);
+  color: var(--dark);
   background: none;
   border: none;
   font-weight: 600;
   padding: 0;
+  cursor: pointer;
 }
+.filter-panel__title button:hover { text-decoration: underline; }
 .filter-group {
   margin-bottom: 1.2rem;
 }
