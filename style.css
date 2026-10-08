@@ -834,13 +834,13 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   max-height: calc(100vh - 100px);
   overflow-y: auto;
   overscroll-behavior: contain;
-  scrollbar-color: #D9CE96 transparent; /* Firefox */
+  scrollbar-color: var(--btn) transparent; /* Firefox */
   scrollbar-width: thin;
 }
 /* Chrome, Edge, Safari */
 .filter-panel::-webkit-scrollbar { width: 4px; }
 .filter-panel::-webkit-scrollbar-track { background: transparent; }
-.filter-panel::-webkit-scrollbar-thumb { background: #D9CE96; border-radius: 2px; }
+.filter-panel::-webkit-scrollbar-thumb { background: var(--btn); border-radius: 2px; }
 .filter-panel__title {
   font-family: var(--font-head);
   font-size: 1.1rem;
@@ -913,7 +913,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 }
 .filter-checkbox--kids {
   background: transparent;
-  border: 1.5px dashed #D9CE96;
+  border: 1.5px dashed var(--btn);
   border-radius: 6px;
   padding: 4px 8px;
   font-weight: 600;
@@ -1037,15 +1037,9 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 .calendar-day:hover { background: var(--surface); }
 .calendar-day.other-month { background: var(--surface2); }
 .calendar-day.other-month .cal-day-num { color: var(--light); }
-.calendar-day.today { background: #D9CE96; }
-.calendar-day.today .cal-day-num { color: var(--dark); font-weight: 700; }
-/* Proef: in oktober blauwgrijs (#55748D) i.p.v. zand (#D9CE96) */
-body.maand-oktober .calendar-day.today { background: #55748D; }
-body.maand-oktober .calendar-day.today .cal-day-num { color: var(--white); }
-body.maand-oktober .calendar-day.today .cal-dot { background: var(--white); }
-body.maand-oktober .filter-panel { scrollbar-color: #55748D transparent; }
-body.maand-oktober .filter-panel::-webkit-scrollbar-thumb { background: #55748D; }
-body.maand-oktober .filter-checkbox--kids { border-color: #55748D; }
+.calendar-day.today { background: var(--btn); }
+.calendar-day.today .cal-day-num { color: var(--white); font-weight: 700; }
+.calendar-day.today .cal-dot { background: var(--white); }
 .calendar-day.has-events { cursor: pointer; }
 .calendar-day.selected { background: #FFF1EB; outline: 2px solid var(--accent); }
 .cal-day-num {

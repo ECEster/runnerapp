@@ -95,8 +95,6 @@ function renderList(lang) {
   el.classList.toggle('events-grid--compact', calMonth === 10);
   // Proef: in oktober eventnamen in het lettertype van het logo
   el.classList.toggle('events-grid--logofont', calMonth === 9);
-  // Proef: in oktober blauwgrijze accenten (vandaag, scrollbalk, Kids Runs-rand)
-  document.body.classList.toggle('maand-oktober', calMonth === 9);
   var events = listEvents();
   var countEl = document.getElementById('results-count');
   if (countEl) countEl.textContent = events.length + ' evenementen';
