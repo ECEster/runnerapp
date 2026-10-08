@@ -120,12 +120,10 @@ function renderEventCard(ev, lang) {
   var badgeClass = getBadgeClass(ev.type);
   var typeName = cardTypeName(ev, lang);
   var priceHtml = makePriceHtml(ev, lang);
-  var freeBadge = !ev.paid ? '<span class="event-card__free-badge">' + t('free') + '</span>' : '';
   var distChips = '<span class="event-card__distances-text">' + ev.distances.join(' | ') + '</span>';
   return cardOpen('event-card', ev) +
     '<div class="event-card__img">' +
       '<img src="' + getEventImage(ev) + '" alt="' + name + '" loading="lazy">' +
-      freeBadge +
       '<span class="event-card__photo-badges">' +
         '<span class="event-card__photo-badge">' + typeName + '</span>' +
         (ev.type2 ? '<span class="event-card__photo-badge">' + getTypeName(ev.type2, lang) + '</span>' : '') +
