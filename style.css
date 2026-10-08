@@ -1037,8 +1037,8 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 }
 .calendar-day:nth-child(7n) { border-right: none; }
 .calendar-day:hover { background: var(--surface); }
-.calendar-day.other-month { background: #C4B57B; }
-.calendar-day.other-month .cal-day-num { color: #EDE6C8; }
+.calendar-day.other-month { background: #FDF9F2; }
+.calendar-day.other-month .cal-day-num { color: #C4B57B; }
 .calendar-day.today { background: var(--btn); }
 .calendar-day.today .cal-day-num { color: var(--white); font-weight: 700; }
 .calendar-day.today .cal-dot { background: var(--white); }
