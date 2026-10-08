@@ -368,7 +368,19 @@ function cardTypeName(ev, lang) {
 }
 // Korte namen voor de labels in de foto ("Baan" i.p.v. "Baanevenement")
 function badgeTypeName(type, lang) {
-  var short = { baanevenement: { nl: 'Baan', en: 'Track' }, wegevenement: { nl: 'Weg', en: 'Road' }, ultrarun: { nl: 'Ultra', en: 'Ultra' } };
+  var short = {
+    baanevenement: { nl: 'Baan', en: 'Track' },
+    wegevenement: { nl: 'Weg', en: 'Road' },
+    ultrarun: { nl: 'Ultra', en: 'Ultra' },
+    'gemengd parcours': { nl: 'Gemengd', en: 'Mixed' },
+    'gecertificeerd parcours': { nl: 'Gecertificeerd', en: 'Certified' },
+    'sportief wandelen': { nl: 'Wandelen', en: 'Walking' },
+    'inclusieve runs': { nl: 'Inclusief', en: 'Inclusive' },
+    'virtuele run': { nl: 'Virtueel', en: 'Virtual' },
+    studentenevenement: { nl: 'Studenten', en: 'Students' },
+    survivalrun: { nl: 'Survival', en: 'Survival' },
+    urbanrun: { nl: 'Urban', en: 'Urban' }
+  };
   if (short[type]) return short[type][lang === 'en' ? 'en' : 'nl'];
   return getTypeName(type, lang);
 }
