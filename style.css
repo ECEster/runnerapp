@@ -701,6 +701,12 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   padding-top: 5.5rem;
   padding-bottom: 4.3rem;
 }
+/* Agenda: hogere banner, uitsnede naar beneden zodat beide voeten in beeld zijn */
+.page-header--agenda {
+  background-position: center 78%;
+  padding-top: 8rem;
+  padding-bottom: 7rem;
+}
 .page-header--photo::before {
   content: '';
   position: absolute;
