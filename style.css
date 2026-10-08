@@ -406,7 +406,7 @@ p:last-child { margin-bottom: 0; }
   flex-direction: column;
 }
 .event-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-8px);
   box-shadow: var(--shadow-lg);
 }
 /* Verschijnen bij scrollen (zie revealOnScroll in data.js) */
