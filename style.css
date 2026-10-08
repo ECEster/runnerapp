@@ -323,7 +323,7 @@ p:last-child { margin-bottom: 0; }
   justify-content: center;
   background: var(--dark) url('images/hero.png') center 60%/cover no-repeat;
   overflow: hidden;
-  border-bottom: 3px solid var(--accent);
+  border-bottom: 3px solid var(--btn);
 }
 .hero::before {
   content: '';
@@ -716,7 +716,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   background: var(--dark);
   padding: 3rem 1.5rem;
   text-align: center;
-  border-bottom: 3px solid var(--accent);
+  border-bottom: 3px solid var(--btn);
 }
 .page-header h1 { color: var(--white); text-transform: uppercase; }
 .page-header p { color: rgba(255,255,255,0.7); margin-top: 0.5rem; font-size: 1.05rem; }
