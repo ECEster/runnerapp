@@ -310,7 +310,7 @@ function cardOpen(cls, ev) {
 }
 function cardClose(ev) { return ev.registration_url ? '</a>' : '</div>'; }
 
-// Het filterblok staat standaard ingeklapt achter een knop "Filters" (met het
+// Het filterblok staat standaard ingeklapt achter een knop "Zoeken" (met het
 // aantal actieve filters erachter). Op de telefoon klapt het na "Zoeken" weer
 // in en springt de pagina naar de resultaten.
 function initFilterToggle() {
@@ -322,7 +322,7 @@ function initFilterToggle() {
   btn.className = 'filter-toggle';
   btn.setAttribute('aria-controls', panel.id);
   btn.setAttribute('aria-expanded', 'false');
-  btn.innerHTML = '<span>Filters<span class="filter-toggle__count"></span></span>' +
+  btn.innerHTML = '<span>Zoeken<span class="filter-toggle__count"></span></span>' +
     '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
   panel.parentNode.insertBefore(btn, panel);
   panel.classList.add('is-collapsed');
