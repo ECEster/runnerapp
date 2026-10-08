@@ -226,6 +226,7 @@ p:last-child { margin-bottom: 0; }
 }
 .nav__links a {
   position: relative;
+  top: 6px; /* onderkant tekst op één lijn met onderkant logo */
   color: rgba(255,255,255,0.8);
   font-family: 'Montserrat', var(--font-body);
   font-size: 1rem;
