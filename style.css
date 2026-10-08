@@ -504,6 +504,14 @@ p:last-child { margin-bottom: 0; }
   display: block;
   text-decoration: none;
 }
+/* Proef: in oktober eventnamen in Montserrat (het lettertype van het logo), headerkleur */
+.events-grid--logofont .event-card__title {
+  font-family: 'Montserrat', var(--font-body);
+  font-weight: 700;
+  font-size: 1.02rem;
+  letter-spacing: -0.01em;
+  color: var(--dark);
+}
 a.event-card__title:hover { color: var(--accent); }
 .event-card__meta {
   font-size: 0.82rem;

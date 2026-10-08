@@ -6,7 +6,7 @@
   <title>Agenda — RunningNederland.nl</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@400;500;600&family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@400;500;600&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -365,6 +365,8 @@ function renderList(lang) {
   var el = document.getElementById('events-list');
   // Proef: in november compacte, liggende kaarten (optie D)
   el.classList.toggle('events-grid--compact', calMonth === 10);
+  // Proef: in oktober eventnamen in het lettertype van het logo
+  el.classList.toggle('events-grid--logofont', calMonth === 9);
   var events = listEvents();
   var countEl = document.getElementById('results-count');
   if (countEl) countEl.textContent = events.length + ' ' + t('results_count');
