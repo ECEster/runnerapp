@@ -209,7 +209,27 @@ function isKidsOnlyEvent(ev) {
   return kms.length > 0 && kms.every(function(km) { return km <= 3; });
 }
 
+// Standaardfoto's met meerdere varianten: om en om in de volgorde waarin de
+// kaarten getekend worden, zodat kaarten naast elkaar niet dezelfde foto tonen.
+var IMAGE_VARIANTS = {
+  'images/cross.jpg': ['images/cross.jpg', 'images/cross2.jpg'],
+  'images/trail.jpg': ['images/trail.jpg', 'images/trail2.jpg'],
+};
+var IMAGE_VARIANT_COUNT = {};
+
+function pickImageVariant(src, ev) {
+  var list = IMAGE_VARIANTS[src];
+  if (!list) return src;
+  var i = IMAGE_VARIANT_COUNT[src] || 0;
+  IMAGE_VARIANT_COUNT[src] = i + 1;
+  return list[i % list.length];
+}
+
 function getEventImage(ev) {
+  return pickImageVariant(getBaseEventImage(ev), ev);
+}
+
+function getBaseEventImage(ev) {
   if (ev.type === 'baanevenement') return 'images/baanevenement.jpg';
   // Alleen-kids-evenementen altijd met de kidsfoto, ook als er een eigen foto is
   if (isKidsOnlyEvent(ev)) return 'images/kidsrun.jpg';
