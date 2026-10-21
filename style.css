@@ -720,10 +720,10 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 }
 /* Trainingsschema's: Banner4, uitsnede op sokken en schoenen */
 .page-header--training { background-position: center 66%; }
-/* Contact: foto met de schoenen rechtsonder, geen oranje lijn */
+/* Contact: Banner5 (3:1), geen oranje lijn */
 .page-header--contact {
   border-bottom: none;
-  background-position: center 70%;
+  background-position: center 55%;
 }
 .page-header--photo::before {
   content: '';
