@@ -50,6 +50,9 @@
 
 <!-- ── HERO ────────────────────────────────────────────────── -->
 <section class="hero">
+  <video class="hero__video" id="hero-video" autoplay muted playsinline loop preload="auto" poster="images/banner2.jpg" aria-hidden="true">
+    <source src="videos/bannervideo.mp4" type="video/mp4">
+  </video>
   <div class="hero__content">
     <h1><span data-i18n="hero_title">Vind jouw volgende</span> <span class="text-accent" data-i18n="hero_title_accent">loop</span></h1>
   </div>
@@ -191,6 +194,27 @@ function toggleMobileNav() {
   var nav = document.getElementById('mobile-nav');
   nav.classList.toggle('open');
 }
+</script>
+<script>
+// Bannervideo: de laatste 3 seconden overslaan door eerder terug te springen
+// naar het begin. Bij "minder beweging" blijft de stilstaande foto staan.
+(function () {
+  var v = document.getElementById('hero-video');
+  if (!v) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    v.removeAttribute('autoplay'); v.pause(); return;
+  }
+  var SKIP_END = 3;
+  function check() {
+    if (v.duration && v.currentTime >= v.duration - SKIP_END) { v.currentTime = 0; v.play(); }
+  }
+  // timeupdate werkt altijd; per beeldje controleren (waar mogelijk) is preciezer
+  v.addEventListener('timeupdate', check);
+  if ('requestVideoFrameCallback' in v) {
+    var onFrame = function () { check(); v.requestVideoFrameCallback(onFrame); };
+    v.requestVideoFrameCallback(onFrame);
+  }
+})();
 </script>
 </body>
 </html>
