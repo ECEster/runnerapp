@@ -314,10 +314,10 @@ p:last-child { margin-bottom: 0; }
 /* ── Hero ────────────────────────────────────────────────────── */
 .hero {
   position: relative;
-  /* Even hoog als .page-header--photo op de andere pagina's: padding
-     (5.5 + 4.3rem) + h1 (font-size x 1.15) + ondertitel (0.5rem marge +
-     1.05rem x 1.6) + 3px oranje rand */
-  height: calc(11.98rem + 1.15 * clamp(2.2rem, 5vw, 4rem) + 3px);
+  /* Even hoog als de agendabanner (.page-header--agenda): padding
+     (8 + 7rem) + h1 (font-size x 1.15) + ruimte van de ondertitel
+     (0.5rem marge + 1.05rem x 1.6) */
+  height: calc(17.18rem + 1.15 * clamp(2.2rem, 5vw, 4rem));
   display: flex;
   align-items: center;
   justify-content: center;

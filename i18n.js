@@ -25,7 +25,7 @@ var I18N = {
     about_text3: "Ons team van enthousiaste hardlopers en ervaren eventorganisatoren zorgt ervoor dat elk evenement een onvergetelijke ervaring wordt. Veiligheid, gezelligheid en sportiviteit staan altijd voorop.",
 
     // Agenda
-    agenda_title: "Evenementenagenda",
+    agenda_title: "Agenda",
     agenda_subtitle: "Ontdek alle hardloopevenementen in Nederland",
     filter_title: "Filteren",
     filter_type: "Soort evenement",
@@ -190,7 +190,7 @@ var I18N = {
     about_text3: "Our team of enthusiastic runners and experienced event organisers ensures that every event becomes an unforgettable experience. Safety, fun and sportsmanship always come first.",
 
     // Agenda
-    agenda_title: "Event calendar",
+    agenda_title: "Calendar",
     agenda_subtitle: "Discover all running events in the Netherlands",
     filter_title: "Filter",
     filter_type: "Event type",
