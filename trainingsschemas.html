@@ -336,8 +336,8 @@ function buildPrintHTML(id) {
     '<table><thead><tr><th>Week</th>'+
       days.map(function(d){ return '<th>'+d+'</th>'; }).join('')+
     '</tr></thead><tbody>'+tableRows+'</tbody></table>'+
-    '<h3>🔥 Warming-up tips</h3><ul>'+warmup+'</ul>'+
-    '<h3>🧘 Stretch tips</h3><ul>'+stretch+'</ul>'+
+    '<h3>Warming-up tips</h3><ul>'+warmup+'</ul>'+
+    '<h3>Stretch tips</h3><ul>'+stretch+'</ul>'+
     '<p class="footer">RunningNederland.nl — trainingsschema '+label+'</p>'+
     '</body></html>';
 }
@@ -533,11 +533,11 @@ function renderTabContent(id, lang) {
     '</table></div>'+
     '<div class="training-tips">'+
       '<div class="training-tips__box">'+
-        '<h4>🔥 '+t('warmup_title')+'</h4>'+
+        '<h4>'+t('warmup_title')+'</h4>'+
         '<ul>'+warmup.map(function(tip){ return '<li>'+tip+'</li>'; }).join('')+'</ul>'+
       '</div>'+
       '<div class="training-tips__box">'+
-        '<h4>🧘 '+t('stretch_title')+'</h4>'+
+        '<h4>'+t('stretch_title')+'</h4>'+
         '<ul>'+stretch.map(function(tip){ return '<li>'+tip+'</li>'; }).join('')+'</ul>'+
       '</div>'+
     '</div>';
