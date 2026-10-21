@@ -1375,7 +1375,10 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
 .plan-maker__warning { background: #FEF3C7; color: #78350F; border-radius: var(--radius); padding: 0.75rem 1rem; margin: 0 0 1rem; font-size: 0.92rem; }
 
 /* Mijn Runs: intro en geen oranje details */
-.mijnruns-intro { text-align: center; font-size: 1.15rem; font-weight: 600; color: var(--dark); max-width: 60ch; margin: 0 auto 2rem; }
+.mijnruns-intro { text-align: center; font-size: 1.2rem; font-weight: 600; color: var(--dark); max-width: 40ch; margin: 0 auto 1.75rem; line-height: 1.5; }
+.page-mijnruns .login-gate { max-width: 680px; padding: 3rem 2.5rem; margin-top: 0; }
+.page-mijnruns .login-gate p.mijnruns-intro { color: var(--dark); }
+.page-mijnruns #auth-form { max-width: 400px !important; }
 .page-mijnruns .btn--primary { background: var(--dark); }
 .page-mijnruns .btn--primary:hover { background: var(--dark2); box-shadow: 0 4px 14px rgba(17,24,39,0.25); }
 .page-mijnruns .btn--ghost { color: var(--dark); border-color: var(--dark); }
