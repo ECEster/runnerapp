@@ -420,6 +420,7 @@ p:last-child { margin-bottom: 0; }
 .event-card__img img[src*="gemengd-parcours"] { object-position: center 35%; }
 .event-card__img img[src*="wegevenement"] { object-position: center 25%; }
 .event-card__img img[src*="wegevenement3"] { object-position: 70% 80%; } /* schoenen staan rechtsonder */
+.event-card__img img[src*="wegevenement4"] { object-position: center 45%; }
 .event-card__img img[src*="baanevenement"] { object-position: center 70%; }
 .event-card__img img[src*="kidsrun"] { object-position: center 30%; }
 .event-card__img img[src*="marathon"] { object-position: center 60%; }
