@@ -1036,7 +1036,7 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
   color: var(--dark3);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  background: #C4B57B;
+  background: rgba(196,181,123,0.6); /* #C4B57B, iets transparant */
   border-bottom: 1px solid var(--light);
 }
 .calendar-day {
