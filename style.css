@@ -717,6 +717,11 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   padding-top: 8rem;
   padding-bottom: 7rem;
 }
+/* Contact: foto met de schoenen rechtsonder, geen oranje lijn */
+.page-header--contact {
+  border-bottom: none;
+  background-position: 70% 80%;
+}
 .page-header--photo::before {
   content: '';
   position: absolute;
@@ -1597,6 +1602,10 @@ body.page-overons { background: var(--white); }
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus { outline: none; border-color: var(--accent); }
+/* Contact: geen oranje details, dus donkerblauwe focusrand */
+.contact-form-card .form-group input:focus,
+.contact-form-card .form-group select:focus,
+.contact-form-card .form-group textarea:focus { border-color: var(--dark); }
 .form-group textarea { resize: vertical; min-height: 120px; }
 .contact-success {
   display: none;
