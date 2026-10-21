@@ -716,14 +716,14 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 /* Agenda: hogere banner, uitsnede naar beneden zodat beide voeten in beeld zijn */
 .page-header--agenda {
   border-bottom: none; /* geen lijn onder de banner op de agenda */
-  background-position: center 78%;
+  background-position: center 88%; /* Banner3a: onderbenen en schoenen op het heidepad */
 }
 /* Trainingsschema's: Banner4, uitsnede op sokken en schoenen */
 .page-header--training { background-position: center 66%; }
 /* Over ons: geen oranje details, dus witte cijfers in de blokjes */
 .page-overons .about-stat__num { color: var(--white); }
 /* Over ons: Banner7 (3:1), geen oranje lijn; op mobiel naar rechts */
-.page-header--overons { border-bottom: none; background-position: center 70%; }
+.page-header--overons { border-bottom: none; background-position: center 100%; } /* ook de linkervoet in beeld */
 @media (max-width: 768px) {
   .page-header--overons { background-position: 68% 70%; }
 }
