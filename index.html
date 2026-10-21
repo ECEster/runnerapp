@@ -196,23 +196,11 @@ function toggleMobileNav() {
 }
 </script>
 <script>
-// Bannervideo: de laatste 3 seconden overslaan door eerder terug te springen
-// naar het begin. Bij "minder beweging" blijft de stilstaande foto staan.
+// Bannervideo: bij "minder beweging" blijft de stilstaande foto staan
 (function () {
   var v = document.getElementById('hero-video');
-  if (!v) return;
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    v.removeAttribute('autoplay'); v.pause(); return;
-  }
-  var SKIP_END = 3;
-  function check() {
-    if (v.duration && v.currentTime >= v.duration - SKIP_END) { v.currentTime = 0; v.play(); }
-  }
-  // timeupdate werkt altijd; per beeldje controleren (waar mogelijk) is preciezer
-  v.addEventListener('timeupdate', check);
-  if ('requestVideoFrameCallback' in v) {
-    var onFrame = function () { check(); v.requestVideoFrameCallback(onFrame); };
-    v.requestVideoFrameCallback(onFrame);
+  if (v && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    v.removeAttribute('autoplay'); v.pause();
   }
 })();
 </script>
