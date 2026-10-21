@@ -743,7 +743,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
    beide schoenen in beeld blijven */
 .page-header--contact {
   border-bottom: none;
-  background-position: center 60%;
+  background-position: center 74%;
 }
 @media (max-width: 768px) {
   .page-header--contact { background-position: 72% 60%; }
