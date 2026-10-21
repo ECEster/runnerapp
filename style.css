@@ -719,13 +719,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   background-position: center 78%;
 }
 /* Trainingsschema's: Banner4a (3:1) */
-/* Ingezoomd zodat links en rechts van de titel een voet staat. De zoom hangt
-   aan de bannerhoogte, zodat de voeten op elk breed scherm even ver uit
-   elkaar staan; op mobiel de hele foto (cover). */
-.page-header--training { background-size: auto 280%; background-position: 55% 81%; }
-@media (max-width: 768px) {
-  .page-header--training { background-size: cover; background-position: center 60%; }
-}
+.page-header--training { background-position: center 60%; } /* computer en mobiel */
 /* Contact: foto met de schoenen rechtsonder, geen oranje lijn */
 .page-header--contact {
   border-bottom: none;
