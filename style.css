@@ -718,8 +718,8 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   border-bottom: none; /* geen lijn onder de banner op de agenda */
   background-position: center 78%;
 }
-/* Trainingsschema's: brede versie van Banner4, benen en schoenen in beeld */
-.page-header--training { background-position: center 72%; }
+/* Trainingsschema's: Banner4, uitsnede op sokken en schoenen */
+.page-header--training { background-position: center 66%; }
 /* Contact: foto met de schoenen rechtsonder, geen oranje lijn */
 .page-header--contact {
   border-bottom: none;
