@@ -1385,7 +1385,10 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
 .page-mijnruns .btn--ghost:hover { background: var(--dark); color: var(--white); }
 .page-mijnruns .page-header { border-bottom: none; }
 /* Banner8: roze schoenen links in beeld; op mobiel iets naar links */
-.page-header--mijnruns { background-position: center 70%; }
+.page-header--mijnruns { background-position: center 68%; }
+/* Op heel brede schermen is de foto sterker ingezoomd: iets verder omlaag
+   zodat de onderste schoen niet wegvalt */
+@media (min-width: 1600px) { .page-header--mijnruns { background-position: center 88%; } }
 @media (max-width: 768px) { .page-header--mijnruns { background-position: 32% 70%; } }
 .page-mijnruns .form-group input:focus,
 .page-mijnruns .run-form input:focus,
