@@ -323,7 +323,6 @@ p:last-child { margin-bottom: 0; }
   justify-content: center;
   background: var(--dark) url('images/banner2.jpg') center 72%/cover no-repeat;
   overflow: hidden;
-  border-bottom: 3px solid var(--btn);
 }
 .hero::before {
   content: '';
