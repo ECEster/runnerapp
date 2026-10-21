@@ -65,6 +65,7 @@
     <button class="tab-btn" onclick="showTab('20')" data-i18n="tab_20">20 km</button>
     <button class="tab-btn" onclick="showTab('24')" data-i18n="tab_24">24 km</button>
     <button class="tab-btn" onclick="showTab('marathon')" data-i18n="tab_marathon">Marathon</button>
+    <button class="tab-btn" onclick="showTab('eigen')" data-i18n="tab_own">Eigen schema</button>
   </div>
 
   <!-- Tab panels -->
@@ -76,6 +77,47 @@
   <div id="tab-20" class="tab-panel"></div>
   <div id="tab-24" class="tab-panel"></div>
   <div id="tab-marathon" class="tab-panel"></div>
+  <div id="tab-eigen" class="tab-panel">
+    <form class="plan-maker" id="plan-maker" onsubmit="makeOwnPlan(event)">
+      <p class="plan-maker__intro">Vul in waar je nu staat en waar je naartoe wilt. Je krijgt direct een schema dat stap voor stap opbouwt, met rustweken en een rustige laatste week voor je loop.</p>
+      <div class="plan-maker__fields">
+        <div class="filter-group">
+          <label for="pm-goal">Welke afstand wil je lopen?</label>
+          <select id="pm-goal">
+            <option value="5">5 km</option>
+            <option value="10" selected>10 km</option>
+            <option value="15">15 km</option>
+            <option value="21.1">Halve marathon (21,1 km)</option>
+            <option value="42.2">Marathon (42,2 km)</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="pm-level">Wat kun je nu?</label>
+          <select id="pm-level">
+            <option value="0">Ik loop (nog) niet</option>
+            <option value="1" selected>Ik kan 20 tot 30 minuten achter elkaar lopen</option>
+            <option value="2">Ik loop regelmatig, mijn langste loop is ongeveer een uur</option>
+            <option value="3">Ik loop vaak langer dan anderhalf uur</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="pm-days">Hoeveel dagen per week wil je trainen?</label>
+          <select id="pm-days">
+            <option value="2">2 dagen</option>
+            <option value="3" selected>3 dagen</option>
+            <option value="4">4 dagen</option>
+            <option value="5">5 dagen</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="pm-weeks">Hoeveel weken heb je tot je loop?</label>
+          <select id="pm-weeks"></select>
+        </div>
+      </div>
+      <button type="submit" class="btn btn--dark plan-maker__submit">Maak mijn schema</button>
+    </form>
+    <div id="eigen-result"></div>
+  </div>
 
 </div>
 
@@ -316,6 +358,138 @@ function downloadSchema(id) {
   setTimeout(function(){ w.print(); }, 500);
 }
 
+// ── Eigen schema: vaste trainingsregels in plaats van AI ───────────────
+// Alles in minuten (geen tempo nodig). De lange duurloop groeit geleidelijk
+// van het startniveau naar het doel, met elke 4e week een rustweek en een
+// rustigere eindfase (taper) voor de wedstrijd.
+var GOALS = {
+  '5':    { label: '5 km',           longRun: 35,  taper: 1, rep: 2, tempoMax: 15, minWeeks: [8, 4, 3, 3] },
+  '10':   { label: '10 km',          longRun: 60,  taper: 1, rep: 3, tempoMax: 25, minWeeks: [12, 6, 4, 3] },
+  '15':   { label: '15 km',          longRun: 80,  taper: 2, rep: 4, tempoMax: 30, minWeeks: [16, 9, 6, 4] },
+  '21.1': { label: 'halve marathon', longRun: 110, taper: 2, rep: 5, tempoMax: 35, minWeeks: [20, 12, 8, 6] },
+  '42.2': { label: 'marathon',       longRun: 180, taper: 3, rep: 6, tempoMax: 45, minWeeks: [30, 20, 14, 10] }
+};
+var LEVEL_START = [20, 25, 55, 85]; // langste aaneengesloten loop nu (minuten)
+// Loop/wandel-opbouw voor wie nog niet loopt: [lopen, wandelen, herhalingen]
+var RUN_WALK = [[1,2,8],[1.5,1.5,7],[2,1,7],[3,1,6],[4,1,5],[5,1,4],[8,1,3],[10,1,2],[15,1,2]];
+
+function round5(m) { return Math.max(5, Math.round(m / 5) * 5); }
+function fmtMin(m) { return String(m).replace('.', ','); }
+
+function runWalkSession(step) {
+  var p = RUN_WALK[Math.min(step, RUN_WALK.length - 1)];
+  return '5 min wandelen + ' + p[2] + '×(' + fmtMin(p[0]) + ' min lopen / ' + fmtMin(p[1]) + ' min wandelen)';
+}
+
+function qualitySession(goal, week, buildWeeks, kind) {
+  var f = buildWeeks > 1 ? (week - 1) / (buildWeeks - 1) : 1;
+  if (kind === 'interval') {
+    var reps = Math.round(4 + 4 * f);
+    return 'Intervallen: 10 min inlopen, ' + reps + '×' + goal.rep + ' min vlot met 2 min dribbelen, 10 min uitlopen';
+  }
+  var tempo = round5(10 + (goal.tempoMax - 10) * f);
+  return 'Tempoloop: 10 min inlopen, ' + tempo + ' min op wedstrijdtempo, 10 min uitlopen';
+}
+
+function generatePlan(goalKey, level, days, weeks) {
+  var goal = GOALS[goalKey];
+  var target = goal.longRun;
+  var start = Math.min(LEVEL_START[level], target);
+  var taper = Math.min(goal.taper, Math.max(1, weeks - 2));
+  var build = weeks - taper;
+  // Wie nog niet loopt, begint met loop/wandel-weken tot zo'n 20 min aaneen
+  var runWalkWeeks = level === 0 ? Math.max(2, Math.min(RUN_WALK.length, Math.round(build * 0.5))) : 0;
+  var header = [];
+  for (var d = 1; d <= days; d++) header.push('Dag ' + d);
+  var rows = [header];
+
+  for (var w = 1; w <= weeks; w++) {
+    var isRace = w === weeks;
+    var isTaper = w > build;
+    if (w <= runWalkWeeks && !isRace) {
+      var step = Math.floor((w - 1) * RUN_WALK.length / runWalkWeeks);
+      var rw = [];
+      for (var i = 0; i < days; i++) rw.push(i % 2 === 1 && days > 2 ? 'Wandeling 25 min of rust' : runWalkSession(step));
+      rows.push(rw);
+      continue;
+    }
+    var bw = w - runWalkWeeks, bTotal = Math.max(1, build - runWalkWeeks);
+    var long;
+    var recovery = !isTaper && bw % 4 === 0 && w < build;
+    if (!isTaper) {
+      long = bTotal > 1 ? start + (target - start) * (bw - 1) / (bTotal - 1) : target;
+      if (recovery) long *= 0.75;
+    } else {
+      long = target * (1 - 0.25 * (w - build));
+    }
+    long = round5(long);
+    var easy = round5(Math.min(60, Math.max(20, long * 0.5)));
+    var herstel = Math.min(easy, round5(Math.max(20, long * 0.35)));
+    var kind = bw % 2 === 1 ? 'interval' : 'tempo';
+    var quality = (level === 0 && bw <= 2)
+      ? 'Rustige duurloop ' + easy + ' min'
+      : (recovery || isTaper)
+        ? 'Kort en vlot: 10 min inlopen, 4×1 min vlot, 10 min uitlopen'
+        : qualitySession(goal, bw, bTotal, kind);
+    var longLabel = (long >= 60 ? 'Lange duurloop ' : 'Duurloop ') + long + ' min rustig';
+
+    if (isRace) {
+      var race = 'Wedstrijd: ' + goal.label + ' 🏁';
+      var last = { 2: ['Rustige duurloop 20 min', race],
+                   3: ['Rustige duurloop 25 min', 'Kort: 15 min rustig + 4×30 sec vlot', race],
+                   4: ['Rustige duurloop 25 min', 'Kort: 15 min rustig + 4×30 sec vlot', 'Losloopje 15 min', race],
+                   5: ['Rustige duurloop 30 min', 'Kort: 15 min rustig + 4×30 sec vlot', 'Rustige duurloop 20 min', 'Losloopje 15 min', race] };
+      rows.push(last[days]);
+      continue;
+    }
+    var layout = { 2: ['Rustige duurloop ' + easy + ' min', longLabel],
+                   3: ['Rustige duurloop ' + easy + ' min', quality, longLabel],
+                   4: ['Rustige duurloop ' + easy + ' min', quality, 'Herstelloop ' + herstel + ' min', longLabel],
+                   5: ['Rustige duurloop ' + easy + ' min', quality, 'Herstelloop ' + herstel + ' min', 'Rustige duurloop ' + easy + ' min', longLabel] };
+    var row = layout[days];
+    if (recovery) row[0] = 'Rustweek: r' + row[0].slice(1);
+    rows.push(row);
+  }
+  return rows;
+}
+
+function planWarnings(goalKey, level, days, weeks) {
+  var goal = GOALS[goalKey], out = [];
+  var min = goal.minWeeks[level];
+  if (weeks < min) out.push('Je hebt weinig tijd voor deze afstand. Voor jouw niveau raden we minimaal ' + min + ' weken aan. Het schema bouwt nu sneller op dan ideaal: luister goed naar je lichaam, of kies een kortere afstand of een latere loop.');
+  if (goalKey === '42.2' && days < 3) out.push('Voor een marathon raden we minimaal 3 trainingsdagen per week aan.');
+  if (goalKey === '42.2' && level === 0) out.push('Begin je net met hardlopen? Loop eerst een 5 of 10 km en bouw daarna op naar de marathon.');
+  return out;
+}
+
+function fillWeeksSelect() {
+  var sel = document.getElementById('pm-weeks');
+  if (!sel || sel.options.length) return;
+  for (var w = 6; w <= 30; w++) {
+    var o = document.createElement('option');
+    o.value = w; o.textContent = w + ' weken';
+    if (w === 12) o.selected = true;
+    sel.appendChild(o);
+  }
+}
+
+function makeOwnPlan(e) {
+  if (e) e.preventDefault();
+  var goalKey = document.getElementById('pm-goal').value;
+  var level = parseInt(document.getElementById('pm-level').value, 10);
+  var days = parseInt(document.getElementById('pm-days').value, 10);
+  var weeks = parseInt(document.getElementById('pm-weeks').value, 10);
+  var goal = GOALS[goalKey];
+  var intro = 'Jouw schema naar de ' + goal.label + ': ' + weeks + ' weken, ' + days + ' dagen per week. ' +
+    'Rustig betekent dat je nog kunt praten. Plan een rustdag tussen twee trainingen.';
+  PLANS.eigen = { label_nl: 'eigen schema ' + goal.label, label_en: 'own plan ' + goal.label,
+                  intro_nl: intro, intro_en: intro, weeks: generatePlan(goalKey, level, days, weeks) };
+  var warn = planWarnings(goalKey, level, days, weeks).map(function(w) { return '<p class="plan-maker__warning">' + w + '</p>'; }).join('');
+  var el = document.getElementById('eigen-result');
+  el.innerHTML = warn + renderTabContent('eigen', getLang());
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 function showTab(id) {
   document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
@@ -371,6 +545,7 @@ function renderTabContent(id, lang) {
 
 function renderAllTabs(lang) {
   Object.keys(PLANS).forEach(function(id) {
+    if (id === 'eigen') return; // eigen schema staat onder het formulier
     var el = document.getElementById('tab-'+id);
     if (el) el.innerHTML = renderTabContent(id, lang);
   });
@@ -395,6 +570,7 @@ function toggleMobileNav() { document.getElementById('mobile-nav').classList.tog
   var btnM = document.getElementById('lang-toggle-mobile');
   if (btnM) btnM.textContent = I18N[lang].nav_language;
   renderAllTabs(lang);
+  fillWeeksSelect();
 })();
 </script>
 </body>

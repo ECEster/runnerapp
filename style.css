@@ -721,7 +721,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 /* Contact: foto met de schoenen rechtsonder, geen oranje lijn */
 .page-header--contact {
   border-bottom: none;
-  background-position: 70% 80%;
+  background-position: center 70%;
 }
 .page-header--photo::before {
   content: '';
@@ -1332,6 +1332,14 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
   color: var(--dark3);
   list-style: none;
 }
+/* Eigen schema (schemamaker) */
+.plan-maker { background: var(--white); border: 1px solid var(--light); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.5rem; display: grid; gap: 1rem; }
+.plan-maker__intro { color: var(--mid); margin: 0; max-width: 70ch; }
+.plan-maker__fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 1rem; }
+.plan-maker__fields .filter-group { margin: 0; }
+.plan-maker__submit { justify-self: start; }
+.plan-maker__warning { background: #FEF3C7; color: #78350F; border-radius: var(--radius); padding: 0.75rem 1rem; margin: 0 0 1rem; font-size: 0.92rem; }
+
 /* Trainingsschema's: geen oranje details */
 .page-training .page-header { border-bottom: none; }
 .page-training .tab-btn.active { color: var(--dark); border-bottom-color: var(--dark); }

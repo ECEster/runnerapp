@@ -82,6 +82,8 @@ var I18N = {
     tab_20: "20 km",
     tab_24: "24 km",
     tab_marathon: "Marathon",
+    tab_own: "Your own plan",
+    tab_own: "Eigen schema",
 
     // Mijn Runs
     mijnruns_title: "Mijn Runs",
