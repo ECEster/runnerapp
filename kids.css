@@ -34,14 +34,16 @@
   overflow: hidden;
 }
 .kids-hero h1 {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: clamp(2.5rem, 7vw, 5rem);
+  /* Zelfde lettertype en maat als de andere banners (zoals de agenda) */
+  font-family: var(--font-head);
+  font-size: clamp(2.2rem, 5vw, 4rem);
   font-weight: 800;
+  line-height: 1.15;
   color: #fff;
   text-transform: uppercase;
   text-shadow: 3px 4px 0 rgba(0,0,0,0.18);
   margin-bottom: 1rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.01em;
 }
 .kids-hero p {
   font-size: 1.25rem;
