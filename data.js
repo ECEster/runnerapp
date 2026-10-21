@@ -214,6 +214,7 @@ function isKidsOnlyEvent(ev) {
 var IMAGE_VARIANTS = {
   'images/cross.jpg': ['images/cross.jpg', 'images/cross2.jpg'],
   'images/trail.jpg': ['images/trail.jpg', 'images/trail2.jpg'],
+  'images/wegevenement.jpg': ['images/wegevenement.jpg', 'images/wegevenement2.jpg'],
 };
 var IMAGE_VARIANT_COUNT = {};
 
