@@ -88,7 +88,7 @@ function renderEvent(ev, lang) {
   var dateStr = formatDate(ev.date, lang);
   var badgeClass = getBadgeClass(ev.type);
   var typeName = getTypeName(ev.type, lang);
-  var distList = ev.distances.join(' · ');
+  var distList = formatDistances(ev.distances);
   var catList = ev.categories.join(', ');
 
   var atletiekHtml = ev.atletiekunie ?

@@ -113,6 +113,22 @@ function distanceKmValues(label) {
   return nums.map(function(n) { return parseFloat(n) * factor; });
 }
 
+// Afstanden voor op de kaarten: "0.9 | 1.8 | 10 KM". Getallen met een
+// decimale punt, KM één keer aan het eind. Labels die geen gewone km-afstand
+// zijn (bv. "4 mi", "10km - 40km") blijven staan, in hoofdletters.
+function formatDistances(distances) {
+  var plain = /^\s*(\d+(?:[.,]\d+)?)\s*(km)?\s*$/i;
+  var list = (distances || []).filter(Boolean);
+  function num(m) { return m[1].replace(',', '.'); }
+  if (list.length && list.every(function(d) { return plain.test(d); })) {
+    return list.map(function(d) { return num(plain.exec(d)); }).join(' | ') + ' KM';
+  }
+  return list.map(function(d) {
+    var m = plain.exec(d);
+    return m ? num(m) + ' KM' : String(d).toUpperCase().replace(/(\d),(\d)/g, '$1.$2').replace(/\s*KM\b/g, ' KM');
+  }).join(' | ');
+}
+
 // Afstandsfilter: 'max:10' = minstens één afstand t/m 10 km,
 // 'min:42.2' = minstens één afstand langer dan 42,2 km.
 function matchesDistanceFilter(ev, filter) {
