@@ -42,7 +42,7 @@
 .kids-hero h1 {
   /* Zelfde lettertype en maat als de andere banners (zoals de agenda) */
   font-family: var(--font-head);
-  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-size: clamp(1.8rem, 4vw, 3.1rem);
   font-weight: 800;
   line-height: 1.15;
   color: #fff;
@@ -102,7 +102,7 @@
   filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.12));
 }
 .kids-section-header h2 {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: var(--font-head);
   font-size: clamp(1.8rem, 4vw, 2.8rem);
   font-weight: 800;
   text-transform: uppercase;
@@ -165,7 +165,7 @@
 .kids-section--physio .kids-card    { border-bottom-color: var(--kids-purple); }
 .kids-card__icon { font-size: 2.2rem; margin-bottom: 0.75rem; }
 .kids-card h4 {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: var(--font-head);
   font-size: 1.25rem;
   font-weight: 800;
   margin-bottom: 0.6rem;
@@ -239,7 +239,7 @@
   margin-bottom: 0.3rem;
 }
 .kids-event-card h4 {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: var(--font-head);
   font-size: 1.2rem;
   font-weight: 800;
   margin-bottom: 0.4rem;

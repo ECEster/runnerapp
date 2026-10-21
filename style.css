@@ -22,7 +22,7 @@
   --shadow:      0 2px 12px rgba(0,0,0,0.10);
   --shadow-lg:   0 8px 32px rgba(0,0,0,0.16);
   --transition:  0.2s ease;
-  --font-head:   'Barlow Condensed', sans-serif;
+  --font-head:   'Montserrat', 'Inter', sans-serif; /* koppen, zelfde letter als het logo */
   --font-body:   'Inter', sans-serif;
 
   /* Badgekleuren: vijf duidelijk verschillende groepen, alle met wit
@@ -77,11 +77,12 @@ h1, h2, h3, h4, h5 {
   font-family: var(--font-head);
   font-weight: 800;
   line-height: 1.15;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.01em;
 }
-h1 { font-size: clamp(2.2rem, 5vw, 4rem); }
-h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); }
-h3 { font-size: clamp(1.2rem, 2.5vw, 1.7rem); }
+/* Montserrat is breder dan het oude smalle koppenlettertype: iets kleiner */
+h1 { font-size: clamp(1.8rem, 4vw, 3.1rem); }
+h2 { font-size: clamp(1.4rem, 2.5vw, 2rem); }
+h3 { font-size: clamp(1.1rem, 2vw, 1.45rem); }
 h4 { font-size: 1.15rem; }
 p { margin-bottom: 1rem; }
 p:last-child { margin-bottom: 0; }
