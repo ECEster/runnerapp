@@ -314,9 +314,7 @@ p:last-child { margin-bottom: 0; }
 /* ── Hero ────────────────────────────────────────────────────── */
 .hero {
   position: relative;
-  /* Even hoog als de agendabanner (.page-header--agenda): padding
-     (8 + 7rem) + h1 (font-size x 1.15) + ruimte van de ondertitel
-     (0.5rem marge + 1.05rem x 1.6) */
+  /* Zelfde hoogte als alle fotobanners (.page-header--photo) */
   height: calc(17.18rem + 1.15 * clamp(2.2rem, 5vw, 4rem));
   display: flex;
   align-items: center;
@@ -707,15 +705,18 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   position: relative;
   background-size: cover;
   background-position: center;
-  padding-top: 5.5rem;
-  padding-bottom: 4.3rem;
+  /* Alle fotobanners even hoog als de homepagina-banner (.hero) */
+  height: calc(17.18rem + 1.15 * clamp(2.2rem, 5vw, 4rem));
+  padding-block: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 /* Agenda: hogere banner, uitsnede naar beneden zodat beide voeten in beeld zijn */
 .page-header--agenda {
   border-bottom: none; /* geen lijn onder de banner op de agenda */
   background-position: center 78%;
-  padding-top: 8rem;
-  padding-bottom: 7rem;
 }
 /* Contact: foto met de schoenen rechtsonder, geen oranje lijn */
 .page-header--contact {
@@ -735,9 +736,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   position: relative;
   z-index: 1;
 }
-/* Kop zonder ondertitel: ruimte van de ondertitel (0.5rem marge + 1.05rem x
-   1.6) aanvullen, zodat alle fotokoppen even hoog blijven */
-.page-header--photo h1:last-child { margin-bottom: calc(0.5rem + 1.05rem * 1.6); }
+
 
 /* ── Agenda page ─────────────────────────────────────────────── */
 .agenda-layout {
@@ -1333,6 +1332,14 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
   color: var(--dark3);
   list-style: none;
 }
+/* Trainingsschema's: geen oranje details */
+.page-training .page-header { border-bottom: none; }
+.page-training .tab-btn.active { color: var(--dark); border-bottom-color: var(--dark); }
+.page-training .training-table .week-cell { color: var(--dark); }
+.page-training .training-table tr:hover td { background: var(--surface2); }
+.page-training .training-tips__box ul li::before { color: var(--dark); }
+.page-training .btn--ghost { color: var(--dark); border-color: var(--dark); }
+.page-training .btn--ghost:hover { background: var(--dark); color: var(--white); }
 .training-tips__box ul li::before {
   content: '→';
   color: var(--accent);
