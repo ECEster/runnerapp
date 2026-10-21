@@ -343,11 +343,9 @@ commit `ce3cf03` gecommitte `scraper/.env` was leeg en is in `de32a0e` weer verw
 Op 8 oktober 2026 is veel aan de vormgeving gedaan (menubalk, kalender, eventkaarten, foto's).
 Deze punten staan nog open:
 
-- **Proeven per kalendermaand afronden.** In `agenda.html` en `regio.js` (in `renderList`)
-  staan proeven die alleen in één maand gelden. Kies per proef: overal of weg.
-  - Oktober: een kleurloze kalender (`body.maand-oktober`). De eventnamen in Montserrat zijn
-    op 2026-10-21 overal ingevoerd; de compacte liggende kaarten (november) zijn vervallen.
-  - November: de maandtitel in Barlow Condensed (`body.maand-november`).
+- ~~Proeven per kalendermaand afronden.~~ Afgerond op 2026-10-21: de oktoberstijl (eventnamen
+  in Montserrat, kleurloze dagvakjes) geldt nu overal, met de groene dagenrij (`#C4B57B`);
+  de novemberproeven (compacte kaarten, maandtitel in Barlow Condensed) zijn vervallen.
 - **Logo kiezen.** Opties A–L (Bebas Neue, Inter, Barlow Condensed) staan op
   https://claude.ai/artifact/HkQK5Rod2Pqz3rNaefMoez. Nu op de site: Montserrat (RUNNING
   ExtraBold, Nederland Light), ook gebruikt in het menu en de kalenderkop.
