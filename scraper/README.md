@@ -345,10 +345,9 @@ Deze punten staan nog open:
 
 - **Proeven per kalendermaand afronden.** In `agenda.html` en `regio.js` (in `renderList`)
   staan proeven die alleen in één maand gelden. Kies per proef: overal of weg.
-  - Oktober: eventnamen in Montserrat (`events-grid--logofont`) en een kleurloze kalender
-    (`body.maand-oktober`).
-  - November: compacte liggende kaarten (`events-grid--compact`, optie D) en de maandtitel in
-    Barlow Condensed (`body.maand-november`).
+  - Oktober: een kleurloze kalender (`body.maand-oktober`). De eventnamen in Montserrat zijn
+    op 2026-10-21 overal ingevoerd; de compacte liggende kaarten (november) zijn vervallen.
+  - November: de maandtitel in Barlow Condensed (`body.maand-november`).
 - **Logo kiezen.** Opties A–L (Bebas Neue, Inter, Barlow Condensed) staan op
   https://claude.ai/artifact/HkQK5Rod2Pqz3rNaefMoez. Nu op de site: Montserrat (RUNNING
   ExtraBold, Nederland Light), ook gebruikt in het menu en de kalenderkop.
