@@ -1381,6 +1381,9 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
 .page-mijnruns .btn--ghost { color: var(--dark); border-color: var(--dark); }
 .page-mijnruns .btn--ghost:hover { background: var(--dark); color: var(--white); }
 .page-mijnruns .page-header { border-bottom: none; }
+/* Banner8: roze schoenen links in beeld; op mobiel iets naar links */
+.page-header--mijnruns { background-position: center 70%; }
+@media (max-width: 768px) { .page-header--mijnruns { background-position: 32% 70%; } }
 .page-mijnruns .form-group input:focus,
 .page-mijnruns .run-form input:focus,
 .page-mijnruns .run-form textarea:focus { border-color: var(--dark); }
