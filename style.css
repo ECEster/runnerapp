@@ -386,7 +386,7 @@ p:last-child { margin-bottom: 0; }
 .event-card {
   background: var(--white);
   border-radius: var(--radius-lg);
-  border: 1px solid #26220F;
+  border: 1px solid #DDD8C4; /* warm zand */
   box-shadow: 0 6px 22px rgba(0,0,0,0.16);
   overflow: hidden;
   transition: transform var(--transition), box-shadow var(--transition);
