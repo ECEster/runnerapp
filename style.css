@@ -1374,6 +1374,23 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
 .plan-maker__submit { justify-self: start; }
 .plan-maker__warning { background: #FEF3C7; color: #78350F; border-radius: var(--radius); padding: 0.75rem 1rem; margin: 0 0 1rem; font-size: 0.92rem; }
 
+/* Mijn Runs: intro en geen oranje details */
+.mijnruns-intro { text-align: center; font-size: 1.15rem; font-weight: 600; color: var(--dark); max-width: 60ch; margin: 0 auto 2rem; }
+.page-mijnruns .btn--primary { background: var(--dark); }
+.page-mijnruns .btn--primary:hover { background: var(--dark2); box-shadow: 0 4px 14px rgba(17,24,39,0.25); }
+.page-mijnruns .btn--ghost { color: var(--dark); border-color: var(--dark); }
+.page-mijnruns .btn--ghost:hover { background: var(--dark); color: var(--white); }
+.page-mijnruns .page-header { border-bottom: none; }
+.page-mijnruns .form-group input:focus,
+.page-mijnruns .run-form input:focus,
+.page-mijnruns .run-form textarea:focus { border-color: var(--dark); }
+.page-mijnruns .run-cal-dist { color: var(--dark); }
+.page-mijnruns .run-cal-today .run-cal-num { background: var(--dark); }
+.page-mijnruns .run-cal-has-run,
+.page-mijnruns .run-cal-has-run.run-cal-today { background: #E6EBF5; }
+.page-mijnruns .run-cal-has-run:hover { background: #D3DCEE; }
+.page-mijnruns .run-cal-legend-dot { background: #E6EBF5; border-color: #D3DCEE; }
+
 /* Trainingsschema's: geen oranje details */
 .page-training .page-header { border-bottom: none; }
 .page-training .tab-btn.active { color: var(--dark); border-bottom-color: var(--dark); }

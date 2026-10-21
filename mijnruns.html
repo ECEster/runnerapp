@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="page-mijnruns">
 
 <!-- ── NAV ─────────────────────────────────────────────────── -->
 <nav class="nav">
@@ -55,9 +55,10 @@
 <!-- ── MAIN ────────────────────────────────────────────────── -->
 <div class="container section">
 
+  <p class="mijnruns-intro">Sla al je favoriete runs op in je eigen kalender en kijk uit naar je next run!</p>
+
   <!-- Login gate (shown when not logged in) -->
   <div id="login-gate" class="login-gate">
-    <div class="login-gate__icon">🏃‍♂️</div>
     <h3 data-i18n="mijnruns_title">Mijn Runs</h3>
     <p data-i18n="login_required">Log in om je runs bij te houden en evenementen op te slaan</p>
 
@@ -76,7 +77,7 @@
     </form>
     <p style="margin-top:1rem;font-size:0.85rem;color:var(--mid);">
       <span id="auth-toggle-text" data-i18n="no_account_yet">Nog geen account?</span>
-      <a href="#" onclick="toggleAuthMode(event)" id="auth-toggle-link" data-i18n="signup_link" style="color:var(--accent);font-weight:600;">Registreren</a>
+      <a href="#" onclick="toggleAuthMode(event)" id="auth-toggle-link" data-i18n="signup_link" style="color:var(--dark);font-weight:600;text-decoration:underline;">Registreren</a>
     </p>
   </div>
 
@@ -92,7 +93,7 @@
     <div class="runs-layout">
       <!-- Log a run -->
       <div class="runs-card">
-        <h3>➕ <span data-i18n="log_run">Run registreren</span></h3>
+        <h3><span data-i18n="log_run">Run registreren</span></h3>
         <form class="run-form" id="run-form" onsubmit="submitRun(event)">
           <div class="form-row">
             <label data-i18n="run_date">Datum</label>
@@ -116,10 +117,10 @@
 
       <!-- Run history -->
       <div class="runs-card">
-        <h3>📋 <span data-i18n="history_title">Looploophistorie</span></h3>
+        <h3><span data-i18n="history_title">Looploophistorie</span></h3>
         <div id="run-history"></div>
         <div style="margin-top:1rem;">
-          <button class="btn btn--ghost btn--sm" onclick="exportRuns()">📥 Exporteer CSV</button>
+          <button class="btn btn--ghost btn--sm" onclick="exportRuns()">Exporteer CSV</button>
         </div>
       </div>
     </div>
@@ -127,7 +128,7 @@
     <!-- Hardloopkalender -->
     <div class="runs-card" style="margin-top:2rem;">
       <div class="run-cal-nav">
-        <h3 style="margin:0;">📆 Hardloopkalender</h3>
+        <h3 style="margin:0;">Hardloopkalender</h3>
         <div style="display:flex;align-items:center;gap:0.4rem;">
           <button class="btn btn--ghost btn--sm" onclick="calPrev()">&#8249;</button>
           <span id="cal-month-label" class="run-cal-nav-title"></span>
@@ -145,13 +146,13 @@
 
     <!-- Favorites -->
     <div class="runs-card" style="margin-top:2rem;">
-      <h3>❤️ <span data-i18n="favorites_title">Opgeslagen evenementen</span></h3>
+      <h3><span data-i18n="favorites_title">Opgeslagen evenementen</span></h3>
       <div id="favorites-list" class="events-grid" style="margin-top:1rem;"></div>
     </div>
 
     <!-- Upload photo -->
     <div class="runs-card" style="margin-top:2rem;">
-      <h3>📷 <span data-i18n="upload_photo">Foto uploaden</span></h3>
+      <h3><span data-i18n="upload_photo">Foto uploaden</span></h3>
       <p style="color:var(--mid);font-size:0.9rem;margin-bottom:1rem;">Upload een foto van jouw run. Dit is een placeholder — echte upload vereist een server.</p>
       <input type="file" accept="image/*" class="btn btn--ghost btn--sm" disabled>
     </div>
@@ -395,7 +396,7 @@ function renderHistory() {
   var runs = cachedRuns;
   var el = document.getElementById('run-history');
   if (!runs.length) {
-    el.innerHTML = '<div class="empty-state"><span>🏃</span>'+t('run_empty')+'</div>';
+    el.innerHTML = '<div class="empty-state">'+t('run_empty')+'</div>';
     renderCalendarRuns();
     return;
   }
@@ -405,7 +406,7 @@ function renderHistory() {
       '<td>'+r.distance+' km</td>'+
       '<td>'+( r.time || '—' )+'</td>'+
       '<td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+( r.notes || '—' )+'</td>'+
-      '<td><button style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:1rem;" onclick="deleteRun('+r.id+')" title="Verwijder">🗑️</button></td>'+
+      '<td><button style="background:none;border:none;color:var(--mid);cursor:pointer;font-size:0.85rem;text-decoration:underline;" onclick="deleteRun('+r.id+')" title="Verwijder">Verwijder</button></td>'+
     '</tr>';
   }).join('');
   el.innerHTML = '<table class="runs-history-table">'+
@@ -429,7 +430,7 @@ function renderStats() {
     { num: maxDist+' km', label: 'Langste run' }
   ].map(function(s) {
     return '<div style="background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:1.25rem;text-align:center;">'+
-      '<div style="font-family:var(--font-head);font-size:1.9rem;font-weight:800;color:var(--accent);">'+s.num+'</div>'+
+      '<div style="font-family:var(--font-head);font-size:1.9rem;font-weight:800;color:var(--dark);">'+s.num+'</div>'+
       '<div style="font-size:0.82rem;color:var(--mid);margin-top:0.2rem;">'+s.label+'</div>'+
     '</div>';
   }).join('');
@@ -439,13 +440,13 @@ function renderFavorites() {
   var lang = getLang();
   var el = document.getElementById('favorites-list');
   if (!cachedFavIds.length) {
-    el.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><span>❤️</span>'+t('favorites_empty')+'<br><small style="color:var(--mid)">'+t('no_favorites')+'</small></div>';
+    el.innerHTML = '<div class="empty-state" style="grid-column:1/-1">'+t('favorites_empty')+'<br><small style="color:var(--mid)">'+t('no_favorites')+'</small></div>';
     return;
   }
   var todayStr = new Date().toISOString().split('T')[0];
   var favEvents = EVENTS.filter(function(ev){ return cachedFavIds.indexOf(ev.id) !== -1 && ev.date >= todayStr; });
   if (!favEvents.length) {
-    el.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><span>❤️</span>'+t('favorites_empty')+'<br><small style="color:var(--mid)">'+t('no_favorites')+'</small></div>';
+    el.innerHTML = '<div class="empty-state" style="grid-column:1/-1">'+t('favorites_empty')+'<br><small style="color:var(--mid)">'+t('no_favorites')+'</small></div>';
     return;
   }
   el.innerHTML = favEvents.map(function(ev) {
