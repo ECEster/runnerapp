@@ -1241,11 +1241,9 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
 }
 .cal-dot--accent { background: var(--accent); }
 /* Alle stipjes in één kleur: net iets lichter blauw dan de kalenderkop (--dark) */
-/* Bolletjes met wat diepte: lichtpuntje linksboven, donkerder naar de rand, klein schaduwtje */
-.cal-dots .cal-dot {
-  background: radial-gradient(circle at 32% 30%, #6B7FA8 0%, #2A3B5E 55%, #18233A 100%);
-  box-shadow: 0 1px 1.5px rgba(17,24,39,0.35);
-}
+.cal-dots .cal-dot { background: #2A3B5E; } /* effen stippen, zonder kleurverloop of schaduw */
+.cal-dots { align-items: center; gap: 3px; }
+.cal-dot-more { font: 700 0.62rem/1 var(--font-head); color: #2A3B5E; }
 
 /* Day panel */
 .day-panel {

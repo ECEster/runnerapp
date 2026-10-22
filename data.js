@@ -347,6 +347,15 @@ function revealOnScroll(cards) {
 // tabblad). Zonder registratielink blijft het een gewone, niet-klikbare kaart.
 // Kaartjes linken naar de eigen evenementpagina (goed voor bezoekers én Google);
 // daar staat de knop "Inschrijven" naar de site van de organisator.
+// Stippen in de agendakalender: maximaal 3 effen stippen, bij meer evenementen een plusje
+function calDotsHtml(evs, lang) {
+  var dots = evs.slice(0, 3).map(function(ev) {
+    return '<div class="cal-dot" title="' + (lang === 'en' ? ev.name_en : ev.name_nl) + '"></div>';
+  }).join('');
+  if (evs.length > 3) dots += '<span class="cal-dot-more" title="' + evs.length + '">+</span>';
+  return dots;
+}
+
 function eventUrl(ev) { return 'evenement.html?id=' + ev.id; }
 // De bladwijzerknop staat náást de link (in een wrapper), niet erin: een knop
 // binnen een link is ongeldige HTML en lastig met toetsenbord en schermlezer.
