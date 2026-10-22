@@ -273,6 +273,20 @@ p:last-child { margin-bottom: 0; }
   transition: all var(--transition);
 }
 .nav__lang:hover { background: rgba(196,181,123,0.15); }
+/* Inloggen/Uitloggen rechtsboven, in dezelfde stijl als de taalknop */
+.nav__login {
+  display: inline-flex; align-items: center; gap: 0.4rem; white-space: nowrap;
+  font: 600 0.82rem var(--font-head); color: #C4B57B !important;
+  border: 1px solid #C4B57B; border-radius: 5px; padding: 0.3rem 0.7rem;
+  transition: background var(--transition);
+}
+.nav__login::after { display: none !important; }
+/* In de menubalk: zelfde maat en hoogte als de taalknop ernaast */
+.nav__links a.nav__login { top: 0; font-size: 0.82rem; font-weight: 600; padding: 0.35rem 0.7rem; margin-left: 0.5rem; border-left: 1px solid #C4B57B; }
+.nav__login svg { width: 18px; height: 18px; }
+.nav__login:hover { background: rgba(196,181,123,0.15); }
+.nav__mobile .nav__login { display: inline-flex; padding: 0.4rem 0.8rem; margin-right: 0.5rem; border-bottom: 1px solid #C4B57B; }
+.nav__mobile .nav__login:hover { padding-left: 0.8rem; }
 .nav__admin { font-size: 0.72rem !important; opacity: 0.5; letter-spacing: 0.02em; }
 .nav__admin:hover { opacity: 0.85 !important; }
 .nav__hamburger {
@@ -762,7 +776,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 }
 .footer__links a:hover { color: var(--white); }
 .footer__login { display: inline-flex; align-items: center; gap: 0.4rem; }
-.footer__shoe { width: 18px; height: 18px; flex-shrink: 0; }
+.footer__lock { width: 12px; height: 14px; flex-shrink: 0; }
 .footer__copy {
   font-size: 0.8rem;
   color: rgba(255,255,255,0.38);

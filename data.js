@@ -428,6 +428,28 @@ async function toggleBookmark(e, id) {
   }
 }
 
+// Knop rechtsboven: "Inloggen" (naar Mijn Runs) of, als je bent ingelogd, "Uitloggen"
+async function updateAuthButtons() {
+  if (typeof getCurrentUser !== 'function') return;
+  var user = await getCurrentUser().catch(function() { return null; });
+  document.querySelectorAll('[data-auth-btn]').forEach(function(btn) {
+    var label = btn.querySelector('[data-auth-label]');
+    if (label) label.textContent = t(user ? 'nav_logout' : 'nav_login');
+    btn.onclick = user ? function(e) {
+      e.preventDefault();
+      signOut().catch(function() {}).then(function() { window.location.href = 'index.html'; });
+    } : null;
+  });
+}
+function initAuthButtons() {
+  updateAuthButtons();
+  if (typeof db !== 'undefined' && db.auth && db.auth.onAuthStateChange) {
+    db.auth.onAuthStateChange(function() { updateAuthButtons(); });
+  }
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initAuthButtons);
+else initAuthButtons();
+
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadFavIds);
 else loadFavIds();
 

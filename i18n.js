@@ -12,7 +12,8 @@ var I18N = {
     nav_contact: "Contact",
     nav_faq: "FAQ",
     faq_title: "Veelgestelde vragen",
-    footer_login: "Inloggen",
+    nav_login: "Inloggen",
+    nav_logout: "Uitloggen",
     nav_language: "EN",
 
     // Homepage
@@ -226,7 +227,8 @@ var I18N = {
     nav_contact: "Contact",
     nav_faq: "FAQ",
     faq_title: "Frequently asked questions",
-    footer_login: "Log in",
+    nav_login: "Log in",
+    nav_logout: "Log out",
     nav_language: "NL",
 
     // Homepage
