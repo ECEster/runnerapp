@@ -282,7 +282,8 @@ p:last-child { margin-bottom: 0; }
 }
 .nav__login::after { display: none !important; }
 /* In de menubalk: zelfde maat en hoogte als de taalknop ernaast */
-.nav__links a.nav__login { top: 0; font-size: 0.82rem; font-weight: 600; padding: 0.35rem 0.7rem; margin-left: 0.5rem; border-left: 1px solid #C4B57B; }
+.nav__links a.nav__login { top: 0; font-size: 0.82rem; font-weight: 600; padding: 0.35rem 0.7rem; margin-left: 0.5rem; border: 1px solid #C4B57B; } /* volledige rand: de regel voor de laatste menulink haalde de rechterrand weg */
+.nav__links .nav__lang { margin-left: 1rem; } /* EN wat verder naar rechts */
 .nav__login-icon { height: 22px; width: auto; display: block; }
 .nav__links > .nav__login, .nav__links > .nav__lang { flex-shrink: 0; }
 .nav__login:hover { background: rgba(196,181,123,0.15); }
@@ -353,7 +354,7 @@ p:last-child { margin-bottom: 0; }
 }
 .nav__mobile a:hover { color: var(--white); background: rgba(255,255,255,0.06); padding-left: 1.9rem; }
 .nav__mobile-lang {
-  display: block;
+  display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; /* Inloggen links, EN rechts */
   margin: 0.75rem 1.5rem 1rem;
 }
 .nav .nav__mobile-lang .btn {
@@ -2120,7 +2121,7 @@ body.page-overons { background: var(--white); }
 @media (max-width: 1240px) {
   .nav__links a { font-size: 0.9rem; padding: 0.5rem 0.5rem; }
   .nav__links a.nav__login { font-size: 0.78rem; padding: 0.3rem 0.55rem; }
-  .nav__lang { padding: 0.3rem 0.55rem; font-size: 0.78rem; margin-left: 0.4rem; }
+  .nav__links .nav__lang { padding: 0.3rem 0.55rem; font-size: 0.78rem; margin-left: 0.7rem; }
   .nav__login-icon { height: 19px; }
 }
 @media (max-width: 1080px) {
