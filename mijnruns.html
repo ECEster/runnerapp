@@ -77,6 +77,8 @@
         <p id="auth-sub">Log in om je opgeslagen runs en tijden te zien.</p>
       </div>
       <form id="auth-form" class="mr-login__form" onsubmit="submitAuth(event)">
+        <label for="a-name" class="mr-login__signup-only" data-i18n="mrl_name_label">Voornaam</label>
+        <input type="text" id="a-name" class="mr-login__signup-only" maxlength="40" placeholder="Bijv. Sanne" data-i18n-placeholder="mrl_name_ph" autocomplete="given-name">
         <label for="a-email" data-i18n="email_label">E-mailadres</label>
         <input type="email" id="a-email" required placeholder="jouw@email.nl" autocomplete="email">
         <label for="a-pw" data-i18n="password_label">Wachtwoord</label>
@@ -99,7 +101,8 @@
 
   <!-- Logged in content -->
   <div id="logged-in-content" class="hidden">
-    <div style="display:flex;justify-content:flex-end;margin-bottom:1.5rem;">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem;">
+      <h2 id="welcome-msg" class="mr-welcome"></h2>
       <button class="btn btn--ghost btn--sm" onclick="doLogout()" data-i18n="logout_btn">Uitloggen</button>
     </div>
 
@@ -232,7 +235,17 @@ function updateAuthModeUI() {
   document.getElementById('a-pw').setAttribute('autocomplete', signup ? 'new-password' : 'current-password');
   document.getElementById('a-email').setAttribute('autocomplete', signup ? 'off' : 'email');
   document.getElementById('a-pw2').required = signup;
+  document.getElementById('a-name').required = signup;
   document.getElementById('login-gate').classList.toggle('is-signup', signup);
+  renderWelcome(); // wordt ook bij een taalwissel aangeroepen
+}
+
+function renderWelcome() {
+  var el = document.getElementById('welcome-msg');
+  if (!el) return;
+  var meta = currentSession && currentSession.user && currentSession.user.user_metadata;
+  var name = meta && meta.first_name ? String(meta.first_name).trim() : '';
+  el.textContent = name ? t('mrl_hello_name').replace('{name}', name) : t('mrl_hello');
 }
 
 function togglePw() {
@@ -270,7 +283,7 @@ async function submitAuth(e) {
     if (authMode === 'login') {
       await signIn(email, pw);
     } else {
-      var result = await signUp(email, pw);
+      var result = await signUp(email, pw, document.getElementById('a-name').value.trim());
       if (!result.session) {
         okEl.textContent = t('signup_check_email');
         okEl.classList.remove('hidden');
@@ -294,6 +307,7 @@ function doLogout() {
 async function showLoggedIn() {
   document.getElementById('login-gate').classList.add('hidden');
   document.body.classList.remove('is-logged-out');
+  renderWelcome();
   document.getElementById('logged-in-content').classList.remove('hidden');
   document.getElementById('auth-form').reset();
   // Set today's date

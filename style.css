@@ -1943,6 +1943,7 @@ body.page-overons { background: var(--white); }
 .mr-login__pw svg { width: 20px; height: 20px; }
 .mr-login__pw .eye-closed, .mr-login__pw button.is-shown .eye-open { display: none; }
 .mr-login__pw button.is-shown .eye-closed { display: block; }
+.mr-welcome { font: 800 1.5rem var(--font-head); color: var(--dark); margin: 0; }
 .mr-login__signup-only { display: none; }
 .mr-login.is-signup .mr-login__signup-only { display: block; }
 .mr-login__msg { padding: 0.6rem 0.9rem; border-radius: 8px; font-size: 0.85rem; margin-top: 10px; }

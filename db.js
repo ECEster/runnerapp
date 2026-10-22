@@ -124,8 +124,13 @@ async function loadAllEventsAdmin() {
 
 // Account aanmaken. Geeft { user, session } terug — session is null als
 // e-mailbevestiging vereist is (afhankelijk van de projectinstellingen).
-async function signUp(email, password) {
-    const { data, error } = await db.auth.signUp({ email, password });
+// De voornaam wordt bij het account bewaard (user_metadata.first_name) voor de begroeting.
+async function signUp(email, password, firstName) {
+    const { data, error } = await db.auth.signUp({
+        email,
+        password,
+        options: { data: { first_name: firstName || '' } }
+    });
     if (error) throw error;
     return data;
 }
