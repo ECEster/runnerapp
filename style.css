@@ -261,9 +261,9 @@ p:last-child { margin-bottom: 0; }
   background: currentColor;
 }
 .nav__lang {
-  /* Groenbeige van de weekdagenrij in de kalender */
-  background: #C4B57B;
-  color: var(--dark);
+  /* Marine vakje met rand en letters in het groenbeige van de kalender */
+  background: var(--dark);
+  color: #C4B57B;
   border: 1px solid #C4B57B;
   border-radius: 5px;
   padding: 0.35rem 0.7rem;
@@ -272,7 +272,7 @@ p:last-child { margin-bottom: 0; }
   margin-left: 0.5rem;
   transition: all var(--transition);
 }
-.nav__lang:hover { background: #D4C793; border-color: #D4C793; }
+.nav__lang:hover { background: rgba(196,181,123,0.15); }
 .nav__admin { font-size: 0.72rem !important; opacity: 0.5; letter-spacing: 0.02em; }
 .nav__admin:hover { opacity: 0.85 !important; }
 .nav__hamburger {
@@ -332,11 +332,11 @@ p:last-child { margin-bottom: 0; }
   margin: 0.75rem 1.5rem 1rem;
 }
 .nav__mobile-lang .btn {
-  background: #C4B57B;
-  color: var(--dark);
+  background: var(--dark);
+  color: #C4B57B;
   border: 1px solid #C4B57B;
 }
-.nav__mobile-lang .btn:hover { background: #D4C793; border-color: #D4C793; }
+.nav__mobile-lang .btn:hover { background: rgba(196,181,123,0.15); }
 
 /* ── Hero ────────────────────────────────────────────────────── */
 .hero {
