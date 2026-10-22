@@ -737,6 +737,11 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 .page-header--training { background-position: center 66%; }
 /* Regiopagina's: geen oranje lijn onder de banner */
 .page-header--regio { border-bottom: none; }
+/* Noord en West: hele afbeelding (met de kaart) in beeld, met stroken in de randkleur */
+.page-header--regio-noord,
+.page-header--regio-west { background-size: auto 100%; background-repeat: no-repeat; background-position: center; }
+.page-header--regio-noord { background-color: #68838A; }
+.page-header--regio-west  { background-color: #5F6D75; }
 /* Over ons: geen oranje details, dus witte cijfers in de blokjes */
 .page-overons .about-stat__num { color: var(--white); }
 /* Over ons: Banner7 (3:1), geen oranje lijn; op mobiel naar rechts */
