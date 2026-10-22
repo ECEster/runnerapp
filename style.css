@@ -346,7 +346,7 @@ p:last-child { margin-bottom: 0; }
   color: #C4B57B;
   border: 1px solid #C4B57B;
 }
-.nav .nav__mobile-lang .btn:hover { background: rgba(196,181,123,0.15); }
+.nav .nav__mobile-lang .btn:hover { background: rgba(196,181,123,0.15); color: #C4B57B; }
 
 /* ── Hero ────────────────────────────────────────────────────── */
 .hero {
