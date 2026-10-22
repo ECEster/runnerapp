@@ -1487,7 +1487,7 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
 .tab-tile.active, .page-training .tab-tile.active { background: #2A3B5E; border-color: #2A3B5E; } /* donkerblauw, zoals de kalenderknoppen */
 .tab-tile.active b { color: #C4B57B; }
 .tab-tile.active i { color: rgba(255,255,255,0.75); }
-.tab-tile--own { border-style: dashed; border-color: #2A3B5E; }
+.tab-tile--own { border-style: dashed; border-color: #C4B57B; }
 .tab-tile--own.active { border-style: solid; }
 .tab-tile:focus-visible { outline: 2px solid #C4B57B; outline-offset: 2px; }
 @media (max-width: 900px) {
