@@ -30,7 +30,8 @@ async function loadEventsFromDB() {
         date:             e.date      || '',
         type:             e.type      || '',
         type2:            e.type2     || '',
-        city:             e.city      || '',
+        // Plaatsnamen altijd als "Havelterberg", ook als ze in de database in hoofdletters staan
+        city:             typeof titleCase === 'function' ? titleCase(e.city || '') : (e.city || ''),
         province:         e.province  || '',
         distances:        e.distances ? e.distances.replace(/(\d{1,2}),(\d{1,3})(?!\d)/g, '$1.$2').split(',').map(d => d.trim()).filter(Boolean).map(roundDistanceLabel) : [],
         price:            e.price     || '',

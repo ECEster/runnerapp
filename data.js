@@ -44,7 +44,10 @@ function titleCase(str) {
   if (!str) return str;
   return str.toLowerCase()
     .replace(/\b[a-zà-ÿ]/g, function(c) { return c.toUpperCase(); })
-    .replace(/'[A-Z]/g, function(m) { return m.toLowerCase(); });
+    .replace(/'[A-Z]/g, function(m) { return m.toLowerCase(); })
+    .replace(/\bIj/g, 'IJ') // IJmuiden, IJsselstein
+    // Tussenwoorden klein, behalve aan het begin: "Alphen aan den Rijn", "Bergen op Zoom"
+    .replace(/ (Aan|Den|De|Der|Op|Bij|In|Van|Het|Ter|Ten|En|Onder|Over)(?= )/g, function(m) { return m.toLowerCase(); });
 }
 
 // Zet alleen de allereerste letter van een tekst in hoofdletters, de rest in
