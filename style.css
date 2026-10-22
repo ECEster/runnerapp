@@ -988,7 +988,7 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
 }
 .filter-checkbox--kids {
   background: transparent;
-  border: 1.5px dashed var(--btn);
+  border: 1.5px dashed #C4B57B; /* groenbeige van de weekdagenrij in de kalender */
   border-radius: 6px;
   padding: 4px 8px;
   font-weight: 600;
