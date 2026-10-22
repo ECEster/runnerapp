@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="page-mijnruns">
+<body class="page-mijnruns is-logged-out">
 
 <!-- ── NAV ─────────────────────────────────────────────────── -->
 <nav class="nav">
@@ -50,33 +50,50 @@
   <h1 data-i18n="mijnruns_title">Mijn Runs</h1>
 </div>
 
-<!-- ── MAIN ────────────────────────────────────────────────── -->
-<div class="container section">
+<!-- ── LOGIN (alleen als je niet bent ingelogd) ─────────────── -->
+<!-- Computer: foto met uitleg links, formulier rechts. Telefoon: foto als banner, formulier als kaart eroverheen. -->
+<section id="login-gate" class="mr-login">
+  <div class="mr-login__photo">
+    <div>
+      <span class="mr-login__kicker" data-i18n="mijnruns_title">Mijn Runs</span>
+      <h1 class="mr-login__title"><span data-i18n="mrl_h_a">Jouw loopjaar,</span> <em data-i18n="mrl_h_b">overzichtelijk</em> <span data-i18n="mrl_h_c">bij elkaar</span></h1>
+    </div>
+    <ul class="mr-login__perks">
+      <li><span class="mr-login__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><path d="M12 13.2l1 2 2.2.3-1.6 1.5.4 2.2-2-1-2 1 .4-2.2-1.6-1.5 2.2-.3z" fill="currentColor" stroke="none"/></svg></span><div><b data-i18n="mrl_p1_t">Favorieten in je kalender</b><span data-i18n="mrl_p1_d">Bewaar runs uit de agenda en zie ze terug in je eigen maandoverzicht.</span></div></li>
+      <li><span class="mr-login__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.5M10 2.5h4M18.5 6.5l1.5-1.5"/></svg></span><div><b data-i18n="mrl_p2_t">Je tijden bijhouden</b><span data-i18n="mrl_p2_d">Noteer afstand, finishtijd en hoe het ging, zodat je je vooruitgang ziet.</span></div></li>
+      <li><span class="mr-login__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2.5"/><circle cx="12" cy="13" r="3.5"/><path d="M8.5 6l1.5-2.5h4L15.5 6"/></svg></span><div><b data-i18n="mrl_p3_t">Foto's van je loop</b><span data-i18n="mrl_p3_d">Upload je mooiste foto's bij elke run die je gelopen hebt.</span></div></li>
+    </ul>
+  </div>
 
-  <!-- Login gate (shown when not logged in) -->
-  <div id="login-gate" class="login-gate">
-    <p class="mijnruns-intro">Sla al je favoriete runs op in je eigen kalender en kijk uit naar je next run!</p>
-    <h3 data-i18n="mijnruns_title">Mijn Runs</h3>
-    <p data-i18n="login_required">Log in om je runs bij te houden en evenementen op te slaan</p>
-
-    <form id="auth-form" style="text-align:left;max-width:320px;margin:0 auto;" onsubmit="submitAuth(event)">
-      <div class="form-group">
+  <div class="mr-login__side">
+    <div class="mr-login__card">
+      <div class="mr-login__seg" id="auth-seg">
+        <span class="mr-login__pill"></span>
+        <button type="button" id="seg-login" aria-pressed="true" onclick="setAuthMode('login')" data-i18n="login_btn">Inloggen</button>
+        <button type="button" id="seg-signup" aria-pressed="false" onclick="setAuthMode('signup')" data-i18n="signup_link">Registreren</button>
+      </div>
+      <div class="mr-login__head">
+        <h2 id="auth-title">Welkom terug</h2>
+        <p id="auth-sub">Log in om je opgeslagen runs en tijden te zien.</p>
+      </div>
+      <form id="auth-form" class="mr-login__form" onsubmit="submitAuth(event)">
         <label for="a-email" data-i18n="email_label">E-mailadres</label>
         <input type="email" id="a-email" required placeholder="jouw@email.nl" autocomplete="email">
-      </div>
-      <div class="form-group">
         <label for="a-pw" data-i18n="password_label">Wachtwoord</label>
-        <input type="password" id="a-pw" required minlength="6" placeholder="••••••••" autocomplete="current-password">
-      </div>
-      <div id="auth-error" class="hidden" style="background:#FEE2E2;color:#991B1B;padding:0.6rem 0.9rem;border-radius:var(--radius);font-size:0.85rem;margin-bottom:1rem;"></div>
-      <div id="auth-success" class="hidden" style="background:#DCFCE7;color:#166534;padding:0.6rem 0.9rem;border-radius:var(--radius);font-size:0.85rem;margin-bottom:1rem;"></div>
-      <button type="submit" class="btn btn--primary" id="auth-submit-btn" style="width:100%;" data-i18n="login_btn">Inloggen</button>
-    </form>
-    <p style="margin-top:1rem;font-size:0.85rem;color:var(--mid);">
-      <span id="auth-toggle-text" data-i18n="no_account_yet">Nog geen account?</span>
-      <a href="#" onclick="toggleAuthMode(event)" id="auth-toggle-link" data-i18n="signup_link" style="color:var(--dark);font-weight:600;text-decoration:underline;">Registreren</a>
-    </p>
+        <div class="mr-login__pw">
+          <input type="password" id="a-pw" required minlength="6" placeholder="Minimaal 6 tekens" data-i18n-placeholder="mrl_pw_ph" autocomplete="current-password">
+          <button type="button" id="pw-toggle" onclick="togglePw()" data-i18n="mrl_show">Toon</button>
+        </div>
+        <div id="auth-error" class="hidden mr-login__msg mr-login__msg--err"></div>
+        <div id="auth-success" class="hidden mr-login__msg mr-login__msg--ok"></div>
+        <button type="submit" class="mr-login__submit" id="auth-submit-btn" data-i18n="login_btn">Inloggen</button>
+      </form>
+    </div>
   </div>
+</section>
+
+<!-- ── MAIN ────────────────────────────────────────────────── -->
+<div class="container section">
 
   <!-- Logged in content -->
   <div id="logged-in-content" class="hidden">
@@ -189,27 +206,30 @@ var cachedFavIds = [];
 var calYear = new Date().getFullYear();
 var calMonth = new Date().getMonth();
 
-function toggleAuthMode(e) {
-  e.preventDefault();
-  authMode = authMode === 'login' ? 'signup' : 'login';
+function setAuthMode(mode) {
+  authMode = mode;
   updateAuthModeUI();
 }
 
 function updateAuthModeUI() {
   var btn = document.getElementById('auth-submit-btn');
-  var toggleText = document.getElementById('auth-toggle-text');
-  var toggleLink = document.getElementById('auth-toggle-link');
-  document.getElementById('auth-error').classList.add('hidden');
   if (!btn) return;
-  if (authMode === 'login') {
-    btn.textContent = t('login_btn');
-    toggleText.textContent = t('no_account_yet');
-    toggleLink.textContent = t('signup_link');
-  } else {
-    btn.textContent = t('signup_btn');
-    toggleText.textContent = t('has_account_already');
-    toggleLink.textContent = t('login_link');
-  }
+  var signup = authMode === 'signup';
+  document.getElementById('auth-error').classList.add('hidden');
+  btn.textContent = t(signup ? 'signup_btn' : 'login_btn');
+  document.getElementById('auth-title').textContent = t(signup ? 'mrl_signup_title' : 'mrl_welcome');
+  document.getElementById('auth-sub').textContent = t(signup ? 'mrl_signup_sub' : 'mrl_welcome_sub');
+  document.getElementById('auth-seg').classList.toggle('is-signup', signup);
+  document.getElementById('seg-login').setAttribute('aria-pressed', signup ? 'false' : 'true');
+  document.getElementById('seg-signup').setAttribute('aria-pressed', signup ? 'true' : 'false');
+  document.getElementById('a-pw').setAttribute('autocomplete', signup ? 'new-password' : 'current-password');
+}
+
+function togglePw() {
+  var input = document.getElementById('a-pw');
+  var show = input.type === 'password';
+  input.type = show ? 'text' : 'password';
+  document.getElementById('pw-toggle').textContent = t(show ? 'mrl_hide' : 'mrl_show');
 }
 
 async function submitAuth(e) {
@@ -252,6 +272,7 @@ function doLogout() {
 
 async function showLoggedIn() {
   document.getElementById('login-gate').classList.add('hidden');
+  document.body.classList.remove('is-logged-out');
   document.getElementById('logged-in-content').classList.remove('hidden');
   document.getElementById('auth-form').reset();
   // Set today's date
@@ -264,6 +285,7 @@ async function showLoggedIn() {
 
 function showLoggedOut() {
   document.getElementById('login-gate').classList.remove('hidden');
+  document.body.classList.add('is-logged-out');
   document.getElementById('logged-in-content').classList.add('hidden');
   cachedRuns = [];
   cachedFavIds = [];
@@ -438,13 +460,13 @@ function renderFavorites() {
   var lang = getLang();
   var el = document.getElementById('favorites-list');
   if (!cachedFavIds.length) {
-    el.innerHTML = '<div class="empty-state" style="grid-column:1/-1">'+t('favorites_empty')+'<br><small style="color:var(--mid)">'+t('no_favorites')+'</small></div>';
+    el.innerHTML = '<div class="empty-state" style="grid-column:1/-1">'+t('favorites_empty')+'<br><small style="color:var(--mid)">'+t('no_favorites')+'<a href="agenda.html" style="color:var(--dark);font-weight:600;text-decoration:underline;text-underline-offset:3px">'+t('no_favorites_link')+'</a></small></div>';
     return;
   }
   var todayStr = new Date().toISOString().split('T')[0];
   var favEvents = EVENTS.filter(function(ev){ return cachedFavIds.indexOf(ev.id) !== -1 && ev.date >= todayStr; });
   if (!favEvents.length) {
-    el.innerHTML = '<div class="empty-state" style="grid-column:1/-1">'+t('favorites_empty')+'<br><small style="color:var(--mid)">'+t('no_favorites')+'</small></div>';
+    el.innerHTML = '<div class="empty-state" style="grid-column:1/-1">'+t('favorites_empty')+'<br><small style="color:var(--mid)">'+t('no_favorites')+'<a href="agenda.html" style="color:var(--dark);font-weight:600;text-decoration:underline;text-underline-offset:3px">'+t('no_favorites_link')+'</a></small></div>';
     return;
   }
   el.innerHTML = favEvents.map(function(ev) {
