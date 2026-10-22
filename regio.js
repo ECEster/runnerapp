@@ -190,7 +190,7 @@ function openDayPanel(year, month, day) {
     return '<div class="day-panel__item">'+
       '<span class="event-card__badge '+badgeClass+'" style="position:static;font-size:0.72rem;padding:3px 10px;">'+typeName+'</span>'+
       '<span class="day-panel__name">'+name+'</span>'+
-      '<span style="color:var(--mid);font-size:0.82rem">'+ev.city+'</span>'+
+      '<span class="day-panel__city">'+ev.city+'</span>'+
       (ev.registration_url ? '<a href="' + ev.registration_url + '" class="btn btn--ghost btn--sm" target="_blank" rel="noopener">Meer info</a>' : '')+
     '</div>';
   }).join('');

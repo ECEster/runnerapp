@@ -225,7 +225,7 @@
       <div class="day-panel hidden" id="day-panel">
         <div class="day-panel__header">
           <h3 id="day-panel-title"></h3>
-          <button class="day-panel__close" onclick="closeDayPanel()" data-i18n="day_panel_close">✕</button>
+          <button class="day-panel__close" onclick="closeDayPanel()" aria-label="Sluiten">✕</button>
         </div>
         <div class="day-panel__list" id="day-panel-list"></div>
       </div>
@@ -469,7 +469,7 @@ function openDayPanel(year, month, day) {
     return '<div class="day-panel__item">'+
       '<span class="event-card__badge '+badgeClass+'" style="position:static;font-size:0.72rem;padding:3px 10px;">'+typeName+'</span>'+
       '<span class="day-panel__name">'+name+'</span>'+
-      '<span style="color:var(--mid);font-size:0.82rem">'+ev.city+'</span>'+
+      '<span class="day-panel__city">'+ev.city+'</span>'+
       (ev.registration_url ? '<a href="' + ev.registration_url + '" class="btn btn--ghost btn--sm" target="_blank" rel="noopener">'+t('meer_info')+'</a>' : '')+
     '</div>';
   }).join('');
