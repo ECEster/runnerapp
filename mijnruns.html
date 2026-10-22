@@ -106,6 +106,25 @@
       <button class="btn btn--ghost btn--sm" onclick="doLogout()" data-i18n="logout_btn">Uitloggen</button>
     </div>
 
+    <!-- Hardloopkalender -->
+    <div class="runs-card" style="margin-bottom:2rem;">
+      <div class="run-cal-nav">
+        <h3 style="margin:0;">Hardloopkalender</h3>
+        <div style="display:flex;align-items:center;gap:0.4rem;">
+          <button class="btn btn--ghost btn--sm" onclick="calPrev()">&#8249;</button>
+          <span id="cal-month-label" class="run-cal-nav-title"></span>
+          <button class="btn btn--ghost btn--sm" onclick="calNext()">&#8250;</button>
+        </div>
+      </div>
+      <div class="run-cal-wrap">
+        <div id="run-calendar"></div>
+      </div>
+      <div class="run-cal-legend">
+        <span class="run-cal-legend-dot"></span>
+        <span>Dag met een run — klik op een dag om datum in te vullen</span>
+      </div>
+    </div>
+
     <!-- Stats strip -->
     <div id="stats-strip" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;"></div>
 
@@ -141,25 +160,6 @@
         <div style="margin-top:1rem;">
           <button class="btn btn--ghost btn--sm" onclick="exportRuns()">Exporteer CSV</button>
         </div>
-      </div>
-    </div>
-
-    <!-- Hardloopkalender -->
-    <div class="runs-card" style="margin-top:2rem;">
-      <div class="run-cal-nav">
-        <h3 style="margin:0;">Hardloopkalender</h3>
-        <div style="display:flex;align-items:center;gap:0.4rem;">
-          <button class="btn btn--ghost btn--sm" onclick="calPrev()">&#8249;</button>
-          <span id="cal-month-label" class="run-cal-nav-title"></span>
-          <button class="btn btn--ghost btn--sm" onclick="calNext()">&#8250;</button>
-        </div>
-      </div>
-      <div class="run-cal-wrap">
-        <div id="run-calendar"></div>
-      </div>
-      <div class="run-cal-legend">
-        <span class="run-cal-legend-dot"></span>
-        <span>Dag met een run — klik op een dag om datum in te vullen</span>
       </div>
     </div>
 
