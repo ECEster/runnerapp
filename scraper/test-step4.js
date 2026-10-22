@@ -5,7 +5,7 @@ const url = 'https://hardloopkalendernederland.nl/groningen/'
 const html = await fetchHtml(url)
 
 const events = parseHardloopkalenderEvents(html, {
-  year: 2026,
+  year: new Date().getFullYear(),
   provincie: 'Groningen',
   bronUrl: url,
 })

@@ -52,7 +52,7 @@ async function main() {
   console.log(`Regio: ${regioProvincies ? `${regio} (${regioProvincies.join(', ')})` : 'alle'} | max. nieuwe events: ${MAX_INSERTS_PER_RUN}`)
 
   console.log('\nStap 1/4: events ophalen en parsen van beide bronnen...')
-  const { unique, duplicates } = await collectEvents({ year: 2026 })
+  const { unique, duplicates } = await collectEvents({ year: new Date().getFullYear() })
   console.log(`  ${unique.length} unieke events gevonden (${duplicates.length} onderlinge duplicaten weggefilterd)`)
 
   console.log('\nStap 2/4: bestaande events in Supabase ophalen voor dedupliceer-check...')

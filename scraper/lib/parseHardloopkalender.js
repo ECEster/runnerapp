@@ -57,13 +57,24 @@ const TIME_TOKEN_RE = /^\d{1,2}h\d{0,2}'?$/i
 const DISTANCE_TOKEN_RE = /^\d+(?:x\d+(?:,\d+)?)?(?:,\d+)?(?:km|mijl|mi)$/i
 const LEADING_ORDINAL_RE = /^\d+(?:ste|de)\s+/i
 
+const WEEKDAYS_NL = ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag']
+
+// De site noemt geen jaartal ("Zaterdag 6 maart"). Het jaar leiden we af uit de
+// weekdag: 6 maart valt in 2027 op een zaterdag, in 2026 op een vrijdag. We proberen
+// het opgegeven jaar, dan het jaar erna en het jaar ervoor. Klopt de weekdag nergens
+// (typfout op de bronsite), dan valt hij terug op het opgegeven jaar.
 function parseDateLine(dateText, year) {
-  const m = dateText.match(/(\d{1,2})\s+([a-zé]+)$/i)
+  const m = dateText.match(/^([a-zé]+dag)\s+(\d{1,2})\s+([a-zé]+)$/i)
   if (!m) return null
-  const day = Number(m[1])
-  const month = MONTHS_NL[m[2].toLowerCase()]
+  const weekday = WEEKDAYS_NL.indexOf(m[1].toLowerCase())
+  const day = Number(m[2])
+  const month = MONTHS_NL[m[3].toLowerCase()]
   if (!month) return null
-  return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+  const fmt = (y) => `${y}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+  for (const y of [year, year + 1, year - 1]) {
+    if (new Date(Date.UTC(y, month - 1, day)).getUTCDay() === weekday) return fmt(y)
+  }
+  return fmt(year)
 }
 
 // Peelt tijd/afstand-woorden van rechts af. Geeft { descriptor, afstanden } terug.
