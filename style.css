@@ -737,12 +737,10 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 .page-header--training { background-position: center 66%; }
 /* Regiopagina's: geen oranje lijn onder de banner */
 .page-header--regio { border-bottom: none; }
-/* Noord, Oost en West: hele afbeelding (met de kaart) in beeld, met stroken in de randkleur */
+/* Noord en Oost: hele afbeelding (met de kaart) in beeld, met stroken in de randkleur */
 .page-header--regio-noord,
-.page-header--regio-oost,
-.page-header--regio-west { background-size: auto 100%; background-repeat: no-repeat; background-position: center; }
+.page-header--regio-oost { background-size: auto 100%; background-repeat: no-repeat; background-position: center; }
 .page-header--regio-noord { background-color: #68838A; }
-.page-header--regio-west  { background-color: #5F6D75; }
 .page-header--regio-oost  { background-color: #4D5561; }
 /* Over ons: geen oranje details, dus witte cijfers in de blokjes */
 .page-overons .about-stat__num { color: var(--white); }
