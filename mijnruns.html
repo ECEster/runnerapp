@@ -123,6 +123,12 @@
       <p class="run-cal-tip"><span data-i18n="no_favorites">Sla evenementen op via de </span><a href="agenda.html" data-i18n="no_favorites_link">agenda</a></p>
     </div>
 
+    <!-- Favorites -->
+    <div class="runs-card" style="margin-bottom:2rem;">
+      <h3><span data-i18n="favorites_title">Opgeslagen evenementen</span></h3>
+      <div id="favorites-list" class="events-grid" style="margin-top:1rem;"></div>
+    </div>
+
     <!-- Stats strip -->
     <div id="stats-strip" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;"></div>
 
@@ -159,12 +165,6 @@
           <button class="btn btn--ghost btn--sm" onclick="exportRuns()" data-i18n="export_csv">Exporteer CSV</button>
         </div>
       </div>
-    </div>
-
-    <!-- Favorites -->
-    <div class="runs-card" style="margin-top:2rem;">
-      <h3><span data-i18n="favorites_title">Opgeslagen evenementen</span></h3>
-      <div id="favorites-list" class="events-grid" style="margin-top:1rem;"></div>
     </div>
 
     <!-- Upload photo -->
@@ -503,13 +503,13 @@ function renderFavorites() {
   var lang = getLang();
   var el = document.getElementById('favorites-list');
   if (!cachedFavIds.length) {
-    el.innerHTML = '<div class="empty-state" style="grid-column:1/-1">'+t('favorites_empty')+'<br><span style="color:var(--mid)">'+t('no_favorites')+'<a href="agenda.html" style="color:var(--dark);font-weight:600;text-decoration:underline;text-underline-offset:3px">'+t('no_favorites_link')+'</a></span></div>';
+    el.innerHTML = '<div class="empty-state" style="grid-column:1/-1">'+t('favorites_empty')+'<div style="margin-top:0.25rem">'+t('no_favorites')+'<a href="agenda.html" style="color:var(--dark);font-weight:600;text-decoration:underline;text-underline-offset:3px">'+t('no_favorites_link')+'</a></div></div>';
     return;
   }
   var todayStr = new Date().toISOString().split('T')[0];
   var favEvents = EVENTS.filter(function(ev){ return cachedFavIds.indexOf(ev.id) !== -1 && ev.date >= todayStr; });
   if (!favEvents.length) {
-    el.innerHTML = '<div class="empty-state" style="grid-column:1/-1">'+t('favorites_empty')+'<br><span style="color:var(--mid)">'+t('no_favorites')+'<a href="agenda.html" style="color:var(--dark);font-weight:600;text-decoration:underline;text-underline-offset:3px">'+t('no_favorites_link')+'</a></span></div>';
+    el.innerHTML = '<div class="empty-state" style="grid-column:1/-1">'+t('favorites_empty')+'<div style="margin-top:0.25rem">'+t('no_favorites')+'<a href="agenda.html" style="color:var(--dark);font-weight:600;text-decoration:underline;text-underline-offset:3px">'+t('no_favorites_link')+'</a></div></div>';
     return;
   }
   el.innerHTML = favEvents.map(function(ev) {

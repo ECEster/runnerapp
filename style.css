@@ -1719,6 +1719,12 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
   background: rgba(196,181,123,0.6); border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 .runs-card .run-cal-nav h3 { margin: 0; padding: 0; border-bottom: none; }
+/* Mijn Runs: alle bloktitels in dezelfde groenbeige balk als de hardloopkalender */
+.page-mijnruns .runs-card > h3 {
+  margin: -1.5rem -1.5rem 1.25rem; padding: 0.95rem 1.5rem;
+  background: rgba(196,181,123,0.6); border-bottom: none;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
 .run-cal-nav-title { font-weight: 600; font-size: 0.95rem; text-align: center; flex: 1; }
 .run-cal-legend { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: var(--mid); margin-top: 0.75rem; }
 .run-cal-legend-dot { width: 10px; height: 10px; border-radius: 3px; background: #E6EBF5; border: 1px solid #D3DCEE; flex-shrink: 0; }
