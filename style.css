@@ -826,7 +826,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 /* ── Agenda page ─────────────────────────────────────────────── */
 .agenda-layout {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 280px minmax(0, 1fr);
   gap: 2rem;
   align-items: start;
   padding-top: 0.75rem;
@@ -920,7 +920,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 .agenda-layout > .filter-panel { grid-column: 1; grid-row: 2; }
 .agenda-layout > .agenda-results { grid-column: 2; grid-row: 1 / span 2; }
 .agenda-layout.filters-open { row-gap: 0.75rem; grid-template-rows: auto 1fr; }
-.agenda-layout:not(.filters-open) { grid-template-columns: 1fr; row-gap: 1rem; }
+.agenda-layout:not(.filters-open) { grid-template-columns: minmax(0, 1fr); row-gap: 1rem; }
 .agenda-layout:not(.filters-open) > .filter-toggle { width: auto; justify-self: start; }
 .agenda-layout:not(.filters-open) > .agenda-results { grid-column: 1; grid-row: 2; }
 body:not(.filters-open) .regio-nav-row { grid-template-columns: 1fr; }
@@ -1210,7 +1210,11 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
 }
 .cal-dot--accent { background: var(--accent); }
 /* Alle stipjes in één kleur: net iets lichter blauw dan de kalenderkop (--dark) */
-.cal-dots .cal-dot { background: #2A3B5E; }
+/* Bolletjes met wat diepte: lichtpuntje linksboven, donkerder naar de rand, klein schaduwtje */
+.cal-dots .cal-dot {
+  background: radial-gradient(circle at 32% 30%, #6B7FA8 0%, #2A3B5E 55%, #18233A 100%);
+  box-shadow: 0 1px 1.5px rgba(17,24,39,0.35);
+}
 
 /* Day panel */
 .day-panel {
@@ -1236,10 +1240,11 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
 .day-panel__close {
   background: var(--surface2);
   border: none;
-  border-radius: 50%;
-  width: 28px;
+  border-radius: 14px;
+  min-width: 28px;
+  padding: 0 0.75rem; /* past ook als er "Sluiten" staat in plaats van ✕ */
   height: 28px;
-  font-size: 1rem;
+  font-size: 0.85rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1247,6 +1252,17 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
 }
 .day-panel__close:hover { background: var(--light); }
 .day-panel__list { display: flex; flex-direction: column; gap: 0.75rem; }
+.day-panel__item {
+  display: flex;
+  flex-wrap: wrap; /* op smalle schermen loopt de regel door naar onder i.p.v. buiten beeld */
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--surface2);
+}
+.day-panel__name { font-weight: 600; flex: 1 1 160px; min-width: 0; overflow-wrap: anywhere; }
+/* Grid-kolommen mogen niet breder worden dan de pagina door lange inhoud */
+.agenda-layout > * { min-width: 0; }
 
 /* ── Event detail page ──────────────────────────────────────── */
 .event-detail {
@@ -1815,7 +1831,7 @@ body.page-overons { background: var(--white); }
 
   .events-grid { grid-template-columns: repeat(2, 1fr); }
 
-  .agenda-layout { grid-template-columns: 1fr; }
+  .agenda-layout { grid-template-columns: minmax(0, 1fr); }
   .filter-panel { position: static; max-height: none; overflow: visible; }
   /* Telefoon: alles onder elkaar, knop over de volle breedte */
   .agenda-layout > .filter-toggle,

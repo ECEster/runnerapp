@@ -466,9 +466,9 @@ function openDayPanel(year, month, day) {
     var name = lang==='en'?ev.name_en:ev.name_nl;
     var badgeClass = getBadgeClass(ev.type);
     var typeName = cardTypeName(ev, lang);
-    return '<div style="display:flex;align-items:center;gap:1rem;padding:0.6rem 0;border-bottom:1px solid var(--surface2)">'+
+    return '<div class="day-panel__item">'+
       '<span class="event-card__badge '+badgeClass+'" style="position:static;font-size:0.72rem;padding:3px 10px;">'+typeName+'</span>'+
-      '<span style="font-weight:600;flex:1;color:inherit;text-decoration:none">'+name+'</span>'+
+      '<span class="day-panel__name">'+name+'</span>'+
       '<span style="color:var(--mid);font-size:0.82rem">'+ev.city+'</span>'+
       (ev.registration_url ? '<a href="' + ev.registration_url + '" class="btn btn--ghost btn--sm" target="_blank" rel="noopener">'+t('meer_info')+'</a>' : '')+
     '</div>';
