@@ -10,6 +10,8 @@ var I18N = {
     nav_mijnruns: "Mijn Runs",
     nav_overons: "Over ons",
     nav_contact: "Contact",
+    nav_faq: "FAQ",
+    faq_title: "Veelgestelde vragen",
     nav_language: "EN",
 
     // Homepage
@@ -177,6 +179,8 @@ var I18N = {
     nav_mijnruns: "My Runs",
     nav_overons: "About us",
     nav_contact: "Contact",
+    nav_faq: "FAQ",
+    faq_title: "Frequently asked questions",
     nav_language: "NL",
 
     // Homepage
