@@ -87,7 +87,7 @@ function renderEvent(ev, lang) {
   var badgeClass = getBadgeClass(ev.type);
   var typeName = getTypeName(ev.type, lang);
   var distList = formatDistances(ev.distances);
-  var catList = ev.categories.join(', ');
+  var catList = (ev.categories || []).join(', ') || '—'; // evenementen uit de database hebben (nog) geen categorieën
 
   var atletiekHtml = ev.atletiekunie ?
     '<div class="atletiekunie-badge">🏅 <span data-i18n="atletiekunie_badge">'+t('atletiekunie_badge')+'</span></div>' : '';
@@ -107,7 +107,7 @@ function renderEvent(ev, lang) {
   var shareTitle = encodeURIComponent(name);
 
   return '<div class="event-detail">'+
-    '<a href="agenda.html" class="event-detail__back" data-i18n="back_to_agenda">'+t('back_to_agenda')+'</a>'+
+    renderBreadcrumbs(name)+
     '<div class="event-detail__hero">'+
       '<img src="'+getEventImage(ev)+'" alt="'+name+'">'+
       '<div class="event-detail__hero-overlay">'+
@@ -161,6 +161,42 @@ function renderEvent(ev, lang) {
   '</div>';
 }
 
+// ── Kruimelpad: Home › Agenda › naam van het evenement ──────────────
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, function(c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+function renderBreadcrumbs(eventName) {
+  var items = '<li><a href="index.html">Home</a></li>'+
+    '<li><a href="agenda.html">'+t('nav_agenda')+'</a></li>';
+  if (eventName) items += '<li aria-current="page"><span title="'+escapeHtml(eventName)+'">'+escapeHtml(eventName)+'</span></li>';
+  return '<nav class="breadcrumbs" aria-label="'+t('breadcrumb_label')+'"><ol>'+items+'</ol></nav>';
+}
+
+// Zelfde pad als gestructureerde gegevens (BreadcrumbList), zodat Google het in de zoekresultaten kan tonen
+function setBreadcrumbJsonLd(eventName) {
+  var base = window.location.origin + window.location.pathname.replace(/[^\/]*$/, '');
+  var data = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: base },
+      { '@type': 'ListItem', position: 2, name: t('nav_agenda'), item: base + 'agenda.html' },
+      { '@type': 'ListItem', position: 3, name: eventName, item: window.location.href }
+    ]
+  };
+  var el = document.getElementById('breadcrumb-ld');
+  if (!el) {
+    el = document.createElement('script');
+    el.type = 'application/ld+json';
+    el.id = 'breadcrumb-ld';
+    document.head.appendChild(el);
+  }
+  el.textContent = JSON.stringify(data);
+}
+
 function copyShareLink(url, btn) {
   navigator.clipboard.writeText(decodeURIComponent(url)).then(function() {
     var orig = btn.innerHTML;
@@ -209,7 +245,7 @@ async function refreshFavButton(id) {
 }
 
 function renderNotFound() {
-  return '<div class="event-detail"><a href="agenda.html" class="event-detail__back">← Terug naar agenda</a>'+
+  return '<div class="event-detail">'+renderBreadcrumbs(null)+
     '<div class="no-events-msg"><div class="no-events-msg__icon">🏃</div><h3>Evenement niet gevonden</h3><p>Dit evenement bestaat niet of is verwijderd.</p></div></div>';
 }
 
@@ -241,6 +277,7 @@ async function init() {
   if (ev) {
     root.innerHTML = renderEvent(ev, lang);
     document.title = (lang==='en' ? ev.name_en : ev.name_nl) + ' — RunningNederland.nl';
+    setBreadcrumbJsonLd(lang==='en' ? ev.name_en : ev.name_nl);
     refreshFavButton(ev.id);
   } else {
     root.innerHTML = renderNotFound();
