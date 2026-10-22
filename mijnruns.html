@@ -480,9 +480,7 @@ function showFavPop(btn) {
     var cx = i * (CARD_W + GAP) + CARD_W / 2;
     var sx = axL + (i - (n - 1) / 2) * 10;
     html += '<line class="fav-pop__line" pathLength="100" style="animation-delay:' + (i * 0.02) + 's"' +
-      ' x1="' + sx + '" y1="' + baseY + '" x2="' + cx + '" y2="' + cardY + '"/>' +
-      '<circle class="fav-pop__dot" style="animation-delay:' + (i * 0.02) + 's" cx="' + sx + '" cy="' + baseY + '" r="2"/>' +
-      '<circle class="fav-pop__dot fav-pop__dot--end" style="animation-delay:' + (0.08 + i * 0.02) + 's" cx="' + cx + '" cy="' + cardY + '" r="2.5"/>';
+      ' x1="' + sx + '" y1="' + baseY + '" x2="' + cx + '" y2="' + cardY + '"/>';
   });
   svg.innerHTML = html;
   void pop.offsetWidth; // animaties opnieuw starten
