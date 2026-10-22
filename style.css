@@ -999,6 +999,11 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
 .filter-checkbox--kids input[type="checkbox"] {
   accent-color: var(--accent);
 }
+/* Vinkjes in de filters: vakje en tekst verticaal gecentreerd (de algemene
+   .filter-group label-regel maakte er een blok van met marge eronder) */
+.filter-group .filter-checkbox { display: flex; align-items: center; margin-bottom: 0; line-height: 1.2; }
+.filter-group .filter-checkbox input[type="checkbox"] { margin: 0; flex-shrink: 0; }
+.filter-group .filter-checkbox--kids { padding: 6px 8px; }
 
 /* Active filter chips */
 .filter-chips {
