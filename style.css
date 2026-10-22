@@ -733,9 +733,10 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   border-bottom: none; /* geen lijn onder de banner op de agenda */
   background-position: center 88%; /* Banner3a: onderbenen en schoenen op het heidepad */
 }
-/* Agenda op mobiel: lagere banner, zodat de kalender en evenementen eerder in beeld zijn */
+/* Mobiel: alle banners lager, zodat de inhoud eerder in beeld is */
 @media (max-width: 768px) {
-  .page-header--agenda { height: 210px; }
+  .hero,
+  .page-header--photo { height: 210px; }
 }
 /* Trainingsschema's: Banner4, uitsnede op sokken en schoenen */
 .page-header--training { background-position: center 66%; }

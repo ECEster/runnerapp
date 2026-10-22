@@ -268,3 +268,7 @@
   .kids-cards-grid { grid-template-columns: 1fr; }
   .kids-hero { padding: 0 1rem; }
 }
+/* Mobiel: banner even laag als op de andere pagina's */
+@media (max-width: 768px) {
+  .kids-hero { height: 210px; }
+}
