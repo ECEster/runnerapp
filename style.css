@@ -761,6 +761,8 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   transition: color var(--transition);
 }
 .footer__links a:hover { color: var(--white); }
+.footer__login { display: inline-flex; align-items: center; gap: 0.4rem; }
+.footer__shoe { width: 18px; height: 18px; flex-shrink: 0; }
 .footer__copy {
   font-size: 0.8rem;
   color: rgba(255,255,255,0.38);
