@@ -283,7 +283,8 @@ p:last-child { margin-bottom: 0; }
 .nav__login::after { display: none !important; }
 /* In de menubalk: zelfde maat en hoogte als de taalknop ernaast */
 .nav__links a.nav__login { top: 0; font-size: 0.82rem; font-weight: 600; padding: 0.35rem 0.7rem; margin-left: 0.5rem; border-left: 1px solid #C4B57B; }
-.nav__login svg { width: 18px; height: 18px; }
+.nav__login-icon { height: 22px; width: auto; display: block; }
+.nav__links > .nav__login, .nav__links > .nav__lang { flex-shrink: 0; }
 .nav__login:hover { background: rgba(196,181,123,0.15); }
 .nav__mobile .nav__login { display: inline-flex; padding: 0.4rem 0.8rem; margin-right: 0.5rem; border-bottom: 1px solid #C4B57B; }
 .nav__mobile .nav__login:hover { padding-left: 0.8rem; }
@@ -2113,4 +2114,11 @@ body.page-overons { background: var(--white); }
   .mr-login__side { padding: 0; display: block; position: relative; z-index: 2; margin: -84px 16px 36px; }
   .mr-login__card { max-width: none; background: var(--white); border-radius: 18px; border-top: 4px solid #C4B57B; padding: 26px 20px 24px; box-shadow: 0 30px 60px -24px rgba(17,24,39,.45), 0 2px 6px rgba(17,24,39,.06); }
   .mr-login__head { text-align: center; }
+}
+
+/* Smallere schermen (tablet, kleine laptop): het volledige menu past niet meer naast het logo,
+   dus net als op de telefoon het uitklapmenu */
+@media (max-width: 1180px) {
+  .nav__links { display: none; }
+  .nav__hamburger { display: flex; }
 }
