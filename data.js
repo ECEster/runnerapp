@@ -361,10 +361,11 @@ var FAV_IDS = [];
 
 function isFav(id) { return FAV_IDS.indexOf(id) !== -1; }
 
-function bookmarkButton(ev) {
+// extraCls: bv. 'bookmark-btn--inline' voor de kleine knop achter een naam (dagoverzicht)
+function bookmarkButton(ev, extraCls) {
   var on = isFav(ev.id);
   var label = t(on ? 'bookmark_remove' : 'bookmark_add');
-  return '<button type="button" class="bookmark-btn' + (on ? ' is-saved' : '') + '" data-fav-id="' + ev.id + '"' +
+  return '<button type="button" class="bookmark-btn' + (extraCls ? ' ' + extraCls : '') + (on ? ' is-saved' : '') + '" data-fav-id="' + ev.id + '"' +
     ' aria-pressed="' + on + '" aria-label="' + label + '" title="' + label + '"' +
     ' onclick="toggleBookmark(event, ' + ev.id + ')">' + BOOKMARK_SVG + '</button>';
 }

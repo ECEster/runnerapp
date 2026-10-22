@@ -443,7 +443,7 @@ function openDayPanel(year, month, day) {
   document.getElementById('day-panel-list').innerHTML = evs.map(function(ev){
     var name = lang==='en'?ev.name_en:ev.name_nl;
     return '<div style="display:flex;align-items:center;gap:1rem;padding:0.6rem 0;border-bottom:1px solid var(--surface2)">'+
-      '<a class="day-panel__name" style="flex:1" href="'+eventUrl(ev)+'">'+name+'</a>'+
+      '<span class="day-panel__namewrap" style="flex:1"><a class="day-panel__name" href="'+eventUrl(ev)+'">'+name+'</a>'+bookmarkButton(ev, 'bookmark-btn--inline')+'</span>'+
       '<span style="color:var(--mid);font-size:0.82rem">'+ev.city+'</span>'+
       (ev.registration_url ? '<a href="' + ev.registration_url + '" class="btn btn--ghost btn--sm" target="_blank" rel="noopener">'+t('meer_info')+'</a>' : '')+
     '</div>';

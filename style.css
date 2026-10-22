@@ -1290,7 +1290,12 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
   padding: 0.6rem 0;
   border-bottom: 1px solid var(--surface2);
 }
-.day-panel__name { font-weight: 600; flex: 1 1 160px; min-width: 0; overflow-wrap: anywhere; color: var(--dark); text-decoration: none; }
+.day-panel__namewrap { display: flex; align-items: center; gap: 0.5rem; flex: 1 1 160px; min-width: 0; }
+.day-panel__name { font-weight: 600; min-width: 0; overflow-wrap: anywhere; color: var(--dark); text-decoration: none; }
+/* Kleine bladwijzer direct achter de naam */
+.bookmark-btn.bookmark-btn--inline { position: static; width: 28px; height: 28px; flex-shrink: 0; background: var(--surface2); box-shadow: none; }
+.bookmark-btn.bookmark-btn--inline svg { width: 15px; height: 15px; }
+.bookmark-btn.bookmark-btn--inline.is-saved { background: #2A3B5E; color: #C4B57B; }
 a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px; }
 /* Meer info-knoppen altijd tegen de rechterkant, zodat ze onder elkaar uitgelijnd staan */
 .day-panel__item .btn { margin-left: auto; white-space: nowrap; }
@@ -1301,7 +1306,7 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
 @media (min-width: 601px) {
   .day-panel__item { display: grid; grid-template-columns: auto minmax(0, 1fr) 150px auto; }
   .day-panel__item .event-card__badge { grid-column: 1; }
-  .day-panel__name { grid-column: 2; }
+  .day-panel__namewrap { grid-column: 2; }
   .day-panel__city { grid-column: 3; }
   .day-panel__item .btn { grid-column: 4; }
 }
@@ -1309,7 +1314,7 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
 @media (max-width: 600px) {
   .day-panel__item { display: grid; grid-template-columns: auto 1fr auto; }
   .day-panel__item .event-card__badge { grid-column: 1; grid-row: 1; justify-self: start; }
-  .day-panel__name { grid-column: 2 / 4; grid-row: 1; }
+  .day-panel__namewrap { grid-column: 2 / 4; grid-row: 1; }
   .day-panel__city { grid-column: 1 / 3; grid-row: 2; }
   .day-panel__item .btn { grid-column: 3; grid-row: 2; }
 }
