@@ -1263,6 +1263,8 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
 /* Meer info-knoppen altijd tegen de rechterkant, zodat ze onder elkaar uitgelijnd staan */
 .day-panel__item .btn { margin-left: auto; white-space: nowrap; }
 .day-panel__city { color: var(--mid); font-size: 0.82rem; }
+/* Dagoverzicht: alle soort-badges groenbeige met donkere tekst */
+.day-panel .day-panel__item .event-card__badge { background: #C4B57B; color: var(--dark); min-width: 72px; text-align: center; } /* vaste breedte: namen staan recht onder elkaar */
 /* Telefoon: soort + naam op de eerste regel, plaats + knop op de tweede */
 @media (max-width: 600px) {
   .day-panel__item { display: grid; grid-template-columns: auto 1fr auto; }
