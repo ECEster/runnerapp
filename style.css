@@ -481,10 +481,12 @@ p:last-child { margin-bottom: 0; }
   left: 10px;
   padding: 3px 10px;
   border-radius: 20px;
-  font-size: 0.72rem;
+  font-family: var(--font-head); /* Montserrat is in 700 geladen; Inter niet (werd nep-vet) */
+  font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
   color: var(--white);
 }
 .event-card__photo-badges {
@@ -1265,6 +1267,14 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
 .day-panel__city { color: var(--mid); font-size: 0.82rem; }
 /* Dagoverzicht: alle soort-badges groenbeige met donkere tekst */
 .day-panel .day-panel__item .event-card__badge { background: #C4B57B; color: var(--dark); min-width: 72px; text-align: center; } /* vaste breedte: namen staan recht onder elkaar */
+/* Computer: vaste kolommen (badge | naam | plaats | knop), zodat namen en plaatsen recht onder elkaar staan */
+@media (min-width: 601px) {
+  .day-panel__item { display: grid; grid-template-columns: auto minmax(0, 1fr) 150px auto; }
+  .day-panel__item .event-card__badge { grid-column: 1; }
+  .day-panel__name { grid-column: 2; }
+  .day-panel__city { grid-column: 3; }
+  .day-panel__item .btn { grid-column: 4; }
+}
 /* Telefoon: soort + naam op de eerste regel, plaats + knop op de tweede */
 @media (max-width: 600px) {
   .day-panel__item { display: grid; grid-template-columns: auto 1fr auto; }
