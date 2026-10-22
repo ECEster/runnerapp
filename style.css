@@ -756,6 +756,10 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 .page-header--regio-west { background-position: center 15%; }
 /* Zuid: BannerZuid (4:1), uitsnede iets naar beneden zodat de voeten in beeld blijven */
 .page-header--regio-zuid { background-position: center 70%; }
+/* Zuid op mobiel: uitsnede naar rechts, zodat loper en kaart allebei in beeld zijn */
+@media (max-width: 768px) {
+  .page-header--regio-zuid { background-position: 64% center; }
+}
 /* Noord: altijd de volle hoogte (beide voeten), zijkanten mogen wegvallen */
 .page-header--regio-noord { background-size: auto 100%; background-position: center; background-color: #6E7F86; }
 /* Oost: hele afbeelding (met de kaart) in beeld, met stroken in de randkleur */
