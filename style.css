@@ -1850,6 +1850,9 @@ body.page-overons { background: var(--white); }
   .agenda-layout > .filter-toggle { width: 100%; justify-self: stretch; }
   .regio-nav-row { grid-template-columns: 1fr; gap: 0; }
   .regio-nav-row > .regio-nav-spacer { display: none; }
+  /* Twee kolommen; pijltjes links uitgelijnd zodat Zuid onder Noord en West onder Oost staat */
+  .regio-nav { display: grid; grid-template-columns: 1fr 1fr; }
+  .regio-nav__btn { justify-content: flex-start; padding-left: calc(50% - 2.7rem); }
 
   .about-grid { grid-template-columns: 1fr; }
   .about-grid__img { display: none; }
