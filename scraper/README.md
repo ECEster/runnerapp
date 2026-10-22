@@ -361,6 +361,28 @@ Deze punten staan nog open:
   https://claude.ai/artifact/MC1aqVfJLBhDzNswtjYZ5U en kaartopties
   https://claude.ai/artifact/AumUb5VnqPv3LrQaB9qX6p.
 
+## Herinnering voor de volgende sessie: sitemap en evenementpagina's (2026-10-22)
+
+Op 22 oktober 2026 zijn de evenementpagina's vindbaar gemaakt: kaartjes en het dagoverzicht
+linken naar `evenement.html?id=…`, met een kruimelpad (Home › Agenda › evenement) en
+BreadcrumbList-gegevens voor Google. Nog te doen:
+
+1. **Sitemap controleren.** `/sitemap.xml` is een Netlify-functie
+   (`netlify/functions/sitemap.mjs`) die bij elk bezoek de gepubliceerde evenementen uit
+   Supabase haalt. Lokaal gaf hij 108 adressen (12 vaste pagina's + 96 evenementen); op
+   Netlify is hij nog niet getest. Open runningnederland.nl/sitemap.xml en kijk of er een
+   lijst met adressen staat. `robots.txt` verwijst ernaar en houdt de admin-pagina's buiten
+   Google.
+2. **Aanmelden bij Google Search Console** (search.google.com/search-console): site toevoegen
+   als dat nog niet is gedaan, en bij *Sitemaps* `sitemap.xml` invullen. Google haalt de
+   evenementpagina's daarna binnen enkele dagen tot weken op.
+3. **Voorbeeldfoto's op de evenementpagina's.** Onder "Foto's" staan vaste voorbeeldfoto's
+   (`GALLERY_IMGS` in `evenement.html`) die niet bij het evenement horen. Nog beslissen:
+   weghalen of vervangen.
+
+Let op: `images/trail.jpg` is sinds 22 oktober ook de foto van de inlogpagina van Mijn Runs.
+Wie hem vervangt (zie de nieuwe trailfoto hierboven), verandert dus ook die pagina.
+
 ## Coördinaten (postcodefilter)
 
 Events hebben `lat`/`lng` (migratie `0006_add_lat_lng.sql`) voor het postcode/straal-filter.
