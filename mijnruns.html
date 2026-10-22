@@ -340,6 +340,7 @@ async function refreshRuns() {
 async function refreshFavorites() {
   try {
     cachedFavIds = await getFavoriteIds();
+    FAV_IDS = cachedFavIds.slice(); // bladwijzers op de kaartjes in dezelfde stand
   } catch (err) {
     console.warn('Kon favorieten niet laden:', err.message);
     cachedFavIds = [];

@@ -348,10 +348,78 @@ function revealOnScroll(cards) {
 // Kaartjes linken naar de eigen evenementpagina (goed voor bezoekers én Google);
 // daar staat de knop "Inschrijven" naar de site van de organisator.
 function eventUrl(ev) { return 'evenement.html?id=' + ev.id; }
+// De bladwijzerknop staat náást de link (in een wrapper), niet erin: een knop
+// binnen een link is ongeldige HTML en lastig met toetsenbord en schermlezer.
 function cardOpen(cls, ev) {
-  return '<a class="'+cls+'" href="'+eventUrl(ev)+'">';
+  return '<div class="card-wrap"><a class="'+cls+'" href="'+eventUrl(ev)+'">';
 }
-function cardClose(ev) { return '</a>'; }
+function cardClose(ev) { return '</a>' + bookmarkButton(ev) + '</div>'; }
+
+// ── Opslaan in Mijn Runs (bladwijzer) ──────────────────────────────────
+var BOOKMARK_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h11v17l-5.5-4.6-5.5 4.6z"/></svg>';
+var FAV_IDS = [];
+
+function isFav(id) { return FAV_IDS.indexOf(id) !== -1; }
+
+function bookmarkButton(ev) {
+  var on = isFav(ev.id);
+  var label = t(on ? 'bookmark_remove' : 'bookmark_add');
+  return '<button type="button" class="bookmark-btn' + (on ? ' is-saved' : '') + '" data-fav-id="' + ev.id + '"' +
+    ' aria-pressed="' + on + '" aria-label="' + label + '" title="' + label + '"' +
+    ' onclick="toggleBookmark(event, ' + ev.id + ')">' + BOOKMARK_SVG + '</button>';
+}
+
+// Zet alle bladwijzers op de pagina in de juiste stand (ook de knop op de evenementpagina)
+function markBookmarks() {
+  document.querySelectorAll('[data-fav-id]').forEach(function(btn) {
+    var on = isFav(parseInt(btn.getAttribute('data-fav-id'), 10));
+    var label = t(on ? 'bookmark_remove' : 'bookmark_add');
+    btn.classList.toggle('is-saved', on);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.setAttribute('aria-label', label);
+    btn.title = label;
+    var text = btn.querySelector('.bookmark-btn__label');
+    if (text) text.textContent = t(on ? 'bookmark_saved' : 'bookmark_save');
+  });
+}
+
+async function loadFavIds() {
+  if (typeof getCurrentUser !== 'function') return;
+  try {
+    var user = await getCurrentUser();
+    if (!user) return;
+    FAV_IDS = await getFavoriteIds();
+    markBookmarks();
+  } catch (err) {
+    console.warn('Kon opgeslagen evenementen niet laden:', err.message);
+  }
+}
+
+async function toggleBookmark(e, id) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  var user = await getCurrentUser().catch(function() { return null; });
+  if (!user) {
+    alert(t('login_required_fav'));
+    window.location.href = 'mijnruns.html';
+    return;
+  }
+  try {
+    if (isFav(id)) {
+      await removeFavoriteDB(id);
+      FAV_IDS = FAV_IDS.filter(function(x) { return x !== id; });
+    } else {
+      await addFavorite(id);
+      FAV_IDS.push(id);
+    }
+    markBookmarks();
+    if (typeof refreshFavorites === 'function') refreshFavorites(); // Mijn Runs: lijst bijwerken
+  } catch (err) {
+    alert(err.message || t('auth_error_generic'));
+  }
+}
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadFavIds);
+else loadFavIds();
 
 // Het filterblok staat standaard ingeklapt achter een knop "Zoeken" (met het
 // aantal actieve filters erachter). Op de telefoon klapt het na "Zoeken" weer

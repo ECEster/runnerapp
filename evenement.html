@@ -120,8 +120,8 @@ function renderEvent(ev, lang) {
         '<p class="event-detail__desc">'+desc+'</p>'+
         atletiekHtml+
         '<div style="margin-top:1.5rem;display:flex;gap:0.75rem;flex-wrap:wrap">'+
-          '<button class="btn btn--ghost btn--sm" onclick="toggleFavorite('+ev.id+')" id="fav-btn">'+
-            '🤍 Opslaan'+
+          '<button type="button" class="btn btn--ghost btn--sm bookmark-inline" data-fav-id="'+ev.id+'" aria-pressed="false" onclick="toggleBookmark(event, '+ev.id+')">'+
+            BOOKMARK_SVG+'<span class="bookmark-btn__label">'+t('bookmark_save')+'</span>'+
           '</button>'+
           '<a href="https://www.facebook.com/sharer/sharer.php?u='+shareUrl+'" target="_blank" class="btn btn--share btn--share-fb">'+
             '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.269h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>'+
@@ -197,45 +197,6 @@ function copyShareLink(url, btn) {
   });
 }
 
-async function toggleFavorite(id) {
-  var user = await getCurrentUser().catch(function(){ return null; });
-  if (!user) {
-    alert(t('login_required_fav'));
-    window.location.href = 'mijnruns.html';
-    return;
-  }
-  var btn = document.getElementById('fav-btn');
-  var currentlyFav = btn && btn.dataset.fav === '1';
-  try {
-    if (currentlyFav) {
-      await removeFavoriteDB(id);
-      if (btn) { btn.textContent = '🤍 Opslaan'; btn.dataset.fav = '0'; }
-    } else {
-      await addFavorite(id);
-      if (btn) { btn.textContent = '❤️ Opgeslagen'; btn.dataset.fav = '1'; }
-    }
-  } catch (err) {
-    alert(err.message || t('auth_error_generic'));
-  }
-}
-
-// Reflects the real favorite state once we know whether the visitor is logged in
-async function refreshFavButton(id) {
-  var btn = document.getElementById('fav-btn');
-  if (!btn) return;
-  var user = await getCurrentUser().catch(function(){ return null; });
-  if (!user) return;
-  try {
-    var favIds = await getFavoriteIds();
-    if (favIds.indexOf(id) !== -1) {
-      btn.textContent = '❤️ Opgeslagen';
-      btn.dataset.fav = '1';
-    }
-  } catch (err) {
-    console.warn('Kon favorietstatus niet laden:', err.message);
-  }
-}
-
 function renderNotFound() {
   return '<div class="event-detail">'+renderBreadcrumbs(null)+
     '<div class="no-events-msg"><div class="no-events-msg__icon">🏃</div><h3>Evenement niet gevonden</h3><p>Dit evenement bestaat niet of is verwijderd.</p></div></div>';
@@ -270,7 +231,7 @@ async function init() {
     root.innerHTML = renderEvent(ev, lang);
     document.title = (lang==='en' ? ev.name_en : ev.name_nl) + ' — RunningNederland.nl';
     setBreadcrumbJsonLd(lang==='en' ? ev.name_en : ev.name_nl);
-    refreshFavButton(ev.id);
+    markBookmarks(); // stand van de bladwijzer (FAV_IDS komt uit data.js)
   } else {
     root.innerHTML = renderNotFound();
   }

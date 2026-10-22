@@ -440,7 +440,8 @@ p:last-child { margin-bottom: 0; }
   display: flex;
   flex-direction: column;
 }
-.event-card:hover {
+.event-card:hover,
+.card-wrap:hover > .event-card {
   transform: translateY(-8px);
   box-shadow: var(--shadow-lg);
 }
@@ -466,7 +467,33 @@ p:last-child { margin-bottom: 0; }
   object-fit: cover;
   transition: transform 0.4s ease;
 }
-.event-card:hover .event-card__img img { transform: scale(1.05); }
+.event-card:hover .event-card__img img,
+.card-wrap:hover > .event-card .event-card__img img { transform: scale(1.05); }
+
+/* Kaart + bladwijzer: de knop staat rechtsboven op de foto en beweegt mee met de kaart */
+.card-wrap { position: relative; display: flex; min-width: 0; }
+.card-wrap > a { flex: 1; min-width: 0; }
+.bookmark-btn {
+  position: absolute; top: 10px; right: 10px; z-index: 2;
+  width: 36px; height: 36px; border-radius: 50%; border: 0;
+  background: rgba(255,255,255,0.94); color: var(--dark);
+  display: grid; place-items: center; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(17,24,39,0.22);
+  transition: transform var(--transition), background 0.15s, color 0.15s, opacity 0.6s ease;
+}
+.bookmark-btn svg, .bookmark-inline svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; }
+.bookmark-btn.is-saved { background: var(--dark); color: #C4B57B; }
+.bookmark-btn.is-saved svg, .bookmark-inline.is-saved svg { fill: currentColor; }
+.bookmark-btn:hover { transform: scale(1.08); }
+.card-wrap:hover > .event-card ~ .bookmark-btn { transform: translateY(-8px); }
+.card-wrap:hover > .event-card ~ .bookmark-btn:hover { transform: translateY(-8px) scale(1.08); }
+.card-wrap:hover > .kids-event-card ~ .bookmark-btn { transform: translateY(-4px); }
+.bookmark-btn:focus-visible, .bookmark-inline:focus-visible { outline: 2px solid #C4B57B; outline-offset: 2px; }
+/* Tijdens het inschuiven van de kaart (revealOnScroll) de knop nog niet tonen */
+.card-wrap:has(> .reveal:not(.reveal--in)) > .bookmark-btn { opacity: 0; }
+/* Evenementpagina: knop met tekst */
+.bookmark-inline { display: inline-flex; align-items: center; gap: 0.4rem; }
+.bookmark-inline svg { width: 16px; height: 16px; }
 .event-card__img img[src*="gemengd-parcours"] { object-position: center 35%; }
 .event-card__img img[src*="wegevenement"] { object-position: center 25%; }
 .event-card__img img[src*="wegevenement3"] { object-position: 70% 80%; } /* schoenen staan rechtsonder */
