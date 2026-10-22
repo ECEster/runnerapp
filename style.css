@@ -325,7 +325,17 @@ p:last-child { margin-bottom: 0; }
   transition: all var(--transition);
 }
 /* Pagina waar je bent: wit, met een streepje onder de tekst */
-.nav__mobile a.active { color: var(--white); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+/* Actieve pagina: kort streepje gecentreerd onder de titel (grid-kolom zo breed als de tekst) */
+.nav__mobile a.active { color: var(--white); display: grid; grid-template-columns: max-content; row-gap: 5px; }
+.nav__mobile a.active::after {
+  content: "";
+  justify-self: center;
+  margin-bottom: -7px; /* rij even hoog als de andere menu-items */
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+}
 .nav__mobile a:hover { color: var(--white); background: rgba(255,255,255,0.06); padding-left: 1.9rem; }
 .nav__mobile-lang {
   display: block;
