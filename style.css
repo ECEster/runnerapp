@@ -1057,16 +1057,20 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
   margin-bottom: 1.5rem;
 }
 .calendar-nav {
-  display: flex;
+  /* Drie kolommen: maandnaam precies in het midden, ook al zijn de knoppen
+     ongelijk breed */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
+  gap: 0.5rem;
   padding: 0.6rem 1rem;
   background: var(--dark);
   color: var(--white);
 }
 .calendar-nav h3 {
   font-family: 'Montserrat', var(--font-body); /* lettertype van het logo */
-  font-size: 1.1rem;
+  text-align: center;
+  font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   color: var(--white);
@@ -1085,6 +1089,8 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
   transition: all var(--transition);
 }
 .calendar-nav button:hover { background: rgba(96,130,200,0.38); }
+.calendar-nav button:first-child { justify-self: start; }
+.calendar-nav button:last-child { justify-self: end; }
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
