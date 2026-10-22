@@ -119,7 +119,7 @@
       <div class="run-cal-wrap">
         <div id="run-calendar"></div>
       </div>
-      <p class="run-cal-tip" data-i18n="run_cal_click">Klik op een dag om de datum in te vullen.</p>
+      <p class="run-cal-tip"><span data-i18n="run_cal_click_or">Klik op een dag om de datum in te vullen of sla evenementen op via de </span><a href="agenda.html" data-i18n="no_favorites_link">agenda</a>.</p>
     </div>
 
     <!-- Favorites -->
@@ -502,13 +502,13 @@ function renderFavorites() {
   var lang = getLang();
   var el = document.getElementById('favorites-list');
   if (!cachedFavIds.length) {
-    el.innerHTML = '<div class="empty-state" style="grid-column:1/-1">'+t('favorites_empty')+'<div style="margin-top:0.25rem">'+t('no_favorites')+'<a href="agenda.html" style="color:var(--dark);font-weight:600;text-decoration:underline;text-underline-offset:3px">'+t('no_favorites_link')+'</a></div></div>';
+    el.innerHTML = '<div class="empty-state" style="grid-column:1/-1">'+t('favorites_empty')+'</div>';
     return;
   }
   var todayStr = new Date().toISOString().split('T')[0];
   var favEvents = EVENTS.filter(function(ev){ return cachedFavIds.indexOf(ev.id) !== -1 && ev.date >= todayStr; });
   if (!favEvents.length) {
-    el.innerHTML = '<div class="empty-state" style="grid-column:1/-1">'+t('favorites_empty')+'<div style="margin-top:0.25rem">'+t('no_favorites')+'<a href="agenda.html" style="color:var(--dark);font-weight:600;text-decoration:underline;text-underline-offset:3px">'+t('no_favorites_link')+'</a></div></div>';
+    el.innerHTML = '<div class="empty-state" style="grid-column:1/-1">'+t('favorites_empty')+'</div>';
     return;
   }
   el.innerHTML = favEvents.map(function(ev) {
