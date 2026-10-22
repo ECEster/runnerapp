@@ -1943,6 +1943,8 @@ body.page-overons { background: var(--white); }
 .mr-login__pw svg { width: 20px; height: 20px; }
 .mr-login__pw .eye-closed, .mr-login__pw button.is-shown .eye-open { display: none; }
 .mr-login__pw button.is-shown .eye-closed { display: block; }
+.mr-login__signup-only { display: none; }
+.mr-login.is-signup .mr-login__signup-only { display: block; }
 .mr-login__msg { padding: 0.6rem 0.9rem; border-radius: 8px; font-size: 0.85rem; margin-top: 10px; }
 .mr-login__msg--err { background: #FEE2E2; color: #991B1B; }
 .mr-login__msg--ok { background: #DCFCE7; color: #166534; }

@@ -84,6 +84,8 @@
           <input type="password" id="a-pw" required minlength="6" placeholder="Minimaal 6 tekens" data-i18n-placeholder="mrl_pw_ph" autocomplete="current-password">
           <button type="button" id="pw-toggle" onclick="togglePw()" aria-label="Wachtwoord tonen" aria-pressed="false"><svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.9 17.9A10.4 10.4 0 0 1 12 19c-6.4 0-10-7-10-7a18.5 18.5 0 0 1 4.1-5.1M9.9 5.2A9.7 9.7 0 0 1 12 5c6.4 0 10 7 10 7a18.6 18.6 0 0 1-2.2 3.2M14.1 14.1a3 3 0 1 1-4.2-4.2"/><path d="M2 2l20 20"/></svg></button>
         </div>
+        <label for="a-pw2" class="mr-login__signup-only" data-i18n="mrl_pw2_label">Herhaal wachtwoord</label>
+        <input type="password" id="a-pw2" class="mr-login__signup-only" minlength="6" placeholder="Typ je wachtwoord nog een keer" data-i18n-placeholder="mrl_pw2_ph" autocomplete="new-password">
         <div id="auth-error" class="hidden mr-login__msg mr-login__msg--err"></div>
         <div id="auth-success" class="hidden mr-login__msg mr-login__msg--ok"></div>
         <button type="submit" class="mr-login__submit" id="auth-submit-btn" data-i18n="login_btn">Inloggen</button>
@@ -207,7 +209,12 @@ var calYear = new Date().getFullYear();
 var calMonth = new Date().getMonth();
 
 function setAuthMode(mode) {
+  if (mode === authMode) return;
   authMode = mode;
+  // Leeg beginnen: geen (automatisch ingevulde) inloggegevens bij registreren
+  document.getElementById('auth-form').reset();
+  document.getElementById('auth-success').classList.add('hidden');
+  setPwVisible(false);
   updateAuthModeUI();
 }
 
@@ -223,12 +230,17 @@ function updateAuthModeUI() {
   document.getElementById('seg-login').setAttribute('aria-pressed', signup ? 'false' : 'true');
   document.getElementById('seg-signup').setAttribute('aria-pressed', signup ? 'true' : 'false');
   document.getElementById('a-pw').setAttribute('autocomplete', signup ? 'new-password' : 'current-password');
+  document.getElementById('a-email').setAttribute('autocomplete', signup ? 'off' : 'email');
+  document.getElementById('a-pw2').required = signup;
+  document.getElementById('login-gate').classList.toggle('is-signup', signup);
 }
 
 function togglePw() {
-  var input = document.getElementById('a-pw');
-  var show = input.type === 'password';
-  input.type = show ? 'text' : 'password';
+  setPwVisible(document.getElementById('a-pw').type === 'password');
+}
+
+function setPwVisible(show) {
+  ['a-pw', 'a-pw2'].forEach(function(id) { document.getElementById(id).type = show ? 'text' : 'password'; });
   var btn = document.getElementById('pw-toggle');
   btn.classList.toggle('is-shown', show);
   btn.setAttribute('aria-pressed', show ? 'true' : 'false');
@@ -244,6 +256,12 @@ async function submitAuth(e) {
   var btn = document.getElementById('auth-submit-btn');
   errEl.classList.add('hidden');
   okEl.classList.add('hidden');
+  if (authMode === 'signup' && pw !== document.getElementById('a-pw2').value) {
+    errEl.textContent = t('mrl_pw_mismatch');
+    errEl.classList.remove('hidden');
+    document.getElementById('a-pw2').focus();
+    return;
+  }
   var origText = btn.textContent;
   btn.disabled = true;
   btn.textContent = t('loading');
