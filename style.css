@@ -1715,8 +1715,8 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
 .run-cal-today .run-cal-num { background: var(--accent); color: #fff; border-radius: 50%; width: 22px; height: 22px; line-height: 22px; display: inline-block; font-size: 0.78rem; }
 .run-cal-has-run { background: #E6EBF5; }
 /* Aantal opgeslagen runs (bladwijzers) op die dag */
-.run-cal-fav { display: inline-flex; align-items: center; gap: 2px; margin-top: 2px; font: 700 0.66rem/1 var(--font-head); color: #2A3B5E; }
-.run-cal-fav svg { width: 11px; height: 11px; fill: #C4B57B; stroke: #2A3B5E; stroke-width: 2; stroke-linejoin: round; }
+.run-cal-fav { display: inline-flex; align-items: center; gap: 3px; margin-top: 2px; font: 700 0.8rem/1 var(--font-head); color: #2A3B5E; }
+.run-cal-fav svg { width: 15px; height: 15px; fill: #C4B57B; stroke: #2A3B5E; stroke-width: 2; stroke-linejoin: round; }
 .run-cal-fav { transition: transform 0.2s ease, filter 0.2s ease; position: relative; border: 0; background: none; padding: 2px 3px; cursor: pointer; border-radius: 6px; }
 .run-cal-fav:focus-visible { outline: 2px solid #C4B57B; outline-offset: 1px; }
 .run-cal-fav:hover, .run-cal-fav:focus-visible { transform: translateY(-4px) scale(1.35); filter: drop-shadow(0 3px 3px rgba(17,24,39,0.28)); z-index: 1; }
@@ -1727,8 +1727,8 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
 .fav-pop__line { fill: none; stroke: #2A3B5E; stroke-width: 1.25; stroke-dasharray: 100; stroke-dashoffset: 100; }
 .fav-pop__dot { fill: #2A3B5E; opacity: 0; }
 .fav-pop__dot--end { fill: #C4B57B; stroke: #2A3B5E; stroke-width: 1; }
-.fav-pop.is-open .fav-pop__line { animation: favLine 0.32s ease-out forwards; }
-.fav-pop.is-open .fav-pop__dot { animation: favDot 0.15s ease-out forwards; }
+.fav-pop.is-open .fav-pop__line { animation: favLine 0.14s ease-out forwards; }
+.fav-pop.is-open .fav-pop__dot { animation: favDot 0.08s ease-out forwards; }
 @keyframes favLine { to { stroke-dashoffset: 0; } }
 @keyframes favDot { to { opacity: 1; } }
 .fav-pop__card {
@@ -1736,7 +1736,7 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
   text-decoration: none; color: var(--dark); background: var(--white); border-radius: 8px; overflow: hidden;
   border-top: 2px solid #C4B57B; box-shadow: 0 12px 28px -10px rgba(17,24,39,0.45), 0 1px 3px rgba(17,24,39,0.1);
   opacity: 0; transform: translateY(10px) scale(0.94);
-  transition: opacity 0.22s ease, transform 0.25s cubic-bezier(.2,.7,.2,1);
+  transition: opacity 0.14s ease, transform 0.16s cubic-bezier(.2,.7,.2,1);
 }
 .fav-pop.is-below .fav-pop__card { transform: translateY(-10px) scale(0.94); }
 .fav-pop.is-open .fav-pop__card { opacity: 1; transform: none; }

@@ -447,7 +447,7 @@ function showFavPop(btn) {
 
   pop.innerHTML = '<svg class="fav-pop__lines" aria-hidden="true"></svg>' + evs.map(function(ev, i) {
     var name = lang === 'en' ? ev.name_en : ev.name_nl;
-    return '<a class="fav-pop__card" style="left:' + (i * (CARD_W + GAP)) + 'px;width:' + CARD_W + 'px;transition-delay:' + (0.22 + i * 0.07) + 's" href="' + eventUrl(ev) + '">' +
+    return '<a class="fav-pop__card" style="left:' + (i * (CARD_W + GAP)) + 'px;width:' + CARD_W + 'px;transition-delay:' + (0.09 + i * 0.03) + 's" href="' + eventUrl(ev) + '">' +
       '<img src="' + getEventImage(ev) + '" alt="">' +
       '<span class="fav-pop__name">' + name + '</span>' +
       '<span class="fav-pop__city">' + titleCase(ev.city) + '</span></a>';
@@ -477,9 +477,9 @@ function showFavPop(btn) {
   var html = '<circle class="fav-pop__dot" cx="' + axL + '" cy="' + baseY + '" r="2.5"/>';
   evs.forEach(function(ev, i) {
     var cx = i * (CARD_W + GAP) + CARD_W / 2;
-    html += '<polyline class="fav-pop__line" pathLength="100" style="animation-delay:' + (i * 0.05) + 's" points="' +
+    html += '<polyline class="fav-pop__line" pathLength="100" style="animation-delay:' + (i * 0.02) + 's" points="' +
       axL + ',' + baseY + ' ' + axL + ',' + stemY + ' ' + cx + ',' + cardY + '"/>' +
-      '<circle class="fav-pop__dot fav-pop__dot--end" style="animation-delay:' + (0.18 + i * 0.05) + 's" cx="' + cx + '" cy="' + cardY + '" r="2.5"/>';
+      '<circle class="fav-pop__dot fav-pop__dot--end" style="animation-delay:' + (0.08 + i * 0.02) + 's" cx="' + cx + '" cy="' + cardY + '" r="2.5"/>';
   });
   svg.innerHTML = html;
   void pop.offsetWidth; // animaties opnieuw starten
