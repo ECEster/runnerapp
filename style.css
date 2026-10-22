@@ -1261,7 +1261,8 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
   padding: 0.6rem 0;
   border-bottom: 1px solid var(--surface2);
 }
-.day-panel__name { font-weight: 600; flex: 1 1 160px; min-width: 0; overflow-wrap: anywhere; }
+.day-panel__name { font-weight: 600; flex: 1 1 160px; min-width: 0; overflow-wrap: anywhere; color: var(--dark); text-decoration: none; }
+a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px; }
 /* Meer info-knoppen altijd tegen de rechterkant, zodat ze onder elkaar uitgelijnd staan */
 .day-panel__item .btn { margin-left: auto; white-space: nowrap; }
 .day-panel__city { color: var(--mid); font-size: 0.82rem; }

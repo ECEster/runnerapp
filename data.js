@@ -345,12 +345,13 @@ function revealOnScroll(cards) {
 
 // Eventkaart als geheel klikbaar naar de website van het evenement (nieuw
 // tabblad). Zonder registratielink blijft het een gewone, niet-klikbare kaart.
+// Kaartjes linken naar de eigen evenementpagina (goed voor bezoekers én Google);
+// daar staat de knop "Inschrijven" naar de site van de organisator.
+function eventUrl(ev) { return 'evenement.html?id=' + ev.id; }
 function cardOpen(cls, ev) {
-  return ev.registration_url
-    ? '<a class="'+cls+'" href="'+ev.registration_url+'" target="_blank" rel="noopener">'
-    : '<div class="'+cls+'">';
+  return '<a class="'+cls+'" href="'+eventUrl(ev)+'">';
 }
-function cardClose(ev) { return ev.registration_url ? '</a>' : '</div>'; }
+function cardClose(ev) { return '</a>'; }
 
 // Het filterblok staat standaard ingeklapt achter een knop "Zoeken" (met het
 // aantal actieve filters erachter). Op de telefoon klapt het na "Zoeken" weer
