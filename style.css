@@ -1481,8 +1481,8 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
   transition: transform var(--transition), border-color var(--transition), background var(--transition);
 }
 .tab-tile:hover { transform: translateY(-2px); border-color: #2A3B5E; }
-.tab-tile b { font: 800 1.2rem/1 var(--font-head); color: var(--dark); letter-spacing: -0.01em; white-space: nowrap; }
-.tab-tile b small { font-size: 0.62em; font-weight: 700; margin-left: 2px; }
+.tab-tile b { font: 600 1.15rem/1 var(--font-head); color: #2A3B5E; letter-spacing: 0; white-space: nowrap; } /* zachter: halfvet en donkerblauw i.p.v. extra vet zwart */
+.tab-tile b small { font-size: 0.66em; font-weight: 500; margin-left: 3px; }
 .tab-tile i { font-style: normal; font-size: 0.7rem; font-weight: 500; color: var(--mid); white-space: nowrap; }
 .tab-tile.active, .page-training .tab-tile.active { background: #2A3B5E; border-color: #2A3B5E; } /* donkerblauw, zoals de kalenderknoppen */
 .tab-tile.active b { color: #C4B57B; }
