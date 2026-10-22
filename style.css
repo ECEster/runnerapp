@@ -1718,9 +1718,9 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
 /* Aantal opgeslagen runs (bladwijzers) op die dag */
 .run-cal-fav { display: inline-flex; align-items: center; gap: 2px; margin-top: 2px; font: 700 0.66rem/1 var(--font-head); color: #2A3B5E; }
 .run-cal-fav svg { width: 11px; height: 11px; fill: #C4B57B; stroke: #2A3B5E; stroke-width: 2; stroke-linejoin: round; }
-/* Bij hoveren over een dag schuiven icoon en getal iets omhoog */
-.run-cal-fav { transition: transform 0.2s ease; }
-.run-cal-day:hover .run-cal-fav { transform: translateY(-4px); }
+.run-cal-fav { transition: transform 0.2s ease, filter 0.2s ease; position: relative; }
+/* Bij hoveren: groter en naar voren, met een schaduwtje eronder */
+.run-cal-day:hover .run-cal-fav { transform: translateY(-4px) scale(1.35); filter: drop-shadow(0 3px 3px rgba(17,24,39,0.28)); z-index: 1; }
 @media (prefers-reduced-motion: reduce) { .run-cal-fav { transition: none; } }
 .run-cal-has-run:hover { background: #D3DCEE; }
 .run-cal-has-run.run-cal-today { background: #E6EBF5; }
