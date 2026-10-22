@@ -261,9 +261,10 @@ p:last-child { margin-bottom: 0; }
   background: currentColor;
 }
 .nav__lang {
-  background: rgba(255,255,255,0.12);
-  color: var(--white);
-  border: 1px solid rgba(255,255,255,0.25);
+  /* Groenbeige van de weekdagenrij in de kalender */
+  background: #C4B57B;
+  color: var(--dark);
+  border: 1px solid #C4B57B;
   border-radius: 5px;
   padding: 0.35rem 0.7rem;
   font-size: 0.82rem;
@@ -271,7 +272,7 @@ p:last-child { margin-bottom: 0; }
   margin-left: 0.5rem;
   transition: all var(--transition);
 }
-.nav__lang:hover { background: rgba(255,255,255,0.22); }
+.nav__lang:hover { background: #D4C793; border-color: #D4C793; }
 .nav__admin { font-size: 0.72rem !important; opacity: 0.5; letter-spacing: 0.02em; }
 .nav__admin:hover { opacity: 0.85 !important; }
 .nav__hamburger {
@@ -302,7 +303,15 @@ p:last-child { margin-bottom: 0; }
   background: var(--dark2);
   border-top: 1px solid rgba(255,255,255,0.07);
   border-radius: 0 0 0 var(--radius-lg);
-  box-shadow: 0 14px 36px rgba(0,0,0,0.5), 0 4px 10px rgba(0,0,0,0.3);
+  /* Diepte: brede zachte schaduw, korte donkere schaduw dichtbij, en een
+     dun lichtrandje zodat het paneel ook op de donkere banner loskomt */
+  box-shadow:
+    0 28px 60px rgba(0,0,0,0.55),
+    0 10px 22px rgba(0,0,0,0.40),
+    -8px 0 24px rgba(0,0,0,0.30),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  border-left: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
   overflow: hidden;
 }
 .nav__mobile.open { display: block; }
@@ -320,6 +329,12 @@ p:last-child { margin-bottom: 0; }
   display: block;
   margin: 0.75rem 1.5rem 1rem;
 }
+.nav__mobile-lang .btn {
+  background: #C4B57B;
+  color: var(--dark);
+  border: 1px solid #C4B57B;
+}
+.nav__mobile-lang .btn:hover { background: #D4C793; border-color: #D4C793; }
 
 /* ── Hero ────────────────────────────────────────────────────── */
 .hero {
@@ -1126,6 +1141,7 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
   transition: all var(--transition);
 }
 .calendar-nav button:hover { background: rgba(96,130,200,0.38); }
+.calendar-nav button { white-space: nowrap; }
 .calendar-nav button:first-child { justify-self: start; }
 .calendar-nav button:last-child { justify-self: end; }
 .calendar-grid {
