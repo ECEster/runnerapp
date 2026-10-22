@@ -95,7 +95,7 @@ function renderList(lang) {
   var countEl = document.getElementById('results-count');
   if (countEl) countEl.textContent = events.length + ' evenementen';
   if (!events.length) {
-    el.innerHTML = '<div class="no-events-msg" style="grid-column:1/-1"><div class="no-events-msg__icon">🏃</div><h3>Geen evenementen gevonden</h3><p>Pas de filters aan om meer evenementen te zien.</p></div>';
+    el.innerHTML = '<div class="no-events-msg" style="grid-column:1/-1"><h3>Geen evenementen gevonden</h3><p>Pas de filters aan om meer evenementen te zien.</p></div>';
     return;
   }
   el.innerHTML = events.map(function(ev) {
@@ -114,7 +114,7 @@ function renderList(lang) {
         '</span>'+
       '</div>'+
       '<div class="event-card__body">'+
-        '<div class="event-card__date">📅 '+dateStr+'</div>'+
+        '<div class="event-card__date">'+dateStr+'</div>'+
         '<span class="event-card__title">'+name+'</span>'+
         '<div class="event-card__meta"><span>'+titleCase(ev.city)+'</span></div>'+
         '<div class="event-card__distances">'+distChips+'</div>'+

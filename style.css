@@ -735,6 +735,8 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 }
 /* Trainingsschema's: Banner4, uitsnede op sokken en schoenen */
 .page-header--training { background-position: center 66%; }
+/* Regiopagina's: geen oranje lijn onder de banner */
+.page-header--regio { border-bottom: none; }
 /* Over ons: geen oranje details, dus witte cijfers in de blokjes */
 .page-overons .about-stat__num { color: var(--white); }
 /* Over ons: Banner7 (3:1), geen oranje lijn; op mobiel naar rechts */
@@ -806,7 +808,8 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 }
 /* Rustig grijs met donkerblauw; alleen de actieve regio krijgt de accentkleur */
 .regio-nav__btn:hover { background: rgba(42,59,94,0.07); color: #2A3B5E; }
-.regio-nav__btn.active { background: var(--btn); color: var(--white); border-color: var(--btn); }
+.regio-nav__btn.active,
+.regio-nav__btn:active { background: #2A3B5E; color: var(--white); border-color: #2A3B5E; }
 
 /* Regio richtingicoon — pijl in een rechthoek, gedraaid per windrichting */
 .regio-nav__icon {
@@ -830,8 +833,10 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 .regio-nav__icon--oost svg { transform: rotate(90deg); }
 .regio-nav__icon--zuid svg { transform: rotate(180deg); }
 .regio-nav__icon--west svg { transform: rotate(270deg); }
-.regio-nav__btn.active .regio-nav__icon { background: var(--white); }
-.regio-nav__btn.active .regio-nav__icon svg { fill: var(--btn); }
+.regio-nav__btn.active .regio-nav__icon,
+.regio-nav__btn:active .regio-nav__icon { background: var(--white); }
+.regio-nav__btn.active .regio-nav__icon svg,
+.regio-nav__btn:active .regio-nav__icon svg { fill: #2A3B5E; }
 
 /* Inklapbaar filtermenu (zie initFilterToggle in data.js). Dicht: één knop
    "Filters" boven de kalender en de resultaten over de volle breedte.
