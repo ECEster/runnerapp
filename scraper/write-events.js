@@ -5,6 +5,8 @@
 // Gebruik:
 //   node write-events.js              # dry-run (standaard, veilig)
 //   node write-events.js --live       # schrijft daadwerkelijk naar Supabase
+//   node write-events.js --regio=oost # alleen nieuwe events in één regio (noord/oost/zuid/west)
+//   node write-events.js --max=300    # veiligheidslimiet voor nieuwe events tijdelijk verhogen
 //
 // Vereist een .env met SUPABASE_URL en SUPABASE_SERVICE_ROLE_KEY (zie .env.example).
 
@@ -21,12 +23,33 @@ import { dedupeAgainstDb } from './lib/dedupeAgainstDb.js'
 import { mapToSupabaseShape } from './lib/mapToSupabaseShape.js'
 import { fetchExistingEventKeys, insertEventRow, updateEventFields } from './lib/supabaseAdmin.js'
 
-const MAX_INSERTS_PER_RUN = 50
+const DEFAULT_MAX_INSERTS = 50
+
+const REGIOS = {
+  noord: ['Groningen', 'Friesland', 'Drenthe'],
+  oost: ['Overijssel', 'Gelderland', 'Flevoland'],
+  zuid: ['Noord-Brabant', 'Limburg'],
+  west: ['Noord-Holland', 'Zuid-Holland', 'Utrecht', 'Zeeland'],
+}
+
+function argValue(name) {
+  const arg = process.argv.find((a) => a.startsWith(`--${name}=`))
+  return arg ? arg.slice(name.length + 3).trim() : ''
+}
 
 const isLive = process.argv.includes('--live')
+// Lege waarde of "alle" = geen regiofilter
+const regio = argValue('regio').toLowerCase()
+const regioProvincies = regio && regio !== 'alle' ? REGIOS[regio] : null
+// Bewust te verhogen per run (bv. voor de eerste import van een nieuwe regio)
+const MAX_INSERTS_PER_RUN = Number.parseInt(argValue('max'), 10) || DEFAULT_MAX_INSERTS
 
 async function main() {
   console.log(isLive ? '=== LIVE MODUS — er wordt echt geschreven ===' : '=== DRY RUN (standaard, niets wordt geschreven) ===')
+  if (regio && regio !== 'alle' && !regioProvincies) {
+    throw new Error(`Onbekende regio "${regio}". Kies uit: alle, ${Object.keys(REGIOS).join(', ')}.`)
+  }
+  console.log(`Regio: ${regioProvincies ? `${regio} (${regioProvincies.join(', ')})` : 'alle'} | max. nieuwe events: ${MAX_INSERTS_PER_RUN}`)
 
   console.log('\nStap 1/4: events ophalen en parsen van beide bronnen...')
   const { unique, duplicates } = await collectEvents({ year: 2026 })
@@ -36,7 +59,12 @@ async function main() {
   const existingRows = await fetchExistingEventKeys()
   console.log(`  ${existingRows.length} events staan al in de database`)
 
-  const { toInsert, toMerge, skipped } = dedupeAgainstDb(unique, existingRows)
+  const deduped = dedupeAgainstDb(unique, existingRows)
+  // Regiofilter pas ná het dedupliceren, zodat de vergelijking met de database volledig blijft
+  const inRegio = (e) => !regioProvincies || regioProvincies.includes(e.provincie)
+  const toInsert = deduped.toInsert.filter(inRegio)
+  const toMerge = deduped.toMerge.filter(({ event }) => inRegio(event))
+  const skipped = deduped.skipped.filter(inRegio)
   console.log(
     `\nStap 3/4: ${toInsert.length} nieuw, ${toMerge.length} aan te vullen, ${skipped.length} overgeslagen (al compleet)`,
   )

@@ -9,6 +9,15 @@ on:
         description: "Echt naar Supabase schrijven? (uit = alleen dry-run, print maar schrijft niets)"
         type: boolean
         default: false
+      regio:
+        description: "Alleen nieuwe events in deze regio toevoegen"
+        type: choice
+        options: [alle, noord, oost, zuid, west]
+        default: alle
+      max:
+        description: "Maximaal aantal nieuwe events (veiligheidsstop; standaard 50)"
+        type: string
+        default: "50"
 
 jobs:
   scrape:
@@ -17,9 +26,9 @@ jobs:
       run:
         working-directory: scraper
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "22"
 
@@ -27,11 +36,13 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          REGIO: ${{ github.event.inputs.regio }}
+          MAX_NIEUW: ${{ github.event.inputs.max }}
         run: |
           if [ "${{ github.event.inputs.live }}" = "true" ]; then
-            node write-events.js --live
+            node write-events.js --live --regio="$REGIO" --max="$MAX_NIEUW"
             # Nieuwe evenementen meteen coördinaten geven (postcodefilter)
             node geocode-events.js --live
           else
-            node write-events.js
+            node write-events.js --regio="$REGIO" --max="$MAX_NIEUW"
           fi

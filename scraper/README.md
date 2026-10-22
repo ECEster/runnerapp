@@ -156,6 +156,11 @@ Draaien:
 2. Kies "Scrape hardloopevenementen" → **Run workflow**.
 3. Vink "live" aan om écht te schrijven, laat 'm uit voor een dry-run (print alleen, net
    als lokaal). Bekijk de output onder de workflow-run.
+4. **Regio** (alle/noord/oost/zuid/west): alleen nieuwe events in die regio toevoegen.
+   **Max**: veiligheidsstop voor het aantal nieuwe events (standaard 50). Komt een run
+   daarboven, dan stopt hij zonder iets te schrijven (rode run, "STOP" in de log). Voor de
+   eerste import van een regio: eerst een dry-run met die regio en een hoge max (bv. 400),
+   output controleren, dan dezelfde instellingen met "live" aan.
 
 Voor de PDOK-opzoeking (loopjeloopje.nl → provincie) is geen extra secret nodig — die
 service is publiek toegankelijk zonder sleutel. Wel start elke Actions-run met een lege
