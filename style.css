@@ -740,6 +740,8 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 /* Noord en West: gespiegeld verbrede banner (4,1:1), uitsnede naar boven geschoven
    zodat de bovenkant van de kaart in beeld blijft; onderkant mag wegvallen */
 .page-header--regio-west { background-position: center 15%; }
+/* Zuid: BannerZuid (4:1), uitsnede iets naar beneden zodat de voeten in beeld blijven */
+.page-header--regio-zuid { background-position: center 70%; }
 /* Noord: altijd de volle hoogte (beide voeten), zijkanten mogen wegvallen */
 .page-header--regio-noord { background-size: auto 100%; background-position: center; background-color: #6E7F86; }
 /* Oost: hele afbeelding (met de kaart) in beeld, met stroken in de randkleur */
