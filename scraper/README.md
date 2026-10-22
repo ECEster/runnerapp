@@ -213,6 +213,14 @@ dan wordt er ook geen e-mail verstuurd — dat is geen fout.
   3. Pas dán `migrations/0003_unique_serie_date.sql` (de unique constraint faalt als er op
      dat moment nog dubbele (serie, date)-combinaties bestaan).
 - Afbeeldingen ophalen (Unsplash API).
+- **Ingesproken trainingsschema's** (idee van 22 oktober 2026): bij elk trainingsschema een
+  ingesproken versie, zodat je tijdens het lopen hoort wat je moet doen (bv. "loop nu 3 minuten
+  vlot", "wandel 1 minuut"). Nog uitzoeken: zelf inspreken of een computerstem, en of het als
+  losse audiobestanden per training komt of als een speler op de pagina die de intervallen aftelt.
+- **Icoon schoen met hart** voor de knop Inloggen rechtsboven: Ester stuurde op 22 oktober een
+  lijntekening (hardloopschoen voor een hart), maar het bestand was niet terug te vinden. Opslaan
+  in `images/`, dan omzetten naar een groenbeige icoon met doorzichtige achtergrond (of een
+  vereenvoudigde versie, want de fijne lijnen verdwijnen op 18 pixels).
 
 ## Herinnering voor de volgende sessie: kapotte links (linkcheck 2026-09-30)
 
