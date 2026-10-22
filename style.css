@@ -1894,7 +1894,13 @@ body.page-overons { background: var(--white); }
    Computer: loopfoto met uitleg vult de linkerhelft van header tot footer,
    formulier rechts op wit. Telefoon: foto met pictogrammen als banner en het
    formulier als witte kaart die er half overheen schuift. */
-.page-mijnruns.is-logged-out .page-header--mijnruns { display: none; }
+/* Niet ingelogd: in plaats van de fotobanner een donkerblauwe kop met de titel */
+.page-mijnruns.is-logged-out .page-header--mijnruns { background-image: none !important; background-color: var(--dark); height: auto; padding: 3rem 1.5rem; }
+.page-mijnruns.is-logged-out .page-header--mijnruns::before { display: none; }
+.page-mijnruns.is-logged-out .mr-login__kicker { display: none; } /* titel staat al in de kop */
+@media (max-width: 768px) {
+  .page-mijnruns.is-logged-out .page-header--mijnruns { height: auto; padding: 2rem 1rem; }
+}
 .page-mijnruns.is-logged-out .container.section { padding: 0; }
 .mr-login { --mr-bottom: 120px; display: grid; grid-template-columns: 1fr 1fr; min-height: 640px; background: var(--white); }
 .mr-login__photo {
