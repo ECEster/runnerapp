@@ -341,12 +341,12 @@ p:last-child { margin-bottom: 0; }
   display: block;
   margin: 0.75rem 1.5rem 1rem;
 }
-.nav__mobile-lang .btn {
+.nav .nav__mobile-lang .btn {
   background: var(--dark);
   color: #C4B57B;
   border: 1px solid #C4B57B;
 }
-.nav__mobile-lang .btn:hover { background: rgba(196,181,123,0.15); }
+.nav .nav__mobile-lang .btn:hover { background: rgba(196,181,123,0.15); }
 
 /* ── Hero ────────────────────────────────────────────────────── */
 .hero {
