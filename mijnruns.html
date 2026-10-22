@@ -341,6 +341,7 @@ async function refreshFavorites() {
     cachedFavIds = [];
   }
   renderFavorites();
+  renderCalendarRuns(); // aantal opgeslagen runs per dag in de kalender
 }
 
 async function submitRun(e) {
@@ -412,6 +413,12 @@ function renderCalendarRuns() {
     runMap[r.date] += r.distance;
   });
 
+  // Opgeslagen runs (bladwijzers) per dag
+  var favMap = {};
+  EVENTS.forEach(function(ev) {
+    if (cachedFavIds.indexOf(ev.id) !== -1) favMap[ev.date] = (favMap[ev.date] || 0) + 1;
+  });
+
   var firstDay  = new Date(calYear, calMonth, 1);
   var lastDay   = new Date(calYear, calMonth + 1, 0);
   var startDow  = (firstDay.getDay() + 6) % 7; // maandag = 0
@@ -437,6 +444,8 @@ function renderCalendarRuns() {
     html += '<td class="' + cls + '" onclick="calDayClick(\'' + ds + '\')">' +
       '<span class="run-cal-num">' + day + '</span>' +
       (hasRun ? '<span class="run-cal-dist">' + dist.toFixed(1) + ' km</span>' : '') +
+      (favMap[ds] ? '<span class="run-cal-fav" title="' + t('run_cal_saved').replace('{n}', favMap[ds]) + '">' +
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h11v17l-5.5-4.6-5.5 4.6z"/></svg>' + favMap[ds] + '</span>' : '') +
     '</td>';
 
     dow++;

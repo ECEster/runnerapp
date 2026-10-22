@@ -1712,6 +1712,9 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
 .run-cal-dist { display: block; font-size: 0.65rem; font-weight: 700; color: var(--accent); margin-top: 1px; }
 .run-cal-today .run-cal-num { background: var(--accent); color: #fff; border-radius: 50%; width: 22px; height: 22px; line-height: 22px; display: inline-block; font-size: 0.78rem; }
 .run-cal-has-run { background: #E6EBF5; }
+/* Aantal opgeslagen runs (bladwijzers) op die dag */
+.run-cal-fav { display: inline-flex; align-items: center; gap: 2px; margin-top: 2px; font: 700 0.66rem/1 var(--font-head); color: #2A3B5E; }
+.run-cal-fav svg { width: 11px; height: 11px; fill: #C4B57B; stroke: #2A3B5E; stroke-width: 2; stroke-linejoin: round; }
 .run-cal-has-run:hover { background: #D3DCEE; }
 .run-cal-has-run.run-cal-today { background: #E6EBF5; }
 .run-cal-empty { color: var(--light); cursor: default; }
