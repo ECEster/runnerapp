@@ -513,7 +513,7 @@ function renderTabContent(id, lang) {
   var tableRows = '';
   for (var w=1; w<weeks.length; w++) {
     var row = weeks[w];
-    tableRows += '<tr><td class="week-cell">'+t('week_label')+' '+w+'</td>'+
+    tableRows += '<tr style="--i:'+w+'"><td class="week-cell">'+t('week_label')+' '+w+'</td>'+
       row.map(function(cell){ return '<td>'+cell+'</td>'; }).join('')+
     '</tr>';
   }
