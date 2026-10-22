@@ -499,6 +499,14 @@ function hideFavPopSoon() {
 }
 window.addEventListener('scroll', hideFavPop, { passive: true });
 
+// Eén bladwijzer per opgeslagen run (maximaal 5, daarna een plusje)
+function bookmarkIcons(n) {
+  var icon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h11v17l-5.5-4.6-5.5 4.6z"/></svg>';
+  var html = '';
+  for (var i = 0; i < Math.min(n, 5); i++) html += icon;
+  return html + (n > 5 ? '<span class="run-cal-fav__more">+</span>' : '');
+}
+
 function renderCalendarRuns() {
   var label = document.getElementById('cal-month-label');
   var lang = getLang() === 'en' ? 'en' : 'nl';
@@ -549,7 +557,7 @@ function renderCalendarRuns() {
         ' aria-label="' + t('run_cal_saved').replace('{n}', favMap[ds].length) + '"' +
         ' onclick="openSavedRuns(event)" onmouseenter="showFavPop(this)" onmouseleave="hideFavPopSoon()"' +
         ' onfocus="showFavPop(this)" onblur="hideFavPopSoon()">' +
-        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h11v17l-5.5-4.6-5.5 4.6z"/></svg>' + favMap[ds].length + '</button>' : '') +
+        bookmarkIcons(favMap[ds].length) + '</button>' : '') +
     '</td>';
 
     dow++;
