@@ -469,17 +469,19 @@ function showFavPop(btn) {
   pop.style.top = (below ? r.bottom + 4 : r.top - H - 4) + 'px';
   cards.forEach(function(c) { c.style.top = (below ? RISE : 0) + 'px'; });
 
-  // Lijnen: recht omhoog uit de bladwijzer, dan per kaartje een rechte lijn naar het aanhechtpunt
   var axL = ax - left;
-  var baseY = below ? 0 : H, stemY = below ? 16 : H - 16, cardY = below ? RISE : cardH;
+  var baseY = below ? 0 : H, cardY = below ? RISE : cardH;
   var svg = pop.querySelector('.fav-pop__lines');
   svg.setAttribute('width', rowW); svg.setAttribute('height', H);
   svg.setAttribute('viewBox', '0 0 ' + rowW + ' ' + H);
-  var html = '<circle class="fav-pop__dot" cx="' + axL + '" cy="' + baseY + '" r="2.5"/>';
+  // Elke kaart een eigen, losse rechte lijn: de beginpunten liggen naast elkaar op de bladwijzer
+  var html = '';
   evs.forEach(function(ev, i) {
     var cx = i * (CARD_W + GAP) + CARD_W / 2;
-    html += '<polyline class="fav-pop__line" pathLength="100" style="animation-delay:' + (i * 0.02) + 's" points="' +
-      axL + ',' + baseY + ' ' + axL + ',' + stemY + ' ' + cx + ',' + cardY + '"/>' +
+    var sx = axL + (i - (n - 1) / 2) * 10;
+    html += '<line class="fav-pop__line" pathLength="100" style="animation-delay:' + (i * 0.02) + 's"' +
+      ' x1="' + sx + '" y1="' + baseY + '" x2="' + cx + '" y2="' + cardY + '"/>' +
+      '<circle class="fav-pop__dot" style="animation-delay:' + (i * 0.02) + 's" cx="' + sx + '" cy="' + baseY + '" r="2"/>' +
       '<circle class="fav-pop__dot fav-pop__dot--end" style="animation-delay:' + (0.08 + i * 0.02) + 's" cx="' + cx + '" cy="' + cardY + '" r="2.5"/>';
   });
   svg.innerHTML = html;
