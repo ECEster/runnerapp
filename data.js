@@ -422,3 +422,16 @@ function badgeTypeName(type, lang) {
   if (short[type]) return short[type][lang === 'en' ? 'en' : 'nl'];
   return getTypeName(type, lang);
 }
+
+// Uitklapmenu op de telefoon: markeer de pagina waar je bent (zelfde link
+// als het actieve item in de menubalk) met een streepje eronder.
+function markActiveMobileNav() {
+  var active = document.querySelector('.nav__links a.active');
+  if (!active) return;
+  var href = active.getAttribute('href');
+  document.querySelectorAll('.nav__mobile a').forEach(function(a) {
+    if (a.getAttribute('href') === href) a.classList.add('active');
+  });
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', markActiveMobileNav);
+else markActiveMobileNav();
