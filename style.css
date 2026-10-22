@@ -1472,6 +1472,28 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
   color: var(--accent);
   border-bottom-color: var(--accent);
 }
+/* Afstandstegels (trainingsschema's): afstand groot, eronder dagen per week.
+   Gekozen tegel donkerblauw met groenbeige cijfers. */
+.training-tabs--tiles { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 0.5rem; border-bottom: none; }
+.tab-tile {
+  margin: 0; border: 1.5px solid #DDD8C4; border-radius: 12px; background: var(--white);
+  padding: 0.8rem 0.3rem 0.65rem; display: grid; gap: 0.3rem; justify-items: center; text-align: center;
+  transition: transform var(--transition), border-color var(--transition), background var(--transition);
+}
+.tab-tile:hover { transform: translateY(-2px); border-color: #2A3B5E; }
+.tab-tile b { font: 800 1.2rem/1 var(--font-head); color: var(--dark); letter-spacing: -0.01em; white-space: nowrap; }
+.tab-tile b small { font-size: 0.62em; font-weight: 700; margin-left: 2px; }
+.tab-tile i { font-style: normal; font-size: 0.7rem; font-weight: 500; color: var(--mid); white-space: nowrap; }
+.tab-tile.active, .page-training .tab-tile.active { background: #2A3B5E; border-color: #2A3B5E; } /* donkerblauw, zoals de kalenderknoppen */
+.tab-tile.active b { color: #C4B57B; }
+.tab-tile.active i { color: rgba(255,255,255,0.75); }
+.tab-tile--own { border-style: dashed; border-color: #2A3B5E; }
+.tab-tile--own.active { border-style: solid; }
+.tab-tile:focus-visible { outline: 2px solid #C4B57B; outline-offset: 2px; }
+@media (max-width: 900px) {
+  .training-tabs--tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) { .tab-tile { transition: none; } }
 .tab-panel { display: none; }
 .tab-panel.active { display: block; animation: tabUnfold 0.5s cubic-bezier(.2,.7,.2,1) both; transform-origin: top center; }
 .tab-panel.active .training-table tbody tr { animation: rowUnfold 0.4s ease-out both; animation-delay: calc(0.15s + var(--i, 0) * 0.05s); }
