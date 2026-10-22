@@ -121,7 +121,7 @@
     </div>
 
     <!-- Favorites -->
-    <div class="runs-card" style="margin-bottom:2rem;">
+    <div class="runs-card" id="saved-runs" style="margin-bottom:2rem;">
       <h3><span data-i18n="favorites_title">Opgeslagen runs</span></h3>
       <div id="favorites-list" class="events-grid" style="margin-top:1rem;"></div>
     </div>
@@ -399,6 +399,67 @@ function calDayClick(dateStr) {
   document.getElementById('run-form').closest('.runs-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+// ── Opgeslagen runs in de kalender: klik = naar de lijst, hover = kleine kaartjes ──
+var runCalFavs = {};
+var favPopTimer = null;
+
+function openSavedRuns(e) {
+  e.stopPropagation(); // niet ook de datum in het formulier invullen
+  hideFavPop();
+  document.getElementById('saved-runs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function favPopEl() {
+  var el = document.getElementById('fav-pop');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'fav-pop';
+    el.className = 'fav-pop';
+    el.addEventListener('mouseenter', function() { clearTimeout(favPopTimer); });
+    el.addEventListener('mouseleave', hideFavPopSoon);
+    document.body.appendChild(el);
+  }
+  return el;
+}
+
+function showFavPop(btn) {
+  clearTimeout(favPopTimer);
+  var evs = runCalFavs[btn.getAttribute('data-date')] || [];
+  if (!evs.length) return;
+  var lang = getLang();
+  var pop = favPopEl();
+  pop.innerHTML = evs.slice(0, 3).map(function(ev) {
+    var name = lang === 'en' ? ev.name_en : ev.name_nl;
+    return '<a class="fav-pop__card" href="' + eventUrl(ev) + '">' +
+      '<img src="' + getEventImage(ev) + '" alt="">' +
+      '<span class="fav-pop__name">' + name + '</span>' +
+      '<span class="fav-pop__city">' + titleCase(ev.city) + '</span></a>';
+  }).join('') + (evs.length > 3 ? '<span class="fav-pop__more">+' + (evs.length - 3) + '</span>' : '');
+  pop.classList.remove('is-open');
+  pop.style.display = 'flex';
+  // Boven de bladwijzer, gecentreerd; past het niet, dan eronder
+  var r = btn.getBoundingClientRect();
+  var w = pop.offsetWidth, h = pop.offsetHeight;
+  var left = Math.min(Math.max(8, r.left + r.width / 2 - w / 2), window.innerWidth - w - 8);
+  var top = r.top - h - 10;
+  pop.classList.toggle('is-below', top < 8);
+  if (top < 8) top = r.bottom + 10;
+  pop.style.left = left + 'px';
+  pop.style.top = top + 'px';
+  void pop.offsetWidth; // animatie opnieuw starten
+  pop.classList.add('is-open');
+}
+
+function hideFavPop() {
+  var pop = document.getElementById('fav-pop');
+  if (pop) { pop.classList.remove('is-open'); pop.style.display = 'none'; }
+}
+function hideFavPopSoon() {
+  clearTimeout(favPopTimer);
+  favPopTimer = setTimeout(hideFavPop, 180);
+}
+window.addEventListener('scroll', hideFavPop, { passive: true });
+
 function renderCalendarRuns() {
   var label = document.getElementById('cal-month-label');
   var lang = getLang() === 'en' ? 'en' : 'nl';
@@ -416,8 +477,9 @@ function renderCalendarRuns() {
   // Opgeslagen runs (bladwijzers) per dag
   var favMap = {};
   EVENTS.forEach(function(ev) {
-    if (cachedFavIds.indexOf(ev.id) !== -1) favMap[ev.date] = (favMap[ev.date] || 0) + 1;
+    if (cachedFavIds.indexOf(ev.id) !== -1) (favMap[ev.date] = favMap[ev.date] || []).push(ev);
   });
+  runCalFavs = favMap;
 
   var firstDay  = new Date(calYear, calMonth, 1);
   var lastDay   = new Date(calYear, calMonth + 1, 0);
@@ -444,8 +506,11 @@ function renderCalendarRuns() {
     html += '<td class="' + cls + '" onclick="calDayClick(\'' + ds + '\')">' +
       '<span class="run-cal-num">' + day + '</span>' +
       (hasRun ? '<span class="run-cal-dist">' + dist.toFixed(1) + ' km</span>' : '') +
-      (favMap[ds] ? '<span class="run-cal-fav" title="' + t('run_cal_saved').replace('{n}', favMap[ds]) + '">' +
-        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h11v17l-5.5-4.6-5.5 4.6z"/></svg>' + favMap[ds] + '</span>' : '') +
+      (favMap[ds] ? '<button type="button" class="run-cal-fav" data-date="' + ds + '"' +
+        ' aria-label="' + t('run_cal_saved').replace('{n}', favMap[ds].length) + '"' +
+        ' onclick="openSavedRuns(event)" onmouseenter="showFavPop(this)" onmouseleave="hideFavPopSoon()"' +
+        ' onfocus="showFavPop(this)" onblur="hideFavPopSoon()">' +
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h11v17l-5.5-4.6-5.5 4.6z"/></svg>' + favMap[ds].length + '</button>' : '') +
     '</td>';
 
     dow++;
