@@ -388,6 +388,47 @@ BreadcrumbList-gegevens voor Google. Nog te doen:
 Let op: `images/trail.jpg` is sinds 22 oktober ook de foto van de inlogpagina van Mijn Runs.
 Wie hem vervangt (zie de nieuwe trailfoto hierboven), verandert dus ook die pagina.
 
+## Herinnering voor de volgende sessie: verkeerde jaartallen en import per regio (2026-10-22)
+
+**Verkeerde jaartallen.** hardloopkalendernederland.nl noemt geen jaartal ("Zaterdag 6 maart").
+De scraper zette er altijd 2026 voor, waardoor voorjaarsevents van 2027 als 2026 in de database
+kwamen (bv. id 61 Halve Marathon van Haren, 62 Klap tot Klaploop, 63 Marathon van Groningen).
+Opgelost in de scraper op 22 oktober (commit `13fa4fa`: jaar uit de weekdag), maar de rijen die
+er al staan moeten nog worden rechtgezet. Ze zijn allemaal concept (niet gepubliceerd), dus
+bezoekers zien ze niet. **Doe dit vóór de volgende live run**, anders voegt de scraper de juiste
+2027-versies als nieuwe rijen toe naast de foute.
+
+1. Bekijken (SQL Editor, verandert niets; de tabel heeft géén `created_at`):
+   ```sql
+   select id, name_nl, date, city, published, source_url
+   from public.events
+   where source_url ilike '%hardloopkalendernederland%'
+     and date < '2026-09-01'
+   order by date;
+   ```
+   Resultaat via *Export → Download CSV* aan Claude geven om te controleren.
+2. Pas na controle een jaar verschuiven:
+   ```sql
+   update public.events
+   set date = (date + interval '1 year')::date
+   where source_url ilike '%hardloopkalendernederland%'
+     and date < '2026-09-01';
+   ```
+   Melding over een unieke waarde = er staat al een 2027-versie; die rij apart bekijken.
+
+**Supabase-koppeling (MCP) afmaken.** Toegevoegd als alleen-lezen, alleen op deze laptop. Nog te
+doen: in een gewone terminal (niet VS Code) `cd C:\Users\Ester\runnerapp`, `claude`, `/mcp` →
+*supabase* → *Authenticate*, inloggen in de browser; daarna het VS Code-venster herladen. Dan kan
+Claude zelf query's zoals hierboven bekijken.
+
+**Import per regio** (workflow heeft nu de keuzes *regio* en *max*, zie "Draaien vanaf GitHub"):
+eerst Oost als dry-run met max 400, output laten controleren, dan live; daarna concepten nalopen
+en publiceren met de SQL uit de herinnering van 1 oktober; daarna Zuid en West. Proefrun van
+22 oktober: 1018 events in totaal (Noord 356, Oost 218, West 324, Zuid 120). Twee foute
+samenvoegingen om na de import met de hand toe te voegen: **Zevenheuvelennacht** (Nijmegen,
+14 november, viel weg tegen de Zevenheuvelenloop) en mogelijk **Lingezegenrun** (Elst, viel weg
+tegen Lingezegen Last Man Standing).
+
 ## Coördinaten (postcodefilter)
 
 Events hebben `lat`/`lng` (migratie `0006_add_lat_lng.sql`) voor het postcode/straal-filter.
