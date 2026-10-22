@@ -1721,23 +1721,34 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
 .run-cal-fav:focus-visible { outline: 2px solid #C4B57B; outline-offset: 1px; }
 .run-cal-fav:hover, .run-cal-fav:focus-visible { transform: translateY(-4px) scale(1.35); filter: drop-shadow(0 3px 3px rgba(17,24,39,0.28)); z-index: 1; }
 
-/* Pop-up met kleine kaartjes van de opgeslagen runs van die dag */
-.fav-pop {
-  position: fixed; z-index: 1000; display: none; gap: 8px; align-items: stretch;
-  padding: 8px; background: var(--white); border-radius: 12px; border-top: 3px solid #C4B57B;
-  box-shadow: 0 18px 40px -12px rgba(17,24,39,0.45), 0 2px 6px rgba(17,24,39,0.08);
-  opacity: 0; transform: translateY(6px) scale(0.92); transform-origin: center bottom;
-  transition: opacity 0.18s ease, transform 0.18s cubic-bezier(.2,.7,.2,1);
+/* Pop-up: losse kaartjes van de opgeslagen runs van die dag, aan dunne lijnen uit de bladwijzer */
+.fav-pop { position: fixed; z-index: 1000; display: none; pointer-events: none; }
+.fav-pop__lines { position: absolute; inset: 0; overflow: visible; }
+.fav-pop__line { fill: none; stroke: #2A3B5E; stroke-width: 1.25; stroke-dasharray: 100; stroke-dashoffset: 100; }
+.fav-pop__dot { fill: #2A3B5E; opacity: 0; }
+.fav-pop__dot--end { fill: #C4B57B; stroke: #2A3B5E; stroke-width: 1; }
+.fav-pop.is-open .fav-pop__line { animation: favLine 0.32s ease-out forwards; }
+.fav-pop.is-open .fav-pop__dot { animation: favDot 0.15s ease-out forwards; }
+@keyframes favLine { to { stroke-dashoffset: 0; } }
+@keyframes favDot { to { opacity: 1; } }
+.fav-pop__card {
+  position: absolute; display: grid; grid-template-rows: auto auto 1fr; align-content: start; gap: 2px; padding-bottom: 7px; pointer-events: auto;
+  text-decoration: none; color: var(--dark); background: var(--white); border-radius: 8px; overflow: hidden;
+  border-top: 2px solid #C4B57B; box-shadow: 0 12px 28px -10px rgba(17,24,39,0.45), 0 1px 3px rgba(17,24,39,0.1);
+  opacity: 0; transform: translateY(10px) scale(0.94);
+  transition: opacity 0.22s ease, transform 0.25s cubic-bezier(.2,.7,.2,1);
 }
-.fav-pop.is-below { transform-origin: center top; transform: translateY(-6px) scale(0.92); }
-.fav-pop.is-open { opacity: 1; transform: none; }
-.fav-pop__card { width: 150px; display: grid; gap: 2px; text-decoration: none; color: var(--dark); border-radius: 8px; overflow: hidden; background: var(--surface); padding-bottom: 7px; transition: transform 0.15s ease; }
-.fav-pop__card:hover { transform: translateY(-2px); }
+.fav-pop.is-below .fav-pop__card { transform: translateY(-10px) scale(0.94); }
+.fav-pop.is-open .fav-pop__card { opacity: 1; transform: none; }
+.fav-pop.is-open .fav-pop__card:hover { transform: translateY(-3px); transition-delay: 0s !important; }
 .fav-pop__card img { width: 100%; height: 64px; object-fit: cover; display: block; margin-bottom: 4px; }
-.fav-pop__name { font: 600 0.78rem/1.25 var(--font-head); padding: 0 8px; }
+.fav-pop__name { font: 600 0.78rem/1.25 var(--font-head); padding: 0 8px; overflow-wrap: anywhere; }
 .fav-pop__city { font-size: 0.7rem; color: var(--mid); padding: 0 8px; }
-.fav-pop__more { align-self: center; font: 700 0.8rem var(--font-head); color: #2A3B5E; padding: 0 6px; }
-@media (prefers-reduced-motion: reduce) { .fav-pop { transition: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .fav-pop__card { transition: none; }
+  .fav-pop.is-open .fav-pop__line { animation: none; stroke-dashoffset: 0; }
+  .fav-pop.is-open .fav-pop__dot { animation: none; opacity: 1; }
+}
 /* Bij hoveren: groter en naar voren, met een schaduwtje eronder */
 .run-cal-day:hover .run-cal-fav { transform: translateY(-4px) scale(1.35); filter: drop-shadow(0 3px 3px rgba(17,24,39,0.28)); z-index: 1; }
 @media (prefers-reduced-motion: reduce) { .run-cal-fav { transition: none; } }

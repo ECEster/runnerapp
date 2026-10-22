@@ -135,6 +135,11 @@
         <h3><span data-i18n="log_run">Run registreren</span></h3>
         <form class="run-form" id="run-form" onsubmit="submitRun(event)">
           <div class="form-row">
+            <label for="r-name" data-i18n="run_name">Naam van de run</label>
+            <input type="text" id="r-name" maxlength="80" list="r-name-list" placeholder="Bijv. Zevenheuvelenloop" data-i18n-placeholder="run_name_ph" autocomplete="off">
+            <datalist id="r-name-list"></datalist>
+          </div>
+          <div class="form-row">
             <label data-i18n="run_date">Datum</label>
             <input type="date" id="r-date" required>
           </div>
@@ -342,6 +347,7 @@ async function refreshFavorites() {
   }
   renderFavorites();
   renderCalendarRuns(); // aantal opgeslagen runs per dag in de kalender
+  fillRunNameSuggestions();
 }
 
 async function submitRun(e) {
@@ -352,6 +358,9 @@ async function submitRun(e) {
     time: document.getElementById('r-time').value,
     notes: document.getElementById('r-notes').value
   };
+  // Naam alleen meesturen als die is ingevuld (kolom "name" in de tabel runs)
+  var runName = document.getElementById('r-name').value.trim();
+  if (runName) run.name = runName;
   try {
     await addRun(run);
   } catch (err) {
@@ -415,38 +424,65 @@ function favPopEl() {
     el = document.createElement('div');
     el.id = 'fav-pop';
     el.className = 'fav-pop';
-    el.addEventListener('mouseenter', function() { clearTimeout(favPopTimer); });
-    el.addEventListener('mouseleave', hideFavPopSoon);
+    el.addEventListener('mouseover', function(e) { if (e.target.closest('.fav-pop__card')) clearTimeout(favPopTimer); });
+    el.addEventListener('mouseout', function(e) { if (e.target.closest('.fav-pop__card')) hideFavPopSoon(); });
     document.body.appendChild(el);
   }
   return el;
 }
 
+// Losse kaartjes die aan dunne lijnen uit de bladwijzer omhoog komen (zoals aanduidingen op een satellietbeeld)
 function showFavPop(btn) {
   clearTimeout(favPopTimer);
-  var evs = runCalFavs[btn.getAttribute('data-date')] || [];
+  var evs = (runCalFavs[btn.getAttribute('data-date')] || []).slice(0, 4);
   if (!evs.length) return;
   var lang = getLang();
+  var CARD_W = 150, GAP = 14, RISE = 54, PAD = 8;
+  var n = evs.length;
+  var rowW = n * CARD_W + (n - 1) * GAP;
+  var r = btn.getBoundingClientRect();
+  var ax = r.left + r.width / 2;              // ankerpunt (midden van de bladwijzer)
+  var left = Math.min(Math.max(PAD, ax - rowW / 2), window.innerWidth - rowW - PAD);
   var pop = favPopEl();
-  pop.innerHTML = evs.slice(0, 3).map(function(ev) {
+
+  pop.innerHTML = '<svg class="fav-pop__lines" aria-hidden="true"></svg>' + evs.map(function(ev, i) {
     var name = lang === 'en' ? ev.name_en : ev.name_nl;
-    return '<a class="fav-pop__card" href="' + eventUrl(ev) + '">' +
+    return '<a class="fav-pop__card" style="left:' + (i * (CARD_W + GAP)) + 'px;width:' + CARD_W + 'px;transition-delay:' + (0.22 + i * 0.07) + 's" href="' + eventUrl(ev) + '">' +
       '<img src="' + getEventImage(ev) + '" alt="">' +
       '<span class="fav-pop__name">' + name + '</span>' +
       '<span class="fav-pop__city">' + titleCase(ev.city) + '</span></a>';
-  }).join('') + (evs.length > 3 ? '<span class="fav-pop__more">+' + (evs.length - 3) + '</span>' : '');
-  pop.classList.remove('is-open');
-  pop.style.display = 'flex';
-  // Boven de bladwijzer, gecentreerd; past het niet, dan eronder
-  var r = btn.getBoundingClientRect();
-  var w = pop.offsetWidth, h = pop.offsetHeight;
-  var left = Math.min(Math.max(8, r.left + r.width / 2 - w / 2), window.innerWidth - w - 8);
-  var top = r.top - h - 10;
-  pop.classList.toggle('is-below', top < 8);
-  if (top < 8) top = r.bottom + 10;
+  }).join('');
+  pop.style.width = rowW + 'px';
   pop.style.left = left + 'px';
-  pop.style.top = top + 'px';
-  void pop.offsetWidth; // animatie opnieuw starten
+  pop.style.display = 'block';
+  pop.classList.remove('is-open', 'is-below');
+
+  var cards = pop.querySelectorAll('.fav-pop__card');
+  var cardH = 0;
+  cards.forEach(function(c) { cardH = Math.max(cardH, c.offsetHeight); });
+  cards.forEach(function(c) { c.style.height = cardH + 'px'; }); // even hoog: elke lijn eindigt aan de onderkant
+  var H = cardH + RISE;
+  var below = r.top - H - 4 < PAD;            // geen ruimte erboven: naar beneden uitklappen
+  pop.classList.toggle('is-below', below);
+  pop.style.height = H + 'px';
+  pop.style.top = (below ? r.bottom + 4 : r.top - H - 4) + 'px';
+  cards.forEach(function(c) { c.style.top = (below ? RISE : 0) + 'px'; });
+
+  // Lijnen: recht omhoog uit de bladwijzer, dan per kaartje een rechte lijn naar het aanhechtpunt
+  var axL = ax - left;
+  var baseY = below ? 0 : H, stemY = below ? 16 : H - 16, cardY = below ? RISE : cardH;
+  var svg = pop.querySelector('.fav-pop__lines');
+  svg.setAttribute('width', rowW); svg.setAttribute('height', H);
+  svg.setAttribute('viewBox', '0 0 ' + rowW + ' ' + H);
+  var html = '<circle class="fav-pop__dot" cx="' + axL + '" cy="' + baseY + '" r="2.5"/>';
+  evs.forEach(function(ev, i) {
+    var cx = i * (CARD_W + GAP) + CARD_W / 2;
+    html += '<polyline class="fav-pop__line" pathLength="100" style="animation-delay:' + (i * 0.05) + 's" points="' +
+      axL + ',' + baseY + ' ' + axL + ',' + stemY + ' ' + cx + ',' + cardY + '"/>' +
+      '<circle class="fav-pop__dot fav-pop__dot--end" style="animation-delay:' + (0.18 + i * 0.05) + 's" cx="' + cx + '" cy="' + cardY + '" r="2.5"/>';
+  });
+  svg.innerHTML = html;
+  void pop.offsetWidth; // animaties opnieuw starten
   pop.classList.add('is-open');
 }
 
@@ -456,7 +492,7 @@ function hideFavPop() {
 }
 function hideFavPopSoon() {
   clearTimeout(favPopTimer);
-  favPopTimer = setTimeout(hideFavPop, 180);
+  favPopTimer = setTimeout(hideFavPop, 260);
 }
 window.addEventListener('scroll', hideFavPop, { passive: true });
 
@@ -525,6 +561,21 @@ function renderCalendarRuns() {
   if (el) el.innerHTML = html;
 }
 
+// Namen van opgeslagen runs als suggestie bij "Naam van de run"
+function fillRunNameSuggestions() {
+  var list = document.getElementById('r-name-list');
+  if (!list) return;
+  var lang = getLang();
+  list.innerHTML = EVENTS.filter(function(ev) { return cachedFavIds.indexOf(ev.id) !== -1; })
+    .map(function(ev) { return '<option value="' + escapeHtml(lang === 'en' ? ev.name_en : ev.name_nl) + '">'; }).join('');
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, function(c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
 function renderHistory() {
   var lang = getLang();
   var runs = cachedRuns;
@@ -536,6 +587,7 @@ function renderHistory() {
   }
   var rows = runs.map(function(r) {
     return '<tr>'+
+      '<td>'+( r.name ? escapeHtml(r.name) : '—' )+'</td>'+
       '<td>'+r.date+'</td>'+
       '<td>'+r.distance+' km</td>'+
       '<td>'+( r.time || '—' )+'</td>'+
@@ -544,7 +596,7 @@ function renderHistory() {
     '</tr>';
   }).join('');
   el.innerHTML = '<table class="runs-history-table">'+
-    '<thead><tr><th>'+t('run_date')+'</th><th>'+t('run_distance')+'</th><th>'+t('run_time')+'</th><th>'+t('run_notes')+'</th><th></th></tr></thead>'+
+    '<thead><tr><th>'+t('run_name_short')+'</th><th>'+t('run_date')+'</th><th>'+t('run_distance')+'</th><th>'+t('run_time')+'</th><th>'+t('run_notes')+'</th><th></th></tr></thead>'+
     '<tbody>'+rows+'</tbody>'+
   '</table>';
   renderCalendarRuns();

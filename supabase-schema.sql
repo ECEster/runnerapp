@@ -21,8 +21,11 @@ create table if not exists runs (
   distance    numeric not null,
   time        text,
   notes       text,
+  name        text,          -- naam van de run (optioneel)
   created_at  timestamptz not null default now()
 );
+
+alter table runs add column if not exists name text;
 
 alter table runs enable row level security;
 
