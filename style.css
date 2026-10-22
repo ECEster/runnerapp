@@ -320,7 +320,9 @@ p:last-child { margin-bottom: 0; }
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--dark) url('images/banner2.jpg') center 72%/cover no-repeat;
+  /* Eerste beeld van de bannervideo, zelfde uitsnede als de video: zo is er
+     geen sprong als de video begint */
+  background: var(--dark) url('images/bannervideo-start.jpg') center 52%/cover no-repeat;
   overflow: hidden;
 }
 .hero::before {
