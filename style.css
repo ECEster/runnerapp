@@ -820,9 +820,8 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 }
 /* Noord: altijd de volle hoogte (beide voeten), zijkanten mogen wegvallen */
 .page-header--regio-noord { background-size: auto 100%; background-position: center; background-color: #6E7F86; }
-/* Oost: hele afbeelding (met de kaart) in beeld, met stroken in de randkleur */
-.page-header--regio-oost { background-size: auto 100%; background-repeat: no-repeat; background-position: center; }
-.page-header--regio-oost  { background-color: #4D5561; }
+/* Oost: BannerOost4 (4,1:1), loopster in het midden; op brede schermen uitsnede naar boven zodat het hoofd in beeld blijft */
+.page-header--regio-oost { background-size: cover; background-position: center 25%; background-color: #6F6A55; }
 /* Over ons: geen oranje details, dus witte cijfers in de blokjes */
 .page-overons .about-stat__num { color: var(--white); }
 /* Over ons: Banner7 (3:1), geen oranje lijn; op mobiel naar rechts */
