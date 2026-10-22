@@ -109,11 +109,11 @@
     <!-- Hardloopkalender -->
     <div class="runs-card" style="margin-bottom:2rem;">
       <div class="run-cal-nav">
-        <h3 style="margin:0;">Hardloopkalender</h3>
+        <h3 style="margin:0;" data-i18n="run_cal_title">Hardloopkalender</h3>
         <div style="display:flex;align-items:center;gap:0.4rem;">
-          <button class="btn btn--ghost btn--sm" onclick="calPrev()">&#8249;</button>
+          <button class="btn btn--ghost btn--sm" onclick="calPrev()" id="run-cal-prev" aria-label="Vorige maand">&#8249;</button>
           <span id="cal-month-label" class="run-cal-nav-title"></span>
-          <button class="btn btn--ghost btn--sm" onclick="calNext()">&#8250;</button>
+          <button class="btn btn--ghost btn--sm" onclick="calNext()" id="run-cal-next" aria-label="Volgende maand">&#8250;</button>
         </div>
       </div>
       <div class="run-cal-wrap">
@@ -121,7 +121,7 @@
       </div>
       <div class="run-cal-legend">
         <span class="run-cal-legend-dot"></span>
-        <span>Dag met een run — klik op een dag om datum in te vullen</span>
+        <span data-i18n="run_cal_legend">Dag met een run. Klik op een dag om de datum in te vullen.</span>
       </div>
     </div>
 
@@ -155,10 +155,10 @@
 
       <!-- Run history -->
       <div class="runs-card">
-        <h3><span data-i18n="history_title">Looploophistorie</span></h3>
+        <h3><span data-i18n="history_title">Loophistorie</span></h3>
         <div id="run-history"></div>
         <div style="margin-top:1rem;">
-          <button class="btn btn--ghost btn--sm" onclick="exportRuns()">Exporteer CSV</button>
+          <button class="btn btn--ghost btn--sm" onclick="exportRuns()" data-i18n="export_csv">Exporteer CSV</button>
         </div>
       </div>
     </div>
@@ -377,8 +377,14 @@ async function deleteRun(id) {
 }
 
 // ── Hardloopkalender ────────────────────────────────────────────────
-var CAL_MONTHS = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
-var CAL_DAYS   = ['Ma','Di','Wo','Do','Vr','Za','Zo'];
+var CAL_MONTHS = {
+  nl: ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'],
+  en: ['January','February','March','April','May','June','July','August','September','October','November','December']
+};
+var CAL_DAYS = {
+  nl: ['Ma','Di','Wo','Do','Vr','Za','Zo'],
+  en: ['Mo','Tu','We','Th','Fr','Sa','Su']
+};
 
 function calPrev() {
   if (calMonth === 0) { calMonth = 11; calYear--; } else calMonth--;
@@ -392,13 +398,16 @@ function calNext() {
 function calDayClick(dateStr) {
   var dateInput = document.getElementById('r-date');
   dateInput.value = dateStr;
-  // Scroll naar het formulier
-  document.querySelector('.runs-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Scroll naar het formulier "Run registreren" (de kalender staat erboven)
+  document.getElementById('run-form').closest('.runs-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function renderCalendarRuns() {
   var label = document.getElementById('cal-month-label');
-  if (label) label.textContent = CAL_MONTHS[calMonth] + ' ' + calYear;
+  var lang = getLang() === 'en' ? 'en' : 'nl';
+  if (label) label.textContent = CAL_MONTHS[lang][calMonth] + ' ' + calYear;
+  document.getElementById('run-cal-prev').setAttribute('aria-label', t('run_cal_prev'));
+  document.getElementById('run-cal-next').setAttribute('aria-label', t('run_cal_next'));
 
   // Bouw run-map: datumstring → totale afstand
   var runMap = {};
@@ -413,7 +422,7 @@ function renderCalendarRuns() {
   var todayStr  = new Date().toISOString().split('T')[0];
 
   var html = '<table class="run-cal-table"><thead><tr>';
-  CAL_DAYS.forEach(function(d) { html += '<th>' + d + '</th>'; });
+  CAL_DAYS[lang].forEach(function(d) { html += '<th>' + d + '</th>'; });
   html += '</tr></thead><tbody><tr>';
 
   for (var i = 0; i < startDow; i++) html += '<td class="run-cal-empty"></td>';
@@ -548,7 +557,7 @@ function toggleLang() {
   if (btnM) btnM.textContent = I18N[lang].nav_language;
   applyI18n(lang);
   updateAuthModeUI();
-  if (currentSession) { renderHistory(); renderFavorites(); }
+  if (currentSession) { renderHistory(); renderFavorites(); renderCalendarRuns(); }
 }
 function toggleMobileNav() { document.getElementById('mobile-nav').classList.toggle('open'); }
 
