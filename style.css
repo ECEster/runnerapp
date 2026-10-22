@@ -1707,6 +1707,10 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
 /* ─── Hardloopkalender ──────────────────────── */
 .run-cal-wrap { overflow-x: auto; }
 .run-cal-table { width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 280px; }
+/* Rasterlijnen tussen de dagen, zoals in de agendakalender */
+.run-cal-table td { border: 1px solid #E3E6EC; border-radius: 0; }
+.run-cal-table tr:first-child td { border-top-color: #E3E6EC; }
+.run-cal-wrap + .run-cal-tip { margin-top: 0.9rem; }
 .run-cal-table th { text-align: center; font-size: 0.7rem; font-weight: 600; color: var(--mid); padding: 0.35rem 0; text-transform: uppercase; letter-spacing: .04em; }
 .run-cal-day { text-align: center; vertical-align: top; padding: 0.25rem; border-radius: 8px; cursor: pointer; height: 50px; transition: background var(--transition); }
 .run-cal-day:hover { background: var(--surface2); }
