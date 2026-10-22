@@ -1395,8 +1395,9 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
   font-size: 0.88rem;
 }
 .training-table th {
-  background: var(--dark);
-  color: var(--white);
+  /* Zelfde groenbeige als de weekdagenrij in de kalender */
+  background: rgba(196,181,123,0.6);
+  color: var(--dark3);
   padding: 0.7rem 1rem;
   text-align: left;
   font-weight: 700;
