@@ -2116,9 +2116,19 @@ body.page-overons { background: var(--white); }
   .mr-login__head { text-align: center; }
 }
 
-/* Smallere schermen (tablet, kleine laptop): het volledige menu past niet meer naast het logo,
-   dus net als op de telefoon het uitklapmenu */
-@media (max-width: 1180px) {
+/* Kleine laptops: menu iets compacter zodat alles naast het logo past */
+@media (max-width: 1240px) {
+  .nav__links a { font-size: 0.9rem; padding: 0.5rem 0.5rem; }
+  .nav__links a.nav__login { font-size: 0.78rem; padding: 0.3rem 0.55rem; }
+  .nav__lang { padding: 0.3rem 0.55rem; font-size: 0.78rem; margin-left: 0.4rem; }
+  .nav__login-icon { height: 19px; }
+}
+@media (max-width: 1080px) {
+  .nav__logo-img { height: 20px; }
+  .nav__links a { font-size: 0.82rem; padding: 0.45rem 0.38rem; }
+}
+/* Tablets: het volledige menu past niet meer naast het logo, dus het uitklapmenu */
+@media (max-width: 960px) {
   .nav__links { display: none; }
   .nav__hamburger { display: flex; }
 }
