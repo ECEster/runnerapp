@@ -1611,7 +1611,7 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
 .page-mijnruns .run-cal-has-run,
 .page-mijnruns .run-cal-has-run.run-cal-today { background: #E6EBF5; }
 .page-mijnruns .run-cal-has-run:hover { background: #D3DCEE; }
-.run-cal-tip { margin: 0.6rem 0 0; font-size: 0.85rem; color: var(--mid); }
+.run-cal-tip { margin: 0.4rem 0 0; font-size: 0.85rem; color: var(--mid); }
 .run-cal-tip a { color: var(--dark); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 .page-mijnruns .run-cal-legend-dot { background: #E6EBF5; border-color: #D3DCEE; }
 
