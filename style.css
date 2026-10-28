@@ -2194,3 +2194,4 @@ body.page-overons { background: var(--white); }
 }
 .schema-intro p { margin: 0; }
 .schema-intro__title { font-family: var(--font-head); font-size: 1.05rem; font-weight: 700; color: var(--dark); margin: 0 0 0.3rem; text-transform: none; letter-spacing: 0; }
+.schema-note { margin: -1rem 0 1.5rem; font-size: 0.85rem; color: var(--dark3); max-width: 80ch; }

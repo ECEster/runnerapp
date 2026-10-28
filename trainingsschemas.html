@@ -323,6 +323,15 @@ function introTitle(plan, lang) {
   return (lang==='en' ? plan.title_en : plan.title_nl) || '';
 }
 
+// Uitleg van "versnellen" onder de tabel, alleen bij schema's waarin het voorkomt
+function strideNote(plan, lang) {
+  var has = plan.weeks.some(function(row) { return row.some(function(cell) { return /versnell/i.test(cell); }); });
+  if (!has) return '';
+  return lang==='en'
+    ? '<strong>Strides (versnellen):</strong> run 20 seconds at a brisk pace, not a sprint. Build up the speed calmly, then jog slowly for 1 minute until you have your breath back before the next one.'
+    : '<strong>Versnellen:</strong> loop 20 seconden vlot, geen sprint. Bouw het tempo rustig op en jog daarna 1 minuut rustig tot je weer op adem bent, voor je de volgende doet.';
+}
+
 function buildPrintHTML(id) {
   var lang = getLang();
   var plan = PLANS[id];
@@ -358,6 +367,7 @@ function buildPrintHTML(id) {
     '<table><thead><tr><th>Week</th>'+
       days.map(function(d){ return '<th>'+d+'</th>'; }).join('')+
     '</tr></thead><tbody>'+tableRows+'</tbody></table>'+
+    (strideNote(plan, lang) ? '<p class="intro">'+strideNote(plan, lang)+'</p>' : '')+
     '<h3>Warming-up tips</h3><ul>'+warmup+'</ul>'+
     '<h3>Stretch tips</h3><ul>'+stretch+'</ul>'+
     '<p class="footer">RunningNederland.nl — trainingsschema '+label+'</p>'+
@@ -560,6 +570,7 @@ function renderTabContent(id, lang) {
       '</tr></thead>'+
       '<tbody>'+tableRows+'</tbody>'+
     '</table></div>'+
+    (strideNote(plan, lang) ? '<p class="schema-note">'+strideNote(plan, lang)+'</p>' : '')+
     '<div class="training-tips">'+
       '<div class="training-tips__box">'+
         '<h4>'+t('warmup_title')+'</h4>'+
