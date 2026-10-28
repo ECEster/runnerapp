@@ -400,6 +400,11 @@ Wie hem vervangt (zie de nieuwe trailfoto hierboven), verandert dus ook die pagi
 
 ## Herinnering voor de volgende sessie: verkeerde jaartallen en import per regio (2026-10-22)
 
+**Bijgewerkt 2026-10-28: niet uitvoeren.** De 24 rijen hieronder blijken grotendeels echte
+evenementen van 2026 te zijn (weekdag klopt met 2026, bv. Brinkloop op dinsdag); de 2027-versies
+staan er al als aparte rijen. Een jaar verschuiven maakt ze dubbel. Ze staan als concept met een
+datum in het verleden en zijn dus onzichtbaar; eventueel later opruimen.
+
 **Verkeerde jaartallen.** hardloopkalendernederland.nl noemt geen jaartal ("Zaterdag 6 maart").
 De scraper zette er altijd 2026 voor, waardoor voorjaarsevents van 2027 als 2026 in de database
 kwamen (bv. id 61 Halve Marathon van Haren, 62 Klap tot Klaploop, 63 Marathon van Groningen).
