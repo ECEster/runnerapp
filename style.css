@@ -1680,10 +1680,20 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
 .page-training .training-table tr:nth-child(even) td { background: transparent; }
 .page-training .training-table tr:hover td { background: #FAFAF7; }
 .page-training .training-table .week-cell { font-weight: 700; font-size: 0.92rem; white-space: nowrap; }
-.page-training .tab-tile { border-width: 2px; border-color: var(--salie); align-content: center; min-height: 64px; }
-.page-training .tab-tile--own { border-color: var(--salie); } /* tekst maakt de knop herkenbaar; de rand is decoratie */
-.page-training .tab-tile.active { background: var(--salie); border-color: var(--salie); } /* salie zoals de tabelkop; donkere tekst 7,4:1 (wit haalt maar 2:1) */
-.page-training .tab-tile.active b, .page-training .tab-tile.active i { color: var(--dark); }
+/* Afstandstegels stijl D "kilometerstreepje": wit, kort salie streepje links (zoals op een meetlint).
+   Gekozen: streepje langer en donkerder, rand salie. */
+.page-training .tab-tile { position: relative; border: 1px solid #E3E5DE; background: var(--white); min-height: 64px;
+  justify-items: start; align-content: center; text-align: left; padding: 0.6rem 0.5rem 0.6rem 1.25rem; }
+.page-training .tab-tile::before { content: ""; position: absolute; left: 9px; top: 50%; width: 3px; height: 22px; margin-top: -11px; border-radius: 2px; background: var(--salie); transition: height var(--transition), margin-top var(--transition), background var(--transition); }
+.page-training .tab-tile:hover { transform: none; border-color: var(--salie); }
+.page-training .tab-tile b { color: var(--dark); font-weight: 700; }
+.page-training .tab-tile b small { color: var(--mid); font-weight: 600; }
+.page-training .tab-tile--own { border-color: #E3E5DE; }
+.page-training .tab-tile.active { background: var(--white); border-color: var(--salie); }
+.page-training .tab-tile.active::before { height: 40px; margin-top: -20px; background: var(--salie-tekst); }
+.page-training .tab-tile.active b { color: var(--dark); }
+.page-training .tab-tile.active i { color: var(--mid); }
+@media (prefers-reduced-motion: reduce) { .page-training .tab-tile::before { transition: none; } }
 .page-training .training-tips__box { box-shadow: none; border: 1px solid #E5E7EB; border-left: 4px solid var(--salie); }
 .page-training .training-tips__box ul li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--salie); margin-top: 0.55em; }
 .training-tips__box ul li::before {
