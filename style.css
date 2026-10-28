@@ -549,18 +549,23 @@ p:last-child { margin-bottom: 0; }
   gap: 4px;
   pointer-events: none;
 }
-.event-card__photo-badge {
+.event-card__photo-badge,
+.detail-type-label {
+  /* Leesbaar op elke foto: halfdoorzichtig donker, witte tekst, minimaal 12,5px.
+     Tekst staat in gewone letters in de HTML; hoofdletters alleen via CSS. */
   padding: 3px 10px;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  background: rgba(0, 0, 0, 0.15);
-  color: #e6e6e6;
-  font-size: 0.72rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(17, 24, 39, 0.68);
+  color: #fff;
+  font-size: 0.78rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   backdrop-filter: blur(2px);
 }
+/* Detailpagina: zelfde label, iets groter, zonder typekleur */
+.detail-type-label { display: inline-block; margin: 0 4px 0.5rem 0; font-size: 0.85rem; padding: 4px 12px; }
 .event-card__free-badge {
   position: absolute;
   top: 10px;
