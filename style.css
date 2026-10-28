@@ -2183,3 +2183,11 @@ body.page-overons { background: var(--white); }
 
 /* Deelknop detailpagina */
 .share-status { align-self: center; font-size: 0.85rem; color: var(--dark3); }
+
+/* Trainingsschema's: uitleg van het gekozen schema in een eigen tegel */
+.schema-intro {
+  flex: 1 1 420px; min-width: 0; margin: 0;
+  background: var(--white); border: 1px solid #E5E7EB; border-left: 4px solid var(--salie);
+  border-radius: var(--radius); padding: 0.85rem 1.1rem;
+  color: var(--dark3); font-size: 0.9rem; line-height: 1.55;
+}
