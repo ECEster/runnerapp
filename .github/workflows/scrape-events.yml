@@ -18,6 +18,14 @@ on:
         description: "Maximaal aantal nieuwe events (veiligheidsstop; standaard 50)"
         type: string
         default: "50"
+      vanaf:
+        description: "Vanaf datum (JJJJ-MM-DD; leeg = vandaag)"
+        type: string
+        default: ""
+      tot:
+        description: "Tot en met datum (JJJJ-MM-DD)"
+        type: string
+        default: "2027-12-31"
 
 jobs:
   scrape:
@@ -38,11 +46,13 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           REGIO: ${{ github.event.inputs.regio }}
           MAX_NIEUW: ${{ github.event.inputs.max }}
+          VANAF: ${{ github.event.inputs.vanaf }}
+          TOT: ${{ github.event.inputs.tot }}
         run: |
           if [ "${{ github.event.inputs.live }}" = "true" ]; then
-            node write-events.js --live --regio="$REGIO" --max="$MAX_NIEUW"
+            node write-events.js --live --regio="$REGIO" --max="$MAX_NIEUW" --vanaf="$VANAF" --tot="$TOT"
             # Nieuwe evenementen meteen coördinaten geven (postcodefilter)
             node geocode-events.js --live
           else
-            node write-events.js --regio="$REGIO" --max="$MAX_NIEUW"
+            node write-events.js --regio="$REGIO" --max="$MAX_NIEUW" --vanaf="$VANAF" --tot="$TOT"
           fi

@@ -43,6 +43,10 @@ const regio = argValue('regio').toLowerCase()
 const regioProvincies = regio && regio !== 'alle' ? REGIOS[regio] : null
 // Bewust te verhogen per run (bv. voor de eerste import van een nieuwe regio)
 const MAX_INSERTS_PER_RUN = Number.parseInt(argValue('max'), 10) || DEFAULT_MAX_INSERTS
+// Periode (JJJJ-MM-DD): standaard vanaf vandaag t/m 31 december van volgend jaar
+const isDate = (s) => /^\d{4}-\d{2}-\d{2}$/.test(s)
+const VANAF = isDate(argValue('vanaf')) ? argValue('vanaf') : new Date().toISOString().slice(0, 10)
+const TOT = isDate(argValue('tot')) ? argValue('tot') : `${new Date().getFullYear() + 1}-12-31`
 
 async function main() {
   console.log(isLive ? '=== LIVE MODUS — er wordt echt geschreven ===' : '=== DRY RUN (standaard, niets wordt geschreven) ===')
@@ -50,6 +54,7 @@ async function main() {
     throw new Error(`Onbekende regio "${regio}". Kies uit: alle, ${Object.keys(REGIOS).join(', ')}.`)
   }
   console.log(`Regio: ${regioProvincies ? `${regio} (${regioProvincies.join(', ')})` : 'alle'} | max. nieuwe events: ${MAX_INSERTS_PER_RUN}`)
+  console.log(`Periode: ${VANAF} t/m ${TOT}`)
 
   console.log('\nStap 1/4: events ophalen en parsen van beide bronnen...')
   const { unique, duplicates } = await collectEvents({ year: new Date().getFullYear() })
@@ -61,7 +66,11 @@ async function main() {
 
   const deduped = dedupeAgainstDb(unique, existingRows)
   // Regiofilter pas ná het dedupliceren, zodat de vergelijking met de database volledig blijft
-  const inRegio = (e) => !regioProvincies || regioProvincies.includes(e.provincie)
+  // Regio- en periodefilter pas ná het dedupliceren, zodat de vergelijking met de database volledig blijft
+  const inPeriode = (e) => !e.datum || (e.datum >= VANAF && e.datum <= TOT)
+  const inRegio = (e) => (!regioProvincies || regioProvincies.includes(e.provincie)) && inPeriode(e)
+  const buitenPeriode = deduped.toInsert.filter((e) => !inPeriode(e)).length
+  if (buitenPeriode) console.log(`  ${buitenPeriode} nieuwe events vallen buiten de periode en worden overgeslagen`)
   const toInsert = deduped.toInsert.filter(inRegio)
   const toMerge = deduped.toMerge.filter(({ event }) => inRegio(event))
   const skipped = deduped.skipped.filter(inRegio)

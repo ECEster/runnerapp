@@ -157,6 +157,8 @@ Draaien:
 3. Vink "live" aan om écht te schrijven, laat 'm uit voor een dry-run (print alleen, net
    als lokaal). Bekijk de output onder de workflow-run.
 4. **Regio** (alle/noord/oost/zuid/west): alleen nieuwe events in die regio toevoegen.
+5. **Vanaf / tot** (JJJJ-MM-DD): alleen nieuwe events in die periode. Leeg *vanaf* = vandaag;
+   *tot* staat standaard op 2027-12-31. Lokaal: `--vanaf=... --tot=...`.
    **Max**: veiligheidsstop voor het aantal nieuwe events (standaard 50). Komt een run
    daarboven, dan stopt hij zonder iets te schrijven (rode run, "STOP" in de log). Voor de
    eerste import van een regio: eerst een dry-run met die regio en een hoge max (bv. 400),
