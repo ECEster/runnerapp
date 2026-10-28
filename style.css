@@ -17,6 +17,9 @@
   --surface:     #F9FAFB;
   --surface2:    #F3F4F6;
   --white:       #FFFFFF;
+  --salie:       #B6B88D; /* alleen achtergrond en decoratie (2,05:1 op wit) */
+  --salie-tekst: #6B6D3F; /* tekst in saliegroen: 5,4:1 op wit */
+  --salie-lijn:  #8A8C5F; /* randen en iconen in saliegroen: 3,5:1 op wit */
   --radius:      8px;
   --radius-lg:   14px;
   --shadow:      0 2px 12px rgba(0,0,0,0.10);
@@ -585,7 +588,7 @@ p:last-child { margin-bottom: 0; }
 }
 .event-card__date {
   font-size: 0.78rem;
-  color: #595336;
+  color: var(--salie-tekst);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -1531,7 +1534,7 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
 .tab-tile.active, .page-training .tab-tile.active { background: #2A3B5E; border-color: #2A3B5E; } /* donkerblauw, zoals de kalenderknoppen */
 .tab-tile.active b { color: #C4B57B; }
 .tab-tile.active i { color: rgba(255,255,255,0.75); }
-.tab-tile--own { border-color: #C4B57B; }
+.tab-tile--own { border-color: var(--salie-lijn); } /* 3,5:1 op wit: de rand is de grens van de knop */
 .tab-tile:focus-visible { outline: 2px solid #C4B57B; outline-offset: 2px; }
 @media (max-width: 900px) {
   .training-tabs--tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
