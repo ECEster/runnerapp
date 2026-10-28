@@ -111,7 +111,7 @@ function renderEvent(ev, lang) {
   return '<div class="event-detail">'+
     renderBreadcrumbs(name)+
     '<div class="event-detail__hero">'+
-      '<img src="'+getEventImage(ev)+'" alt="'+name+'">'+
+      '<img src="'+getEventImage(ev)+'" alt="">'+
       '<div class="event-detail__hero-overlay">'+
         '<span class="event-card__badge '+badgeClass+'" style="position:static;display:inline-block;margin-bottom:0.5rem;font-size:0.82rem;padding:4px 12px;">'+typeName+'</span>'+
         (ev.type2 ? '<span class="event-card__badge '+getBadgeClass(ev.type2)+'" style="position:static;display:inline-block;margin-bottom:0.5rem;margin-left:4px;font-size:0.82rem;padding:4px 12px;">'+getTypeName(ev.type2, lang)+'</span>' : '')+
@@ -137,7 +137,7 @@ function renderEvent(ev, lang) {
         '<div class="detail-gallery" style="margin-top:2rem;">'+
           '<h3>'+t('gallery_title')+'</h3>'+
           '<div class="detail-gallery__grid">'+
-            GALLERY_IMGS.map(function(src){ return '<img src="'+src+'" alt="Evenement foto" loading="lazy">'; }).join('')+
+            GALLERY_IMGS.map(function(src){ return '<img src="'+src+'" alt="" loading="lazy">'; }).join('')+
           '</div>'+
         '</div>'+
         ytHtml+

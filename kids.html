@@ -370,11 +370,11 @@ function renderKidsEvents(lang) {
       var price = !ev.paid ? (lang==='en' ? 'Free' : 'Gratis') : (ev.price ? formatPrice(ev.price) : '');
       return cardOpen('kids-event-card', ev)+
         '<div class="kids-event-card__img">'+
-          '<img src="'+getEventImage(ev)+'" alt="'+name+'" loading="lazy">'+
+          '<img src="'+getEventImage(ev)+'" alt="" loading="lazy">'+
         '</div>'+
         '<div class="kids-event-card__body">'+
           '<div class="kids-event-card__date">'+dateStr+'</div>'+
-          '<h4><span>'+name+'</span></h4>'+
+          '<h4>'+cardLink(ev, name)+'</h4>'+
           '<p>'+titleCase(ev.city)+' &nbsp;|&nbsp; '+ev.distances.join(', ')+'&nbsp;|&nbsp; '+price+'</p>'+
         '</div>'+
       cardClose(ev);

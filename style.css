@@ -488,7 +488,12 @@ p:last-child { margin-bottom: 0; }
 
 /* Kaart + bladwijzer: de knop staat rechtsboven op de foto en beweegt mee met de kaart */
 .card-wrap { position: relative; display: flex; min-width: 0; }
-.card-wrap > a { flex: 1; min-width: 0; }
+.card-wrap > .event-card, .card-wrap > .kids-event-card { flex: 1; min-width: 0; }
+/* Stretched link: de titel-link bedekt met ::after de hele kaart */
+.card-link { color: inherit; text-decoration: none; }
+.card-link::after { content: ''; position: absolute; inset: 0; z-index: 1; border-radius: var(--radius-lg); cursor: pointer; }
+.card-link:focus-visible { outline: none; }
+.card-link:focus-visible::after { outline: 2px solid var(--dark); outline-offset: 3px; }
 .bookmark-btn {
   position: absolute; top: 10px; right: 10px; z-index: 2;
   width: 36px; height: 36px; border-radius: 50%; border: 0;
@@ -625,8 +630,7 @@ a.event-card__title:hover { color: var(--accent); }
   margin-bottom: 0.7rem;
 }
 /* Hele kaart is een link naar de website van het evenement */
-a.event-card, a.kids-event-card { color: inherit; text-decoration: none; cursor: pointer; }
-a.event-card:focus-visible, a.kids-event-card:focus-visible { outline: 2px solid var(--dark); outline-offset: 3px; }
+.event-card, .kids-event-card { color: inherit; }
 .event-card__footer {
   display: flex;
   /* Altijd onderaan de kaart en knoppen op één lijn, ook als de prijs of

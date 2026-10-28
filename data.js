@@ -416,10 +416,16 @@ function calDotsHtml(evs, lang) {
 function eventUrl(ev) { return 'evenement.html?id=' + ev.id; }
 // De bladwijzerknop staat náást de link (in een wrapper), niet erin: een knop
 // binnen een link is ongeldige HTML en lastig met toetsenbord en schermlezer.
+// Kaart als <article>; alleen de titel is een link (cardLink), die via CSS
+// (.card-link::after) over de hele kaart klikbaar is. Zo leest een
+// screenreader alleen de naam voor als linktekst, niet de hele kaart.
 function cardOpen(cls, ev) {
-  return '<div class="card-wrap"><a class="'+cls+'" href="'+eventUrl(ev)+'">';
+  return '<div class="card-wrap"><article class="'+cls+'">';
 }
-function cardClose(ev) { return '</a>' + bookmarkButton(ev) + '</div>'; }
+function cardClose(ev) { return '</article>' + bookmarkButton(ev) + '</div>'; }
+function cardLink(ev, name, cls) {
+  return '<a class="card-link' + (cls ? ' ' + cls : '') + '" href="'+eventUrl(ev)+'">' + name + '</a>';
+}
 
 // ── Opslaan in Mijn Runs (bladwijzer) ──────────────────────────────────
 var BOOKMARK_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h11v17l-5.5-4.6-5.5 4.6z"/></svg>';

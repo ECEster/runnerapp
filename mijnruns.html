@@ -653,12 +653,12 @@ function renderFavorites() {
     var typeName = cardTypeName(ev, lang);
     return cardOpen('event-card', ev)+
       '<div class="event-card__img">'+
-        '<img src="'+getEventImage(ev)+'" alt="'+name+'" loading="lazy">'+
+        '<img src="'+getEventImage(ev)+'" alt="" loading="lazy">'+
         '<span class="event-card__photo-badges"><span class="event-card__photo-badge">'+typeName+'</span></span>'+
       '</div>'+
       '<div class="event-card__body">'+
         '<div class="event-card__date">'+dateStr+'</div>'+
-        '<span class="event-card__title">'+name+'</span>'+
+        cardLink(ev, name, 'event-card__title')+
         '<div class="event-card__meta"><span>'+titleCase(ev.city)+'</span></div>'+
         '<div class="event-card__footer">'+
           makePriceHtml(ev, lang)+

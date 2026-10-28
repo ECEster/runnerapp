@@ -385,7 +385,7 @@ function renderList(lang) {
     var distChips = '<span class="event-card__distances-text">'+formatDistances(ev.distances)+'</span>';
     return cardOpen('event-card', ev)+
       '<div class="event-card__img">'+
-        '<img src="'+getEventImage(ev)+'" alt="'+name+'" loading="lazy">'+
+        '<img src="'+getEventImage(ev)+'" alt="" loading="lazy">'+
         '<span class="event-card__photo-badges">'+
           '<span class="event-card__photo-badge">'+typeName+'</span>'+
           (ev.type2 ? '<span class="event-card__photo-badge">'+badgeTypeName(ev.type2, lang)+'</span>' : '')+
@@ -394,7 +394,7 @@ function renderList(lang) {
       '</div>'+
       '<div class="event-card__body">'+
         '<div class="event-card__date">'+dateStr+'</div>'+
-        '<span class="event-card__title">'+name+'</span>'+
+        cardLink(ev, name, 'event-card__title')+
         '<div class="event-card__meta"><span>'+titleCase(ev.city)+'</span></div>'+
         '<div class="event-card__distances">'+distChips+'</div>'+
         '<div class="event-card__footer">'+priceHtml+
