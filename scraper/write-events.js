@@ -25,6 +25,13 @@ import { fetchExistingEventKeys, insertEventRow, updateEventFields } from './lib
 
 const DEFAULT_MAX_INSERTS = 50
 
+// Bewust verwijderde fouten van de bronsites: nooit opnieuw toevoegen.
+// Sleutel = serie|datum (zoals in de database).
+const IGNORE = new Set([
+  'zevenheuvelenloop-nijmegen|2026-11-14', // bronsite zet de loop op de dag van de Zevenheuvelennacht
+  'zevenheuvelenloop-nijmegem|2026-11-15', // dubbel van 'NN Zevenheuvelenloop Nijmegen', met typfout
+])
+
 const REGIOS = {
   noord: ['Groningen', 'Friesland', 'Drenthe'],
   oost: ['Overijssel', 'Gelderland', 'Flevoland'],
@@ -71,7 +78,13 @@ async function main() {
   const inRegio = (e) => (!regioProvincies || regioProvincies.includes(e.provincie)) && inPeriode(e)
   const buitenPeriode = deduped.toInsert.filter((e) => !inPeriode(e)).length
   if (buitenPeriode) console.log(`  ${buitenPeriode} nieuwe events vallen buiten de periode en worden overgeslagen`)
-  const toInsert = deduped.toInsert.filter(inRegio)
+  const notIgnored = (e) => {
+    const row = mapToSupabaseShape(e)
+    return !IGNORE.has(`${row.serie}|${row.date}`)
+  }
+  const ignored = deduped.toInsert.filter((e) => inRegio(e) && !notIgnored(e)).length
+  if (ignored) console.log(`  ${ignored} bewust uitgesloten events overgeslagen (zie IGNORE)`)
+  const toInsert = deduped.toInsert.filter((e) => inRegio(e) && notIgnored(e))
   const toMerge = deduped.toMerge.filter(({ event }) => inRegio(event))
   const skipped = deduped.skipped.filter(inRegio)
   console.log(
