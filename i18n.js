@@ -78,6 +78,7 @@ var I18N = {
     gallery_title: "Foto's",
     youtube_title: "Video",
     share_title: "Delen",
+    share_copied: "Link gekopieerd. Plak hem waar je wilt.",
 
     // Training schemas
     training_title: "Trainingsschema's",
@@ -306,6 +307,7 @@ var I18N = {
     gallery_title: "Photos",
     youtube_title: "Video",
     share_title: "Share",
+    share_copied: "Link copied. Paste it wherever you like.",
 
     // Training schemas
     training_title: "Training Plans",

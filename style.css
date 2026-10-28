@@ -2162,3 +2162,6 @@ body.page-overons { background: var(--white); }
 .mr-login__link { margin-top: 0.9rem; text-align: center; font-size: 0.88rem; color: var(--mid); display: flex; flex-wrap: wrap; justify-content: center; gap: 0.35rem; }
 .mr-login__link button { background: none; border: 0; padding: 0.25rem; min-height: 24px; color: var(--dark); font: inherit; font-weight: 600; text-decoration: underline; cursor: pointer; }
 .mr-login__link button:focus-visible { outline: 2px solid var(--dark); outline-offset: 2px; border-radius: 4px; }
+
+/* Deelknop detailpagina */
+.share-status { align-self: center; font-size: 0.85rem; color: var(--dark3); }
