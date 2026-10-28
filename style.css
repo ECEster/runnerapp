@@ -1668,8 +1668,23 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
 .page-training .training-table .week-cell { color: var(--dark); }
 .page-training .training-table tr:hover td { background: var(--surface2); }
 .page-training .training-tips__box ul li::before { color: var(--dark); }
-.page-training .btn--ghost { color: var(--dark); border-color: var(--dark); }
-.page-training .btn--ghost:hover { background: var(--dark); color: var(--white); }
+.page-training .btn--ghost { color: var(--dark); border: 1px solid var(--light); background: var(--white); }
+.page-training .btn--ghost:hover { border-color: var(--dark); background: var(--white); color: var(--dark); }
+
+/* Trainingsschema's rustiger: tabel als witte kaart, alleen horizontale lijnen,
+   geen streepjes om en om, lichte kop */
+.page-training .training-table-wrap { background: var(--white); border: 1px solid #E5E7EB; border-radius: var(--radius-lg); }
+.page-training .training-table th { background: rgba(182,184,141,0.22); color: var(--dark3); font-weight: 600; font-size: 0.75rem; letter-spacing: 0.08em; padding: 0.8rem 1.1rem; }
+.page-training .training-table td { border-right: none; border-bottom: 1px solid #EEF0F2; padding: 0.8rem 1.1rem; }
+.page-training .training-table tr:last-child td { border-bottom: none; }
+.page-training .training-table tr:nth-child(even) td { background: transparent; }
+.page-training .training-table tr:hover td { background: #FAFAF7; }
+.page-training .training-table .week-cell { font-weight: 700; font-size: 0.92rem; white-space: nowrap; }
+.page-training .tab-tile { border-width: 1px; border-color: #E5E2D6; }
+.page-training .tab-tile--own { border-color: var(--salie-lijn); }
+.page-training .tab-tile.active { border-color: #2A3B5E; }
+.page-training .training-tips__box { box-shadow: none; border: 1px solid #E5E7EB; }
+.page-training .training-tips__box ul li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--salie); margin-top: 0.55em; }
 .training-tips__box ul li::before {
   content: '→';
   color: var(--accent);
