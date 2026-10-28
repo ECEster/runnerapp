@@ -34,6 +34,8 @@ const IGNORE = new Set([
   'zevenheuvelenloop-nijmegem|2026-11-15', // dubbel van 'NN Zevenheuvelenloop Nijmegen', met typfout
   'alfa-laval-stevensloop-nijmegen|2027-03-20', // bronsite geeft 20 maart; is 21 maart (rij 512 met de hand aangepast)
   'stevensloop-nijmegen|2027-03-21', // dubbel van 'Alfa Laval Stevensloop'
+  'blaauwbekmarathon-blauwestad|2027-02-06', // dubbel van 'Blaauwbek Marathon' (id 47)
+  'essity-7km-martenshoek-hoogezand|2027-09-26', // dubbel van '7 Kilometer van Martenshoek' (id 570)
 ])
 
 const REGIOS = {
