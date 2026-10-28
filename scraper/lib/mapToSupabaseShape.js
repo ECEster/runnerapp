@@ -45,7 +45,9 @@ function normalizeerAfstand(afstand) {
 //   lib/extractEditie.js voor hoe deze worden afgeleid.
 export function mapToSupabaseShape(event) {
   return {
-    name_nl: event.naam,
+    // Naam leesbaar maken (&amp; -> &); de serie blijft op de ruwe naam, zodat
+    // bestaande rijen herkend blijven
+    name_nl: decodeHtmlEntities(event.naam),
     date: event.datum,
     city: titleCase(event.plaats),
     province: event.provincie,

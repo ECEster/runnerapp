@@ -49,6 +49,8 @@ const IGNORE = new Set([
   'kardingebultra-achtertoenultra-grunn-groningen-kardingebult|2027-07-18',          // houd id 338 (17 jul)
   'huis-amp-hypotheek-stadsloop-nk-10-km-appingedam|2027-06-27',                     // houd id 319 (26 jun, voorlopig)
   'vuurtorentrail-hollum|2027-03-13',                                                // houd id 941 (14 mrt)
+  'salomon-vuurtorentrail-amp-walk-ameland-hollum|2027-03-13',                       // walk-variant, trail (941) blijft
+  'tocht-om-noord-groningen|2027-09-25', 'tocht-om-noord-groningen|2027-09-26',      // wandeltocht, geen loop
 ])
 
 const REGIOS = {
