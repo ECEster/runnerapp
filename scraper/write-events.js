@@ -36,6 +36,19 @@ const IGNORE = new Set([
   'stevensloop-nijmegen|2027-03-21', // dubbel van 'Alfa Laval Stevensloop'
   'blaauwbekmarathon-blauwestad|2027-02-06', // dubbel van 'Blaauwbek Marathon' (id 47)
   'essity-7km-martenshoek-hoogezand|2027-09-26', // dubbel van '7 Kilometer van Martenshoek' (id 570)
+  // Tweedaagse evenementen: één rij op de dag van de hoofdloop (opgeschoond 2026-10-28)
+  'nn-marathon-rotterdam|2027-04-10', 'marathon-rotterdam|2027-04-11',               // houd id 747 (11 apr)
+  'asml-marathon-eindhoven|2027-10-09', 'marathon-eindhoven|2027-10-10',             // houd id 897 (10 okt)
+  'nn-dam-tot-damloop-amsterdam|2027-09-18', 'dam-tot-damloop-zaandam-amsterdam|2027-09-19', // houd id 678 (19 sep)
+  'tcs-amsterdam-marathon|2027-10-30',                                               // houd id 984 (31 okt)
+  'marathon-leiden|2027-05-08',                                                      // houd id 755 (9 mei)
+  'lentemarathon-amstelveen|2027-03-20',                                             // houd id 690 (21 mrt)
+  'twiskemolenloop-landsmeer|2027-02-06',                                            // houd id 689 (7 feb)
+  'pierewaai-trail-hoek-holland-naar-ijmuiden-zee|2027-01-22',                       // houd id 642 (23 jan)
+  'kustmarathon-zeeland-zoutelande|2027-10-01',                                      // houd id 962 (2 okt)
+  'kardingebultra-achtertoenultra-grunn-groningen-kardingebult|2027-07-18',          // houd id 338 (17 jul)
+  'huis-amp-hypotheek-stadsloop-nk-10-km-appingedam|2027-06-27',                     // houd id 319 (26 jun, voorlopig)
+  'vuurtorentrail-hollum|2027-03-13',                                                // houd id 941 (14 mrt)
 ])
 
 const REGIOS = {
