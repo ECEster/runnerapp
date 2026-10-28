@@ -2087,14 +2087,14 @@ body.page-overons { background: var(--white); }
 .mr-login__photo > * { position: relative; }
 .mr-login__kicker { color: #C4B57B; font: 700 0.72rem var(--font-head); letter-spacing: .14em; text-transform: uppercase; }
 .mr-login__title { color: var(--white); font: 800 1.6rem/1.2 var(--font-head); margin: 6px 0 0; text-transform: none; text-wrap: balance; }
-.mr-login__title em { font-style: normal; color: #C4B57B; }
+.mr-login__title em { font-style: normal; color: var(--white); }
 .mr-login__perks { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
 .mr-login__perks li { display: grid; grid-template-columns: 40px 1fr; gap: 14px; align-items: start; }
 .mr-login__perks li:last-child { align-items: end; } /* pictogram onderaan, gelijk met de knop rechts */
 .mr-login__icon { width: 40px; height: 40px; border-radius: 10px; border: 1px solid #C4B57B; color: #C4B57B; display: grid; place-items: center; background: rgba(17,24,39,.45); }
 .mr-login__icon svg { width: 20px; height: 20px; }
 .mr-login__perks b { display: block; font: 700 0.95rem var(--font-head); margin-bottom: 3px; }
-.mr-login__perks li span:not(.mr-login__icon) { color: rgba(255,255,255,.75); font-size: 0.86rem; line-height: 1.5; }
+.mr-login__perks li span:not(.mr-login__icon) { color: var(--white); font-size: 0.86rem; line-height: 1.5; }
 .mr-login__side { display: grid; place-items: end center; padding: 56px clamp(28px, 6vw, 80px) var(--mr-bottom); }
 .mr-login__card { width: 100%; max-width: 400px; display: grid; gap: 20px; }
 .mr-login__seg { display: grid; grid-template-columns: 1fr 1fr; background: #EEF0F4; border-radius: 12px; padding: 4px; position: relative; }
