@@ -30,6 +30,8 @@ const DEFAULT_MAX_INSERTS = 50
 const IGNORE = new Set([
   'zevenheuvelenloop-nijmegen|2026-11-14', // bronsite zet de loop op de dag van de Zevenheuvelennacht
   'zevenheuvelenloop-nijmegem|2026-11-15', // dubbel van 'NN Zevenheuvelenloop Nijmegen', met typfout
+  'alfa-laval-stevensloop-nijmegen|2027-03-20', // bronsite geeft 20 maart; is 21 maart (rij 512 met de hand aangepast)
+  'stevensloop-nijmegen|2027-03-21', // dubbel van 'Alfa Laval Stevensloop'
 ])
 
 const REGIOS = {
