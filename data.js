@@ -348,7 +348,7 @@ function formatEventDate(ev, lang) {
 
 // Zoekveld: tekst in naam of plaats, of een zoekwoord voor rolstoel/handbike
 // bij evenementen die dat kenmerk hebben.
-var ROLSTOEL_SEARCH = /rolstoel|handbike|hand bike|wheelchair|framerun|frame run|aangepast/;
+var ROLSTOEL_SEARCH = /rolstoel|handbike|hand bike|wheelchair|framerun|frame run|aangepast|g-atle|g-loop|g-run|para/;
 function matchesSearch(ev, q) {
   if (!q) return true;
   if ((ev.name_nl || '').toLowerCase().indexOf(q) !== -1) return true;
