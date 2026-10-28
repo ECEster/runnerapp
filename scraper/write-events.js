@@ -21,6 +21,8 @@ try {
 import { collectEvents } from './lib/collectEvents.js'
 import { dedupeAgainstDb } from './lib/dedupeAgainstDb.js'
 import { mapToSupabaseShape } from './lib/mapToSupabaseShape.js'
+import { namesLikelyMatch } from './lib/nameSimilarity.js'
+import { namesClearlyDifferent } from './lib/dedupe.js'
 import { fetchExistingEventKeys, insertEventRow, updateEventFields } from './lib/supabaseAdmin.js'
 
 const DEFAULT_MAX_INSERTS = 50
@@ -86,7 +88,39 @@ async function main() {
   }
   const ignored = deduped.toInsert.filter((e) => inRegio(e) && !notIgnored(e)).length
   if (ignored) console.log(`  ${ignored} bewust uitgesloten events overgeslagen (zie IGNORE)`)
-  const toInsert = deduped.toInsert.filter((e) => inRegio(e) && notIgnored(e))
+  const candidates = deduped.toInsert.filter((e) => inRegio(e) && notIgnored(e))
+
+  // Extra check tegen de database én tussen de nieuwe events onderling: zelfde datum en
+  // sterk overeenkomende naam = hetzelfde evenement, ook als de bronnen een andere plaats
+  // noemen (bv. Blaauwbek Marathon "Blauwestad" vs "Oostwold"). Eén dag verschil wordt
+  // alleen gemeld: dan spreken de bronsites elkaar tegen en moet iemand kijken.
+  // Zelfde provincie is een voorwaarde: algemene namen ("Nieuwjaarsloop", "Sylvesterloop")
+  // komen in heel het land voor.
+  const sameEvent = (a, b) =>
+    (!a.prov || !b.prov || a.prov === b.prov) &&
+    namesLikelyMatch(a.name, b.name) && !namesClearlyDifferent(a.name, b.name)
+  const known = existingRows.map((r) => ({ name: r.name_nl, date: r.date, prov: r.province, label: `id ${r.id}` }))
+  const dayDiff = (a, b) => Math.abs((new Date(a) - new Date(b)) / 86400000)
+  const toInsert = []
+  const fuzzySkipped = []
+  const oneDayOff = []
+  for (const e of candidates) {
+    const me = { name: e.naam, date: e.datum, prov: e.provincie }
+    const same = known.find((k) => k.date === e.datum && sameEvent(me, k))
+    if (same) { fuzzySkipped.push(`${e.naam} | ${e.datum} | ${e.plaats} = ${same.name} (${same.label})`); continue }
+    const near = known.find((k) => k.date && e.datum && dayDiff(k.date, e.datum) === 1 && sameEvent(me, k))
+    if (near) oneDayOff.push(`${e.naam} | ${e.datum} | ${e.plaats}  <->  ${near.name} | ${near.date} (${near.label})`)
+    toInsert.push(e)
+    known.push({ name: e.naam, date: e.datum, prov: e.provincie, label: 'nieuw' })
+  }
+  if (fuzzySkipped.length) {
+    console.log(`  ${fuzzySkipped.length} nieuwe events overgeslagen: zelfde datum en naam als een bestaand event (andere plaatsnaam):`)
+    fuzzySkipped.forEach((l) => console.log(`    - ${l}`))
+  }
+  if (oneDayOff.length) {
+    console.log(`  LET OP: ${oneDayOff.length} nieuwe events lijken op een event één dag eerder/later (bronnen spreken elkaar tegen):`)
+    oneDayOff.forEach((l) => console.log(`    - ${l}`))
+  }
   const toMerge = deduped.toMerge.filter(({ event }) => inRegio(event))
   const skipped = deduped.skipped.filter(inRegio)
   console.log(
