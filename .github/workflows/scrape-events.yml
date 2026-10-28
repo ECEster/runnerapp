@@ -53,6 +53,8 @@ jobs:
             node write-events.js --live --regio="$REGIO" --max="$MAX_NIEUW" --vanaf="$VANAF" --tot="$TOT"
             # Nieuwe evenementen meteen coördinaten geven (postcodefilter)
             node geocode-events.js --live
+            # Organisator zoeken op de site van nieuwe evenementen (alleen bij een duidelijke naam)
+            node find-organizers.js --live
           else
             node write-events.js --regio="$REGIO" --max="$MAX_NIEUW" --vanaf="$VANAF" --tot="$TOT"
           fi
