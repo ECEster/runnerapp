@@ -80,3 +80,14 @@ test('namesLikelyMatch: "Kleintje X" is een apart evenement naast "X", geen dupl
 // dedupeAgainstDb (matching tegen de database) gebruikt sinds de invoering
 // van 'serie' geen fuzzy naam/plaats-matching meer, maar (serie, date) — zie
 // lib/dedupeAgainstDb.test.js.
+
+test('dedupeEvents: houdt een ander soort loop op dezelfde dag en plaats apart (Zevenheuvelennacht)', () => {
+  const { unique } = dedupeEvents([
+    { naam: 'Zevenheuvelenloop', datum: '2026-11-14', plaats: 'Nijmegen' },
+    { naam: 'Zevenheuvelenloop', datum: '2026-11-14', plaats: 'Nijmegen' },
+    { naam: 'Zevenheuvelennacht', datum: '2026-11-14', plaats: 'Nijmegen' },
+    { naam: 'Kidsrun Woellust', datum: '2026-10-04', plaats: 'Woltersum' },
+    { naam: 'Woellust Run', datum: '2026-10-04', plaats: 'Woltersum' },
+  ])
+  assert.deepEqual(unique.map((e) => e.naam).sort(), ['Kidsrun Woellust', 'Woellust Run', 'Zevenheuvelenloop', 'Zevenheuvelennacht'])
+})

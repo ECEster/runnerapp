@@ -18,6 +18,22 @@
 
 import { namesLikelyMatch } from './nameSimilarity.js'
 
+// Uitzondering op datum+plaats: twee namen die elk een ánder soort loop aanduiden
+// zijn geen dubbel, ook al vallen ze op dezelfde dag in dezelfde plaats. Bv.
+// "Zevenheuvelennacht" naast "Zevenheuvelenloop" (Nijmegen, 14 nov), of een
+// kidsrun naast de hoofdloop. Woorden als deel van een samenstelling tellen mee
+// ("Zevenheuvelennacht" bevat "nacht").
+const DISTINGUISHING_WORDS = ['nacht', 'night', 'kids', 'kinder', 'jeugd', 'junior', 'trail', 'estafette', 'relay', 'wandel', 'walk']
+
+function distinguishingWords(name) {
+  const n = normalize(name)
+  return DISTINGUISHING_WORDS.filter((w) => n.includes(w)).sort().join(',')
+}
+
+export function namesClearlyDifferent(nameA, nameB) {
+  return distinguishingWords(nameA) !== distinguishingWords(nameB)
+}
+
 export function normalize(value) {
   return (value ?? '').trim().toLowerCase().replace(/\s+/g, ' ')
 }
@@ -30,22 +46,28 @@ function keyFor(event) {
 }
 
 export function dedupeEvents(events) {
-  const byKey = new Map()
+  const byKey = new Map() // sleutel -> lijst van behouden events
   const duplicates = []
 
   for (const event of events) {
     const key = keyFor(event)
-    if (byKey.has(key)) {
-      duplicates.push({ kept: byKey.get(key), removed: event })
+    const kept = byKey.get(key) || []
+    const same = kept.find((k) => !namesClearlyDifferent(k.naam, event.naam))
+    if (same) {
+      duplicates.push({ kept: same, removed: event })
       continue
     }
-    byKey.set(key, event)
+    kept.push(event)
+    byKey.set(key, kept)
   }
 
   const unique = []
-  for (const event of byKey.values()) {
+  for (const event of [...byKey.values()].flat()) {
     const fuzzyMatch = unique.find(
-      (kept) => kept.datum === event.datum && namesLikelyMatch(kept.naam, event.naam),
+      (kept) =>
+        kept.datum === event.datum &&
+        namesLikelyMatch(kept.naam, event.naam) &&
+        !namesClearlyDifferent(kept.naam, event.naam),
     )
     if (fuzzyMatch) {
       duplicates.push({ kept: fuzzyMatch, removed: event })
