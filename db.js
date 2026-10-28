@@ -137,6 +137,16 @@ async function signUp(email, password, firstName) {
     return data;
 }
 
+// Inloggen zonder wachtwoord: Supabase mailt een eenmalige inloglink.
+// Alleen voor bestaande accounts (shouldCreateUser: false).
+async function sendLoginLink(email) {
+    const { error } = await db.auth.signInWithOtp({
+        email,
+        options: { shouldCreateUser: false, emailRedirectTo: location.origin + location.pathname },
+    });
+    if (error) throw error;
+}
+
 async function signIn(email, password) {
     const { data, error } = await db.auth.signInWithPassword({ email, password });
     if (error) throw error;

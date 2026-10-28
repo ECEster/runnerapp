@@ -16,6 +16,7 @@
     .btn-login:hover { background: #3a63e0; }
     .btn-login:disabled { opacity: .6; cursor: default; }
     .login-err { color: #c0392b; font-size: .82rem; margin-top: 10px; display: none; }
+    .login-label { display: block; text-align: left; font-size: .82rem; font-weight: 600; color: #333; margin: 8px 0 4px; }
   </style>
 </head>
 <body>
@@ -23,10 +24,14 @@
     <div style="font-size:2.5rem;margin-bottom:12px">🏃</div>
     <h2>Admin inloggen</h2>
     <p>Alleen voor beheerders van RunningNederland.nl</p>
-    <input type="email" id="login-email" placeholder="E-mailadres" autocomplete="email">
-    <input type="password" id="login-pw" placeholder="Wachtwoord" autocomplete="current-password">
-    <button class="btn-login" id="btn-login">Inloggen</button>
-    <div class="login-err" id="login-err">Onjuist e-mailadres of wachtwoord.</div>
+    <form id="login-form" novalidate>
+      <label for="login-email" class="login-label">E-mailadres</label>
+      <input type="email" id="login-email" autocomplete="email" required aria-describedby="login-err">
+      <label for="login-pw" class="login-label">Wachtwoord</label>
+      <input type="password" id="login-pw" autocomplete="current-password" required aria-describedby="login-err">
+      <button type="submit" class="btn-login" id="btn-login">Inloggen</button>
+      <div class="login-err" id="login-err" role="alert">Onjuist e-mailadres of wachtwoord.</div>
+    </form>
   </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -37,7 +42,8 @@
     if (data.session) location.href = 'admin-panel.html';
   });
 
-  document.getElementById('btn-login').addEventListener('click', async () => {
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
     const email = document.getElementById('login-email').value.trim();
     const pw    = document.getElementById('login-pw').value;
     const err   = document.getElementById('login-err');
@@ -56,9 +62,6 @@
     location.href = 'admin-panel.html';
   });
 
-  document.getElementById('login-pw').addEventListener('keydown', e => {
-    if (e.key === 'Enter') document.getElementById('btn-login').click();
-  });
 </script>
 </body>
 </html>
