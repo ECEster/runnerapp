@@ -186,6 +186,7 @@ var FALLBACK_IMAGE_BY_TYPE = {
 // binnengekomen. Een bosloop telt als trail, maar 'cross' gaat voor (bv.
 // "Boerbos Cross"). 'bosch' wordt uitgesloten zodat "Den Bosch" niet matcht.
 var FALLBACK_IMAGE_BY_NAME = [
+  { re: /rolstoel|wheelchair|handbike/i, image: 'images/rolstoel.jpg' },
   { re: /cross/i,           image: 'images/cross.jpg' },
   { re: /trail|bos(?!ch)/i, image: 'images/trail.jpg' },
   { re: /swim|\bdip\b/i,    image: 'images/swimrun.jpg' },
