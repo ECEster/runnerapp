@@ -28,6 +28,7 @@ async function loadEventsFromDB() {
         name_nl:          e.name_nl   || '',
         name_en:          e.name_en   || '',
         date:             e.date      || '',
+        end_date:         e.end_date  || '',
         type:             e.type      || '',
         type2:            e.type2     || '',
         // Plaatsnamen altijd als "Havelterberg", ook als ze in de database in hoofdletters staan

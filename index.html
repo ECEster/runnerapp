@@ -117,7 +117,7 @@ function getTypeName(type, lang) {
 
 function renderEventCard(ev, lang) {
   var name = lang === 'en' ? ev.name_en : ev.name_nl;
-  var dateStr = formatDate(ev.date, lang);
+  var dateStr = formatEventDate(ev, lang);
   var badgeClass = getBadgeClass(ev.type);
   var typeName = cardTypeName(ev, lang);
   var priceHtml = makePriceHtml(ev, lang);
@@ -151,7 +151,7 @@ function renderFeatured(lang) {
     return new Date(a.date) - new Date(b.date);
   });
   var featured = sorted.filter(function(ev) {
-    return new Date(ev.date) >= today;
+    return new Date(eventEnd(ev)) >= today;
   }).slice(0, 4);
   if (!featured.length) featured = sorted.slice(0, 4);
 

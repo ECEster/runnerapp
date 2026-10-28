@@ -300,6 +300,52 @@ function cityCoords(city) {
   return map[city] || null;
 }
 
+// ── Meerdaagse evenementen ───────────────────────────────────────────────
+// ev.date = eerste dag, ev.end_date = laatste dag (leeg bij eendaags).
+function eventEnd(ev) { return ev.end_date || ev.date; }
+
+// Alle dagen van een evenement als 'JJJJ-MM-DD' (maximaal 14 dagen)
+function eventDays(ev) {
+  var days = [ev.date];
+  if (!ev.end_date || ev.end_date <= ev.date) return days;
+  var d = new Date(ev.date + 'T12:00:00');
+  for (var i = 0; i < 14; i++) {
+    d.setDate(d.getDate() + 1);
+    var s = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    days.push(s);
+    if (s >= ev.end_date) break;
+  }
+  return days;
+}
+
+function eventOnDay(ev, year, month, day) {
+  var s = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+  return eventDays(ev).indexOf(s) !== -1;
+}
+
+function eventInMonth(ev, year, month) {
+  var prefix = year + '-' + String(month + 1).padStart(2, '0');
+  return eventDays(ev).some(function(s) { return s.slice(0, 7) === prefix; });
+}
+
+// "13 – 14 maart 2027", "31 januari – 1 februari 2027", of gewoon formatDate
+function formatEventDate(ev, lang) {
+  if (!ev.end_date || ev.end_date === ev.date) return formatDate(ev.date, lang);
+  var mNl = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+  var mEn = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var a = new Date(ev.date + 'T12:00:00'), b = new Date(ev.end_date + 'T12:00:00');
+  var m = lang === 'en' ? mEn : mNl;
+  if (lang === 'en') {
+    if (a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear())
+      return m[a.getMonth()] + ' ' + a.getDate() + '–' + b.getDate() + ', ' + b.getFullYear();
+    return m[a.getMonth()] + ' ' + a.getDate() + (a.getFullYear() === b.getFullYear() ? '' : ', ' + a.getFullYear()) + ' – ' + m[b.getMonth()] + ' ' + b.getDate() + ', ' + b.getFullYear();
+  }
+  if (a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear())
+    return a.getDate() + ' – ' + b.getDate() + ' ' + m[b.getMonth()] + ' ' + b.getFullYear();
+  var yearA = a.getFullYear() === b.getFullYear() ? '' : ' ' + a.getFullYear();
+  return a.getDate() + ' ' + m[a.getMonth()] + yearA + ' – ' + b.getDate() + ' ' + m[b.getMonth()] + ' ' + b.getFullYear();
+}
+
 // Haversine distance formula
 function haversineKm(lat1, lon1, lat2, lon2) {
   var R = 6371;

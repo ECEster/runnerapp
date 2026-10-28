@@ -355,7 +355,7 @@ var calYear, calMonth;
 // kidsrun === true, ongeacht provincie/regio.
 function getKidsEvents() {
   var todayStr = new Date().toISOString().split('T')[0];
-  return EVENTS.filter(function(ev){ return ev.kidsrun === true && ev.date >= todayStr; });
+  return EVENTS.filter(function(ev){ return ev.kidsrun === true && eventEnd(ev) >= todayStr; });
 }
 
 function renderKidsEvents(lang) {
@@ -366,7 +366,7 @@ function renderKidsEvents(lang) {
   } else {
     el.innerHTML = kidsEvents.map(function(ev) {
       var name = lang==='en' ? ev.name_en : ev.name_nl;
-      var dateStr = formatDate(ev.date, lang);
+      var dateStr = formatEventDate(ev, lang);
       var price = !ev.paid ? (lang==='en' ? 'Free' : 'Gratis') : (ev.price ? formatPrice(ev.price) : '');
       return cardOpen('kids-event-card', ev)+
         '<div class="kids-event-card__img">'+
@@ -401,12 +401,12 @@ function renderCalendar(lang) {
 
   var evByDay = {};
   kidsEvents.forEach(function(ev) {
-    var d = new Date(ev.date);
-    if (d.getFullYear()===calYear && d.getMonth()===calMonth) {
-      var day = d.getDate();
+    eventDays(ev).forEach(function(s) {
+      if (Number(s.slice(0, 4)) !== calYear || Number(s.slice(5, 7)) - 1 !== calMonth) return;
+      var day = Number(s.slice(8, 10));
       if (!evByDay[day]) evByDay[day] = [];
       evByDay[day].push(ev);
-    }
+    });
   });
 
   var totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
@@ -436,8 +436,7 @@ function openDayPanel(year, month, day) {
   var lang = getLang();
   var months = lang==='en' ? MONTHS_EN : MONTHS_NL;
   var evs = getKidsEvents().filter(function(ev){
-    var d = new Date(ev.date);
-    return d.getFullYear()===year && d.getMonth()===month && d.getDate()===day;
+    return eventOnDay(ev, year, month, day);
   });
   var panel = document.getElementById('day-panel');
   document.getElementById('day-panel-title').textContent = day+' '+months[month]+' '+year;

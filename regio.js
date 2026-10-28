@@ -40,13 +40,13 @@ function filterEvents() {
   var postalCoords = f.postal.length === 4 ? getPostalCoords(f.postal) : null;
   var todayStr = new Date().toISOString().split('T')[0];
   return EVENTS.filter(function(ev) {
-    if (ev.date < todayStr) return false;
+    if (eventEnd(ev) < todayStr) return false;
     // Always restrict to this regio's provinces
     if (REGIO_PROVINCES.indexOf(ev.province) === -1) return false;
     if (f.type && ev.type !== f.type && ev.type2 !== f.type) return false;
     if (f.province && ev.province !== f.province) return false;
     if (f.distance && !matchesDistanceFilter(ev, f.distance)) return false;
-    if (f.dateFrom && ev.date < f.dateFrom) return false;
+    if (f.dateFrom && eventEnd(ev) < f.dateFrom) return false;
     if (f.dateTo && ev.date > f.dateTo) return false;
     if (f.kidsrun && !ev.kidsrun) return false;
     if (f.estafette && !ev.estafette) return false;
@@ -84,8 +84,7 @@ function listEvents() {
   if (f.type || f.province || f.distance || f.dateFrom || f.dateTo || f.kidsrun ||
       f.estafette || f.freeOnly || f.atletiekunie || f.postal.length === 4 || f.search) return filteredEvents;
   return filteredEvents.filter(function(ev) {
-    var d = new Date(ev.date);
-    return d.getFullYear()===calYear && d.getMonth()===calMonth;
+    return eventInMonth(ev, calYear, calMonth);
   });
 }
 
@@ -100,7 +99,7 @@ function renderList(lang) {
   }
   el.innerHTML = events.map(function(ev) {
     var name = lang==='en' ? ev.name_en : ev.name_nl;
-    var dateStr = formatDate(ev.date, lang);
+    var dateStr = formatEventDate(ev, lang);
     var badgeClass = getBadgeClass(ev.type);
     var typeName = cardTypeName(ev, lang);
     var priceHtml = ev.paid ? '<span class="event-card__price">'+formatPrice(ev.price)+'</span>' : '<span class="event-card__price free">Gratis</span>';
@@ -142,12 +141,12 @@ function renderCalendar() {
 
   var evByDay = {};
   filteredEvents.forEach(function(ev) {
-    var d = new Date(ev.date);
-    if (d.getFullYear()===calYear && d.getMonth()===calMonth) {
-      var day = d.getDate();
+    eventDays(ev).forEach(function(s) {
+      if (Number(s.slice(0, 4)) !== calYear || Number(s.slice(5, 7)) - 1 !== calMonth) return;
+      var day = Number(s.slice(8, 10));
       if (!evByDay[day]) evByDay[day] = [];
       evByDay[day].push(ev);
-    }
+    });
   });
 
   var totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
@@ -177,8 +176,7 @@ function openDayPanel(year, month, day) {
   var lang = getLang();
   var months = lang==='en' ? MONTHS_EN : MONTHS_NL;
   var evs = filteredEvents.filter(function(ev){
-    var d = new Date(ev.date);
-    return d.getFullYear()===year && d.getMonth()===month && d.getDate()===day;
+    return eventOnDay(ev, year, month, day);
   });
   var panel = document.getElementById('day-panel');
   document.getElementById('day-panel-title').textContent = day+' '+months[month]+' '+year;

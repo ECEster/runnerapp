@@ -227,8 +227,17 @@
         </div>
 
         <div>
-          <label for="f-date">Datum</label>
-          <input type="date" id="f-date" required>
+          <!-- Begin- en einddatum naast elkaar; einddatum alleen bij meerdaagse evenementen -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+            <div>
+              <label for="f-date">Datum (eerste dag)</label>
+              <input type="date" id="f-date" required>
+            </div>
+            <div>
+              <label for="f-end-date">t/m (optioneel)</label>
+              <input type="date" id="f-end-date">
+            </div>
+          </div>
         </div>
         <div>
           <label for="f-type">Type</label>
@@ -501,6 +510,7 @@ function startEdit(ev) {
 
   document.getElementById('f-name-nl').value   = ev.name_nl || '';
   document.getElementById('f-date').value       = ev.date || '';
+  document.getElementById('f-end-date').value   = ev.end_date || '';
   document.getElementById('f-type').value       = ev.type || 'wegevenement';
   document.getElementById('f-type2').value      = ev.type2 || '';
   document.getElementById('f-city').value       = ev.city || '';
@@ -569,6 +579,10 @@ document.getElementById('event-form').addEventListener('submit', async e => {
       name_nl:          namNl,
       name_en:          nameEn,
       date:             document.getElementById('f-date').value,
+      end_date:         (function() {
+        var a = document.getElementById('f-date').value, b = document.getElementById('f-end-date').value;
+        return b && b > a ? b : null; // leeg, gelijk of eerder = eendaags
+      })(),
       type:             document.getElementById('f-type').value,
       type2:            document.getElementById('f-type2').value || null,
       city:             capitalizeFirst(document.getElementById('f-city').value),
@@ -666,7 +680,7 @@ function renderEventRow(ev) {
   const regio = provinceToRegio(ev.province);
   return `
     <tr>
-      <td>${ev.date || '—'}</td>
+      <td>${ev.date || '—'}${ev.end_date && ev.end_date !== ev.date ? ' t/m ' + ev.end_date : ''}</td>
       <td><strong>${ev.name_nl || '—'}</strong>${ev.name_en ? '<br><small style="color:#888">' + ev.name_en + '</small>' : ''}</td>
       <td>${ev.city || '—'}</td>
       <td>${regio ? REGIO_LABELS[regio] : '<span style="color:#aaa">—</span>'}</td>
@@ -731,8 +745,8 @@ function renderEventsTable() {
   }
 
   const todayStr = new Date().toISOString().split('T')[0];
-  const upcoming = groupMatchesTogether(events.filter(ev => (ev.date || '') >= todayStr), isFourMijlGroningenOrHaren);
-  const past = groupMatchesTogether(events.filter(ev => (ev.date || '') < todayStr).reverse(), isFourMijlGroningenOrHaren); // meest recent verleden eerst
+  const upcoming = groupMatchesTogether(events.filter(ev => (ev.end_date || ev.date || '') >= todayStr), isFourMijlGroningenOrHaren);
+  const past = groupMatchesTogether(events.filter(ev => (ev.end_date || ev.date || '') < todayStr).reverse(), isFourMijlGroningenOrHaren); // meest recent verleden eerst
 
   tbodyUpcoming.innerHTML = upcoming.length
     ? renderRowsWithYearDividers(upcoming)

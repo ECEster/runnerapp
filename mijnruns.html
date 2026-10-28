@@ -524,7 +524,7 @@ function renderCalendarRuns() {
   // Opgeslagen runs (bladwijzers) per dag
   var favMap = {};
   EVENTS.forEach(function(ev) {
-    if (cachedFavIds.indexOf(ev.id) !== -1) (favMap[ev.date] = favMap[ev.date] || []).push(ev);
+    if (cachedFavIds.indexOf(ev.id) !== -1) eventDays(ev).forEach(function(s) { (favMap[s] = favMap[s] || []).push(ev); });
   });
   runCalFavs = favMap;
 
@@ -641,14 +641,14 @@ function renderFavorites() {
     return;
   }
   var todayStr = new Date().toISOString().split('T')[0];
-  var favEvents = EVENTS.filter(function(ev){ return cachedFavIds.indexOf(ev.id) !== -1 && ev.date >= todayStr; });
+  var favEvents = EVENTS.filter(function(ev){ return cachedFavIds.indexOf(ev.id) !== -1 && eventEnd(ev) >= todayStr; });
   if (!favEvents.length) {
     el.innerHTML = '<div class="empty-state" style="grid-column:1/-1">'+t('favorites_empty')+'</div>';
     return;
   }
   el.innerHTML = favEvents.map(function(ev) {
     var name = lang==='en'?ev.name_en:ev.name_nl;
-    var dateStr = formatDate(ev.date, lang);
+    var dateStr = formatEventDate(ev, lang);
     var badgeClass = getBadgeClass(ev.type);
     var typeName = cardTypeName(ev, lang);
     return cardOpen('event-card', ev)+
