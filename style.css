@@ -1021,6 +1021,17 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
 .filter-group {
   margin-bottom: 1.2rem;
 }
+.filter-fieldset { border: 0; padding: 0; min-width: 0; }
+.filter-fieldset legend {
+  padding: 0;
+  margin-bottom: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--dark3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.filter-fieldset .filter-group--row { margin: 0; }
 .filter-group label {
   display: block;
   font-size: 0.8rem;
@@ -1112,6 +1123,9 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
 }
 .filter-group .filter-checkbox input[type="checkbox"]:checked { background: var(--btn); border-color: var(--btn); }
 .filter-group .filter-checkbox input[type="checkbox"]:checked::before { transform: scale(1); }
+/* Vinkjes binnen de groep 'Kenmerken': zelfde ruimte als toen ze los stonden */
+.filter-fieldset > .filter-checkbox { margin-bottom: 0.85rem; }
+.filter-fieldset > .filter-checkbox:last-child { margin-bottom: 0; }
 .filter-group .filter-checkbox input[type="checkbox"]:focus-visible { outline: 2px solid var(--btn); outline-offset: 2px; }
 .filter-group .filter-checkbox--kids { padding: 6px 8px; }
 

@@ -68,7 +68,7 @@
   <div class="agenda-layout">
 
     <!-- FILTER PANEL -->
-    <aside class="filter-panel">
+    <aside class="filter-panel" aria-label="Filters">
       <div class="filter-panel__title">
         <span data-i18n="filter_title">Filteren</span>
         <button onclick="clearFilters()" data-i18n="clear_filters">Filters wissen</button>
@@ -76,7 +76,7 @@
 
       <!-- Type -->
       <div class="filter-group">
-        <label data-i18n="filter_type">Soort evenement</label>
+        <label for="f-type" data-i18n="filter_type">Soort evenement</label>
         <select id="f-type">
           <option value="">— Alle types —</option>
           <option value="marathon">Marathon</option>
@@ -104,7 +104,7 @@
 
       <!-- Province -->
       <div class="filter-group">
-        <label data-i18n="filter_province">Provincie</label>
+        <label for="f-province" data-i18n="filter_province">Provincie</label>
         <select id="f-province">
           <option value="">— Alle provincies —</option>
           <option value="Groningen">Groningen</option>
@@ -124,7 +124,7 @@
 
       <!-- Distance -->
       <div class="filter-group">
-        <label data-i18n="filter_distance">Afstand</label>
+        <label for="f-distance" data-i18n="filter_distance">Afstand</label>
         <select id="f-distance">
           <option value="">— Alle afstanden —</option>
           <option value="max:5">t/m 5 km</option>
@@ -137,64 +137,52 @@
       </div>
 
       <!-- Date range -->
-      <div class="filter-group filter-group--row">
-        <div>
-          <label data-i18n="filter_date_from">Datum vanaf</label>
-          <input type="date" id="f-date-from">
+      <fieldset class="filter-group filter-fieldset">
+        <legend data-i18n="filter_period">Periode</legend>
+        <div class="filter-group--row">
+          <div>
+            <label for="f-date-from" data-i18n="filter_date_from">Datum vanaf</label>
+            <input type="date" id="f-date-from">
+          </div>
+          <div>
+            <label for="f-date-to" data-i18n="filter_date_to">Datum t/m</label>
+            <input type="date" id="f-date-to">
+          </div>
         </div>
-        <div>
-          <label data-i18n="filter_date_to">Datum t/m</label>
-          <input type="date" id="f-date-to">
-        </div>
-      </div>
+      </fieldset>
 
-      <!-- Kids runs -->
-      <div class="filter-group">
-        <label class="filter-checkbox filter-checkbox--kids">
+      <!-- Kenmerken: checkboxen gegroepeerd voor screenreaders -->
+      <fieldset class="filter-group filter-fieldset">
+        <legend data-i18n="filter_features">Kenmerken</legend>
+        <label class="filter-checkbox filter-checkbox--kids" for="f-kidsrun">
           <input type="checkbox" id="f-kidsrun">
           <span>Kids Runs</span>
         </label>
-      </div>
-
-      <!-- Estafette -->
-      <div class="filter-group">
-        <label class="filter-checkbox">
+        <label class="filter-checkbox" for="f-estafette">
           <input type="checkbox" id="f-estafette">
           <span>Estafette</span>
         </label>
-      </div>
-
-      <!-- Aangepast sporten (rolstoel, handbike, framerunning, G-atletiek) -->
-      <div class="filter-group">
-        <label class="filter-checkbox">
+        <label class="filter-checkbox" for="f-rolstoel">
           <input type="checkbox" id="f-rolstoel">
           <span><span data-i18n="filter_rolstoel">Aangepast sporten</span><br><small class="filter-hint" data-i18n="filter_rolstoel_hint">Rolstoel, handbike, framerunning, G-atletiek</small></span>
         </label>
-      </div>
-
-      <!-- Free only -->
-      <div class="filter-group">
-        <label class="filter-checkbox">
+        <label class="filter-checkbox" for="f-free">
           <input type="checkbox" id="f-free">
           <span data-i18n="filter_free_only">Alleen gratis</span>
         </label>
-      </div>
-
-      <!-- Atletiekunie -->
-      <div class="filter-group">
-        <label class="filter-checkbox">
+        <label class="filter-checkbox" for="f-atletiekunie">
           <input type="checkbox" id="f-atletiekunie">
           <span data-i18n="filter_atletiekunie">Atletiekunie gecertificeerd</span>
         </label>
-      </div>
+      </fieldset>
 
       <!-- Postal code + radius -->
       <div class="filter-group">
-        <label data-i18n="filter_postal">Postcode</label>
+        <label for="f-postal" data-i18n="filter_postal">Postcode</label>
         <input type="text" id="f-postal" maxlength="4" placeholder="bijv. 1000">
       </div>
       <div class="filter-group">
-        <label data-i18n="filter_radius">Straal (km)</label>
+        <label for="f-radius" data-i18n="filter_radius">Straal (km)</label>
         <select id="f-radius">
           <option value="">— Geen limiet —</option>
           <option value="25">25 km</option>
@@ -206,7 +194,7 @@
 
       <!-- Search -->
       <div class="filter-group">
-        <label data-i18n="filter_search">Naam of plaats</label>
+        <label for="f-search" data-i18n="filter_search">Naam of plaats</label>
         <input type="text" id="f-search" placeholder="bijv. Assen of Bosloop">
       </div>
       <button type="button" class="btn btn--primary filter-search-btn" onclick="applyFilters()" data-i18n="search_button">Zoeken</button>
@@ -238,7 +226,7 @@
 
       <!-- Results header -->
       <div class="results-header">
-        <span id="results-count"></span>
+        <span id="results-count" role="status" aria-live="polite"></span>
         <div class="results-sort">
           <select onchange="applyFilters()" id="sort-select">
             <option value="date">Sorteer op datum</option>
