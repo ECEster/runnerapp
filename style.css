@@ -1680,8 +1680,8 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
 .page-training .training-table tr:nth-child(even) td { background: transparent; }
 .page-training .training-table tr:hover td { background: #FAFAF7; }
 .page-training .training-table .week-cell { font-weight: 700; font-size: 0.92rem; white-space: nowrap; }
-.page-training .tab-tile { border-width: 1px; border-color: #E5E2D6; align-content: center; min-height: 64px; }
-.page-training .tab-tile--own { border-color: var(--salie-lijn); }
+.page-training .tab-tile { border-width: 2px; border-color: var(--salie); align-content: center; min-height: 64px; }
+.page-training .tab-tile--own { border-color: var(--salie); } /* tekst maakt de knop herkenbaar; de rand is decoratie */
 .page-training .tab-tile.active { border-color: #2A3B5E; }
 .page-training .training-tips__box { box-shadow: none; border: 1px solid #E5E7EB; }
 .page-training .training-tips__box ul li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--salie); margin-top: 0.55em; }
