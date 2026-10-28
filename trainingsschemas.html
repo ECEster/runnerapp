@@ -138,8 +138,10 @@
 var PLANS = {
   '2_5': {
     label_nl: '2,5 km', label_en: '2.5 km',
-    intro_nl: 'Voor absolute beginners: in 8 weken van wandelen naar 2,5 km hardlopen. Begin elke training met 5 minuten wandelen. 8 weken, 3 trainingsdagen per week.',
-    intro_en: 'For absolute beginners: from walking to running 2.5 km in 8 weeks. Start every session with a 5-minute walk. 8 weeks, 3 training days per week.',
+    title_nl: 'Voor de beginner',
+    title_en: 'For the beginner',
+    intro_nl: 'In 8 weken van wandelen naar 2,5 km hardlopen. Begin elke training met 5 minuten wandelen. 8 weken, 3 trainingsdagen per week.',
+    intro_en: 'From walking to running 2.5 km in 8 weeks. Start every session with a 5-minute walk. 8 weeks, 3 training days per week.',
     weeks: [
       ['Dag 1','Dag 2','Dag 3'],
       ['6×(1 min lopen / 2 min wandelen)', '6×(1 min lopen / 2 min wandelen)', '7×(1 min lopen / 2 min wandelen)'],
@@ -316,6 +318,11 @@ var STRETCH_TIPS = {
   ]
 };
 
+// Optionele titel boven de uitleg (bv. "Voor de beginner")
+function introTitle(plan, lang) {
+  return (lang==='en' ? plan.title_en : plan.title_nl) || '';
+}
+
 function buildPrintHTML(id) {
   var lang = getLang();
   var plan = PLANS[id];
@@ -347,7 +354,7 @@ function buildPrintHTML(id) {
       '.footer{margin-top:24px;font-size:8pt;color:#aaa;border-top:1px solid #eee;padding-top:8px;}'+
     '</style></head><body>'+
     '<h1>Trainingsschema '+label+'</h1>'+
-    '<p class="intro">'+intro+'</p>'+
+    '<p class="intro">'+(introTitle(plan, lang) ? '<strong>'+introTitle(plan, lang)+'</strong><br>' : '')+intro+'</p>'+
     '<table><thead><tr><th>Week</th>'+
       days.map(function(d){ return '<th>'+d+'</th>'; }).join('')+
     '</tr></thead><tbody>'+tableRows+'</tbody></table>'+
@@ -536,7 +543,10 @@ function renderTabContent(id, lang) {
   var stretch = STRETCH_TIPS[lang] || STRETCH_TIPS.nl;
 
   return '<div style="margin-bottom:1rem;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;">'+
-      '<p class="schema-intro">'+intro+'</p>'+
+      '<div class="schema-intro">'+
+        (introTitle(plan, lang) ? '<h2 class="schema-intro__title">'+introTitle(plan, lang)+'</h2>' : '')+
+        '<p>'+intro+'</p>'+
+      '</div>'+
       '<div style="display:flex;gap:0.5rem;flex-shrink:0;">'+
         '<button class="btn btn--ghost btn--sm" onclick="printSchema(\''+id+'\')">Printen</button>'+
         '<button class="btn btn--ghost btn--sm" onclick="downloadSchema(\''+id+'\')">Download PDF</button>'+
