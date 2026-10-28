@@ -346,6 +346,10 @@
             <label for="f-estafette">Estafette</label>
           </div>
           <div class="checkbox-row" style="margin-top:8px">
+            <input type="checkbox" id="f-rolstoel">
+            <label for="f-rolstoel">Rolstoel / handbike</label>
+          </div>
+          <div class="checkbox-row" style="margin-top:8px">
             <input type="checkbox" id="f-hondenloop">
             <label for="f-hondenloop">Hondenloop</label>
           </div>
@@ -525,6 +529,7 @@ function startEdit(ev) {
   document.getElementById('f-kidsrun').checked     = ev.kidsrun || false;
   document.getElementById('f-businessrun').checked = ev.businessrun || false;
   document.getElementById('f-estafette').checked   = ev.estafette || false;
+  document.getElementById('f-rolstoel').checked    = ev.rolstoel || false;
   document.getElementById('f-hondenloop').checked  = ev.hondenloop || false;
   document.getElementById('f-published').checked   = ev.published || false;
 
@@ -599,6 +604,7 @@ document.getElementById('event-form').addEventListener('submit', async e => {
       kidsrun:          document.getElementById('f-kidsrun').checked,
       businessrun:      document.getElementById('f-businessrun').checked,
       estafette:        document.getElementById('f-estafette').checked,
+      rolstoel:         document.getElementById('f-rolstoel').checked,
       hondenloop:       document.getElementById('f-hondenloop').checked,
       published:        document.getElementById('f-published').checked,
     };

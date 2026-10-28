@@ -59,6 +59,8 @@ export function mapToSupabaseShape(event) {
     organizer: null,
     published: false,
     kidsrun: detectKidsrun(event),
+    // Rolstoel/handbike-categorie, alleen als het in de naam staat
+    rolstoel: /rolstoel|handbike|wheelchair|framerun/i.test(event.naam || ''),
     serie: buildSerie({ naam: event.naam, plaats: event.plaats }),
     editie: extractEditie({ rawNaam: event.naam_ruw, datum: event.datum }),
   }

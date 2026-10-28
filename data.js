@@ -346,6 +346,17 @@ function formatEventDate(ev, lang) {
   return a.getDate() + ' ' + m[a.getMonth()] + yearA + ' – ' + b.getDate() + ' ' + m[b.getMonth()] + ' ' + b.getFullYear();
 }
 
+// Zoekveld: tekst in naam of plaats, of een zoekwoord voor rolstoel/handbike
+// bij evenementen die dat kenmerk hebben.
+var ROLSTOEL_SEARCH = /rolstoel|handbike|hand bike|wheelchair|framerun|frame run|aangepast/;
+function matchesSearch(ev, q) {
+  if (!q) return true;
+  if ((ev.name_nl || '').toLowerCase().indexOf(q) !== -1) return true;
+  if ((ev.name_en || '').toLowerCase().indexOf(q) !== -1) return true;
+  if ((ev.city || '').toLowerCase().indexOf(q) !== -1) return true;
+  return !!ev.rolstoel && ROLSTOEL_SEARCH.test(q);
+}
+
 // Haversine distance formula
 function haversineKm(lat1, lon1, lat2, lon2) {
   var R = 6371;

@@ -46,6 +46,7 @@ async function loadEventsFromDB() {
         lat:              e.lat,
         lng:              e.lng,
         estafette:        e.estafette || false,
+        rolstoel:         e.rolstoel  || false,
         businessrun:      e.businessrun || false,
         // Gratis als de prijs 'gratis'/'free' of 0 is; anders betaald
         paid:             !/^\s*(gratis|free|€?\s*0([.,]0+)?)\s*$/i.test(e.price || ''),

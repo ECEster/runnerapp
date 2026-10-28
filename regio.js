@@ -27,6 +27,7 @@ function getFilters() {
     dateTo:   document.getElementById('f-date-to').value,
     kidsrun:      document.getElementById('f-kidsrun').checked,
     estafette:    document.getElementById('f-estafette').checked,
+    rolstoel:     document.getElementById('f-rolstoel').checked,
     freeOnly:     document.getElementById('f-free').checked,
     atletiekunie: document.getElementById('f-atletiekunie').checked,
     postal:   document.getElementById('f-postal').value.trim(),
@@ -50,6 +51,7 @@ function filterEvents() {
     if (f.dateTo && ev.date > f.dateTo) return false;
     if (f.kidsrun && !ev.kidsrun) return false;
     if (f.estafette && !ev.estafette) return false;
+    if (f.rolstoel && !ev.rolstoel) return false;
     if (f.freeOnly && ev.paid) return false;
     if (f.atletiekunie && !ev.atletiekunie) return false;
     // Postcode zonder gekozen straal: standaard 25 km
@@ -57,7 +59,7 @@ function filterEvents() {
       var ec = eventCoords(ev);
       if (!ec || haversineKm(postalCoords.lat, postalCoords.lng, ec.lat, ec.lng) > parseFloat(f.radius || '25')) return false;
     }
-    if (f.search && !(ev.name_nl.toLowerCase().indexOf(f.search) !== -1 || ev.city.toLowerCase().indexOf(f.search) !== -1)) return false;
+    if (f.search && !matchesSearch(ev, f.search)) return false;
     return true;
   });
 }
@@ -82,7 +84,7 @@ function applyFilters() {
 function listEvents() {
   var f = getFilters();
   if (f.type || f.province || f.distance || f.dateFrom || f.dateTo || f.kidsrun ||
-      f.estafette || f.freeOnly || f.atletiekunie || f.postal.length === 4 || f.search) return filteredEvents;
+      f.estafette || f.rolstoel || f.freeOnly || f.atletiekunie || f.postal.length === 4 || f.search) return filteredEvents;
   return filteredEvents.filter(function(ev) {
     return eventInMonth(ev, calYear, calMonth);
   });
@@ -110,6 +112,7 @@ function renderList(lang) {
         '<span class="event-card__photo-badges">'+
           '<span class="event-card__photo-badge">'+typeName+'</span>'+
           (ev.type2 ? '<span class="event-card__photo-badge">'+badgeTypeName(ev.type2, lang)+'</span>' : '')+
+          (ev.rolstoel ? '<span class="event-card__photo-badge">' + t('badge_rolstoel') + '</span>' : '')+
         '</span>'+
       '</div>'+
       '<div class="event-card__body">'+
@@ -208,6 +211,7 @@ function clearFilters() {
   document.getElementById('f-date-to').value='';
   document.getElementById('f-kidsrun').checked=false;
   document.getElementById('f-estafette').checked=false;
+  document.getElementById('f-rolstoel').checked=false;
   document.getElementById('f-free').checked=false;
   document.getElementById('f-atletiekunie').checked=false;
   document.getElementById('f-postal').value='';

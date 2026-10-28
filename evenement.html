@@ -89,6 +89,9 @@ function renderEvent(ev, lang) {
   var distList = formatDistances(ev.distances);
   var catList = (ev.categories || []).join(', ') || '—'; // evenementen uit de database hebben (nog) geen categorieën
 
+  var rolstoelHtml = ev.rolstoel ?
+    '<div class="atletiekunie-badge"><span>'+t('detail_rolstoel')+'</span></div>' : '';
+
   var atletiekHtml = ev.atletiekunie ?
     '<div class="atletiekunie-badge">🏅 <span data-i18n="atletiekunie_badge">'+t('atletiekunie_badge')+'</span></div>' : '';
 
@@ -119,6 +122,7 @@ function renderEvent(ev, lang) {
       '<div>'+
         '<p class="event-detail__desc">'+desc+'</p>'+
         atletiekHtml+
+        rolstoelHtml+
         '<div style="margin-top:1.5rem;display:flex;gap:0.75rem;flex-wrap:wrap">'+
           '<button type="button" class="btn btn--ghost btn--sm bookmark-inline" data-fav-id="'+ev.id+'" aria-pressed="false" onclick="toggleBookmark(event, '+ev.id+')">'+
             BOOKMARK_SVG+'<span class="bookmark-btn__label">'+t('bookmark_save')+'</span>'+
