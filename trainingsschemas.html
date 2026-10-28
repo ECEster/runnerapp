@@ -56,14 +56,14 @@
   <!-- Tabs -->
   <!-- Afstandstegels: afstand groot, eronder het aantal weken (alle schema's: 3 dagen per week) -->
   <div class="training-tabs training-tabs--tiles" id="training-tabs">
-    <button class="tab-btn tab-tile active" onclick="showTab('2_5', this)" aria-label="2,5 km"><b>2,5<small>km</small></b><i class="tile-days" data-weeks="8"></i></button>
-    <button class="tab-btn tab-tile" onclick="showTab('5', this)" aria-label="5 km"><b>5<small>km</small></b><i class="tile-days" data-weeks="8"></i></button>
-    <button class="tab-btn tab-tile" onclick="showTab('7_5', this)" aria-label="7,5 km"><b>7,5<small>km</small></b><i class="tile-days" data-weeks="8"></i></button>
-    <button class="tab-btn tab-tile" onclick="showTab('10', this)" aria-label="10 km"><b>10<small>km</small></b><i class="tile-days" data-weeks="8"></i></button>
-    <button class="tab-btn tab-tile" onclick="showTab('15', this)" aria-label="15 km"><b>15<small>km</small></b><i class="tile-days" data-weeks="10"></i></button>
-    <button class="tab-btn tab-tile" onclick="showTab('20', this)" aria-label="20 km"><b>20<small>km</small></b><i class="tile-days" data-weeks="10"></i></button>
-    <button class="tab-btn tab-tile" onclick="showTab('24', this)" aria-label="24 km"><b>24<small>km</small></b><i class="tile-days" data-weeks="12"></i></button>
-    <button class="tab-btn tab-tile" onclick="showTab('marathon', this)" aria-label="42,2 km"><b>42,2<small>km</small></b><i class="tile-days" data-weeks="16"></i></button>
+    <button class="tab-btn tab-tile active" onclick="showTab('2_5', this)" aria-label="2,5 km"><b>2,5<small>km</small></b></button>
+    <button class="tab-btn tab-tile" onclick="showTab('5', this)" aria-label="5 km"><b>5<small>km</small></b></button>
+    <button class="tab-btn tab-tile" onclick="showTab('7_5', this)" aria-label="7,5 km"><b>7,5<small>km</small></b></button>
+    <button class="tab-btn tab-tile" onclick="showTab('10', this)" aria-label="10 km"><b>10<small>km</small></b></button>
+    <button class="tab-btn tab-tile" onclick="showTab('15', this)" aria-label="15 km"><b>15<small>km</small></b></button>
+    <button class="tab-btn tab-tile" onclick="showTab('20', this)" aria-label="20 km"><b>20<small>km</small></b></button>
+    <button class="tab-btn tab-tile" onclick="showTab('24', this)" aria-label="24 km"><b>24<small>km</small></b></button>
+    <button class="tab-btn tab-tile" onclick="showTab('marathon', this)" aria-label="42,2 km"><b>42,2<small>km</small></b></button>
     <button class="tab-btn tab-tile tab-tile--own" onclick="showTab('eigen', this)"><b>+</b><i data-i18n="tab_own">Eigen schema</i></button>
   </div>
 
@@ -515,13 +515,6 @@ function showTab(id, btn) {
   if (btn) { btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true'); }
 }
 
-// Onderregel van de tegels ("8 weken"), ook na een taalwissel
-function renderTileLabels() {
-  document.querySelectorAll('.tile-days').forEach(function(el) {
-    var txt = t('tile_weeks').replace('{n}', el.getAttribute('data-weeks'));
-    el.textContent = el.hasAttribute('data-marathon') ? t('tab_marathon') + ' · ' + txt : txt;
-  });
-}
 
 function renderTabContent(id, lang) {
   var plan = PLANS[id];
@@ -585,7 +578,6 @@ function toggleLang() {
   if (btnM) btnM.textContent = I18N[lang].nav_language;
   renderAllTabs(lang);
   applyI18n(lang);
-  renderTileLabels();
 }
 function toggleMobileNav() { document.getElementById('mobile-nav').classList.toggle('open'); }
 
@@ -597,7 +589,6 @@ function toggleMobileNav() { document.getElementById('mobile-nav').classList.tog
   var btnM = document.getElementById('lang-toggle-mobile');
   if (btnM) btnM.textContent = I18N[lang].nav_language;
   renderAllTabs(lang);
-  renderTileLabels();
   fillWeeksSelect();
 })();
 </script>

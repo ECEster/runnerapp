@@ -97,7 +97,6 @@ var I18N = {
     tab_24: "24 km",
     tab_marathon: "Marathon",
     tab_own: "Eigen schema",
-    tile_weeks: "{n} weken",
 
     // Mijn Runs
     mijnruns_title: "Mijn Runs",
@@ -326,7 +325,6 @@ var I18N = {
     tab_24: "24 km",
     tab_marathon: "Marathon",
     tab_own: "Own plan",
-    tile_weeks: "{n} weeks",
 
     // Mijn Runs
     mijnruns_title: "My Runs",
