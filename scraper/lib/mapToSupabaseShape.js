@@ -63,5 +63,13 @@ export function mapToSupabaseShape(event) {
     rolstoel: /rolstoel|handbike|wheelchair|framerun|g-run|g-loop/i.test(event.naam || ''),
     serie: buildSerie({ naam: event.naam, plaats: event.plaats }),
     editie: extractEditie({ rawNaam: event.naam_ruw, datum: event.datum }),
+    // Alleen inschrijven.nl levert soms een bedrag (lib/parseInschrijven.js) —
+    // als voorstel, net als scraper/suggest-prices.js; de prijs zelf blijft leeg
+    ...(event.prijs_voorstel && {
+      price_suggestion: event.prijs_voorstel.price,
+      price_suggestion_quote: event.prijs_voorstel.quote,
+      price_suggestion_url: event.prijs_voorstel.url,
+      price_checked_at: new Date().toISOString(),
+    }),
   }
 }

@@ -85,7 +85,7 @@ async function main() {
   console.log(`Periode: ${VANAF} t/m ${TOT}`)
 
   console.log('\nStap 1/4: events ophalen en parsen van beide bronnen...')
-  const { unique, duplicates } = await collectEvents({ year: new Date().getFullYear() })
+  const { unique, duplicates } = await collectEvents({ year: new Date().getFullYear(), vanaf: VANAF, tot: TOT })
   console.log(`  ${unique.length} unieke events gevonden (${duplicates.length} onderlinge duplicaten weggefilterd)`)
 
   console.log('\nStap 2/4: bestaande events in Supabase ophalen voor dedupliceer-check...')

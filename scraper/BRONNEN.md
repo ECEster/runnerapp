@@ -8,10 +8,10 @@ en de `regio-*.html`-pagina's).
 
 | Regio | Provincies | Actief? | Bronnen |
 |---|---|---|---|
-| **Noord** | Groningen, Friesland, Drenthe | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl |
-| **Oost** | Overijssel, Gelderland, Flevoland | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl |
-| **Zuid** | Noord-Brabant, Limburg | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl |
-| **West** | Noord-Holland, Zuid-Holland, Utrecht, Zeeland | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl |
+| **Noord** | Groningen, Friesland, Drenthe | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl + inschrijven.nl |
+| **Oost** | Overijssel, Gelderland, Flevoland | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl + inschrijven.nl |
+| **Zuid** | Noord-Brabant, Limburg | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl + inschrijven.nl |
+| **West** | Noord-Holland, Zuid-Holland, Utrecht, Zeeland | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl + inschrijven.nl |
 
 **Sinds 2026-09-30 worden alle 12 provincies gescraped** — zie `PROVINCES` in
 `lib/collectEvents.js`. Let op: hardloopkalendernederland.nl schrijft de
@@ -65,6 +65,33 @@ Bij het opzetten (2026-09-22) leverde dit voor Noord-Nederland alleen al
 hardloopkalendernederland.nl stonden — vooral kleinere, terugkerende
 evenementen (trainingsloop-series, parkrun, clubwedstrijden) die de andere
 twee bronnen niet apart bijhouden.
+
+## inschrijven.nl: inschrijfplatform, lijst + formulier per evenement
+
+Sinds november 2026 de vierde bron (zie `lib/parseInschrijven.js`). De
+voorpagina zet alle evenementen als JSON in de pagina; een POST met
+`type=l` geeft alleen de loopevenementen (±360 in Nederland per jaar).
+Per evenement halen we het inschrijfformulier op (`/form/<id>-nl`, één
+pagina per seconde): daar staan de onderdelen (afstanden) en soms een
+voorwoord met het inschrijfgeld. robots.txt sluit alleen `/beheer/`,
+`/wijzig/`, `/baan/` en oude jaren af.
+
+- **Provincie** via PDOK op de plaatsnaam, net als loopjeloopje.nl.
+- **Overgeslagen**: buitenland, competities/circuits ("Zeeuwse
+  Crosscompetitie") en evenementen zonder echte plaats ("Meerdere
+  plaatsen", een provincienaam).
+- **Prijs**: staat meestal pas in de volgende formulierstap (na het kiezen
+  van een onderdeel). Die zetten we bewust niet — dat zou een inschrijving
+  starten. Noemt het voorwoord een bedrag, dan wordt dat een prijsvoorstel
+  (`price_suggestion`), te beoordelen in het admin-paneel.
+- **Dubbelen**: inschrijven.nl wordt als laatste verzameld, dus bij een
+  dubbel met runphy/hardloopkalender/loopjeloopje blijft dat event staan.
+  Noemt inschrijven.nl een loop anders ("58e Mosselloop" vs "Mosselloop
+  Burgh-Haamstede"), dan kan hij als concept dubbel binnenkomen — dat zie je
+  bij het nakijken van de concepten.
+- **Niet alles is een wedstrijd**: er staan ook clinics en trainingen op
+  (bv. "Loopclinics Runners Stadskanaal") — verwijderen bij het nakijken.
+- **Eerste run**: ±150 nieuwe events, dus zet *Max* op 200.
 
 ## Wat de bronnen wél en niet vertellen
 

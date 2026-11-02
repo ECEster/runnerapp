@@ -5,6 +5,7 @@ import { fetchHtml } from './fetchPage.js'
 import { parseRunphyEvents } from './parseRunphy.js'
 import { parseHardloopkalenderEvents } from './parseHardloopkalender.js'
 import { parseLoopjeLoopjeEvents } from './parseLoopjeLoopje.js'
+import { collectInschrijvenEvents } from './parseInschrijven.js'
 import { persistProvinceCache } from './resolveProvince.js'
 import { dedupeEvents } from './dedupe.js'
 
@@ -27,7 +28,10 @@ const PROVINCES = [
   { naam: 'Limburg', runphy: 'limburg', hkn: 'limburg' },
 ]
 
-export async function collectEvents({ year }) {
+// vanaf/tot (JJJJ-MM-DD, optioneel): alleen gebruikt voor inschrijven.nl,
+// dat per evenement een pagina moet ophalen — zo blijven dat er niet meer
+// dan nodig.
+export async function collectEvents({ year, vanaf, tot }) {
   const allEvents = []
 
   for (const { naam: provincie, runphy, hkn } of PROVINCES) {
@@ -47,6 +51,11 @@ export async function collectEvents({ year }) {
   // de provincie bepalen (zie lib/parseLoopjeLoopje.js + lib/resolveProvince.js).
   const loopjeLoopjeHtml = await fetchHtml('https://www.loopjeloopje.nl/')
   allEvents.push(...(await parseLoopjeLoopjeEvents(loopjeLoopjeHtml)))
+
+  // inschrijven.nl als laatste: bij een dubbel met een van de bronnen
+  // hierboven blijft het event van die bron staan (zie lib/dedupe.js), zodat
+  // bestaande series hetzelfde blijven. Zie lib/parseInschrijven.js.
+  allEvents.push(...(await collectInschrijvenEvents(fetchHtml, { vanaf, tot })))
   persistProvinceCache()
 
   return dedupeEvents(allEvents)
