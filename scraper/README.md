@@ -221,6 +221,10 @@ bedrag, maar soms ook een teamprijs of de prijs van vorig jaar.
   (`.github/workflows/suggest-prices.yml`), en via Actions → "Zoek
   inschrijfgeld" → Run workflow. Een evenement zonder vondst wordt pas na 14
   dagen opnieuw bekeken.
+- **Melding**: zijn er bij een live run nieuwe voorstellen, dan gaat er een
+  e-mail naar `runningnederland@gmail.com` (zelfde Gmail-secrets als de
+  herinnering "prijs volgt"), en staat er bovenaan het admin-paneel een blok
+  "Prijsvoorstellen klaar" met een knop naar de lijst.
 - **Beoordelen**: admin-paneel → Toon → "Met prijsvoorstel". Per voorstel
   **Overnemen** (wordt de prijs op de site) of **Overslaan** (hetzelfde
   bedrag wordt niet opnieuw voorgesteld; een ander bedrag wel). Noemt het

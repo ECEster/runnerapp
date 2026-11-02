@@ -38,3 +38,25 @@ jobs:
           else
             node suggest-prices.js
           fi
+
+      - name: Bepaal of er nieuwe prijsvoorstellen zijn
+        id: report
+        run: |
+          if [ -s price-suggestions-report.txt ]; then
+            echo "has_content=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_content=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Mail de nieuwe prijsvoorstellen
+        if: steps.report.outputs.has_content == 'true'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.GMAIL_SENDER_ADDRESS }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          from: RunningNederland <${{ secrets.GMAIL_SENDER_ADDRESS }}>
+          to: runningnederland@gmail.com
+          subject: "Nieuwe prijsvoorstellen — RunningNederland"
+          body: file://scraper/price-suggestions-report.txt

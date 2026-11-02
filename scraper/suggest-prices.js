@@ -14,7 +14,8 @@
 //
 // Draaien:  node suggest-prices.js          (dry-run: toont wat er gevonden wordt)
 //           node suggest-prices.js --live   (slaat de voorstellen op)
-// Uitvoer:  .cache/prijsvoorstellen.json
+// Uitvoer:  .cache/prijsvoorstellen.json, en price-suggestions-report.txt als
+//           inhoud van de e-mail (leeg als er niets nieuws is)
 
 try {
   process.loadEnvFile()
@@ -30,6 +31,8 @@ const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 const HEADERS = { apikey: KEY, Authorization: `Bearer ${KEY}`, 'Content-Type': 'application/json' }
 const isLive = process.argv.includes('--live')
 const RECHECK_DAYS = 14
+const REPORT_PATH = 'price-suggestions-report.txt'
+const ADMIN_URL = 'https://runningnederland.nl/admin-panel.html'
 
 // Sites zonder eigen prijsinformatie of die automatische bezoekers weigeren
 const SKIP_HOSTS = /(hardloopkalendernederland|runphy|loopjeloopje|facebook\.com|instagram\.com|google\.)/i
@@ -125,6 +128,18 @@ async function main() {
     console.log(`\n${ok} events bijgewerkt (${found.length} met een voorstel), ${failed} mislukt.`)
     if (found.length) console.log('Bekijk de voorstellen in het admin-paneel: filter "Met prijsvoorstel".')
   }
+
+  // Inhoud van de e-mail (zie de workflows): leeg = geen mail. Alleen bij
+  // --live, want bij een dry-run is er niets opgeslagen om te beoordelen.
+  const lines = found.map(({ ev, found: f }) => `- ${ev.name_nl} (${ev.date}): € ${f.price}`)
+  writeFileSync(
+    REPORT_PATH,
+    isLive && found.length
+      ? `De prijszoeker heeft ${found.length} nieuw${found.length === 1 ? ' prijsvoorstel' : 'e prijsvoorstellen'} gevonden:\n\n` +
+        `${lines.join('\n')}\n\n` +
+        `Beoordeel ze in het admin-paneel (Toon → Met prijsvoorstel):\n${ADMIN_URL}\n`
+      : '',
+  )
 }
 
 main().catch((err) => {

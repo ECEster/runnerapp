@@ -168,6 +168,7 @@
     }
     .price-reminder li:last-child { border-bottom: none; }
     .price-reminder li a { color: #4f7cff; font-size: .82rem; font-weight: 600; white-space: nowrap; }
+    .price-reminder li a.reminder-edit { font-size: inherit; font-weight: 700; white-space: normal; }
     .year-divider td {
       padding: 6px 10px; font-size: .78rem; font-weight: 700; color: #888;
       background: #f0f0f0; border-bottom: 1.5px solid #ddd; border-top: 1.5px solid #ddd;
@@ -224,6 +225,16 @@
 <div class="panel">
 
   <!-- Herinnering: evenementen met prijs "volgt" die dichtbij komen -->
+  <!-- Melding: de prijszoeker (scraper/suggest-prices.js) heeft voorstellen klaargezet -->
+  <div class="card price-reminder" id="price-suggestions-card" hidden>
+    <h2>💡 Prijsvoorstellen klaar</h2>
+    <p style="font-size:.85rem;color:#666;margin-bottom:12px">
+      De prijszoeker heeft op organisatorsites <strong id="price-suggestions-count"></strong> gevonden.
+      Controleer ze en kies per evenement Overnemen of Overslaan.
+    </p>
+    <button type="button" class="btn-bulk" onclick="showPriceSuggestions()">Bekijk de voorstellen</button>
+  </div>
+
   <div class="card price-reminder" id="price-reminder-card" hidden>
     <h2>💬 Prijs nog niet bekend</h2>
     <p style="font-size:.85rem;color:#666;margin-bottom:12px">
@@ -388,7 +399,7 @@
   </div>
 
   <!-- Overzicht bestaande events -->
-  <div class="card">
+  <div class="card" id="events-card">
     <h2>Alle evenementen</h2>
     <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;align-items:flex-end">
       <div style="min-width:180px">
@@ -663,6 +674,7 @@ document.getElementById('event-form').addEventListener('submit', async e => {
     msg.className = 'submit-msg ok';
     msg.style.display = 'block';
     renderEventsTable();
+    renderPriceReminder(); // prijs ingevuld? dan verdwijnt het event uit "Prijs nog niet bekend"
   } catch (err) {
     msg.textContent = '❌ Fout: ' + err.message;
     msg.className = 'submit-msg err';
@@ -832,6 +844,7 @@ function renderEventsTable() {
   // Aantal prijsvoorstellen in het filtermenu, zodat je ziet of er iets klaarstaat
   const nSuggestions = allEvents.filter(hasPriceSuggestion).length;
   document.querySelector('#filter-status option[value="prijsvoorstel"]').textContent = `Met prijsvoorstel (${nSuggestions})`;
+  renderPriceSuggestionsNotice();
 
   tbodyUpcoming.innerHTML = upcoming.length
     ? renderRowsWithYearDividers(upcoming)
@@ -869,10 +882,31 @@ function renderPriceReminder() {
   list.innerHTML = pending.map(ev => {
     const link = ev.registration_url || ev.source_url;
     return `<li>
-      <span><strong>${ev.name_nl || '—'}</strong> — ${ev.date || '—'}</span>
+      <span><a href="#form-card" class="reminder-edit" onclick="editEventById('${ev.id}'); return false;" title="Bewerk dit evenement">${esc(ev.name_nl || '—')}</a> — ${ev.date || '—'}</span>
       ${link ? `<a href="${link}" target="_blank" rel="noopener">Organisatorsite →</a>` : '<span style="color:#aaa;font-size:.8rem">geen link bekend</span>'}
     </li>`;
   }).join('');
+}
+
+// Naam in het blok "Prijs nog niet bekend" → meteen het bewerkformulier, cursor in het prijsveld
+function editEventById(id) {
+  const ev = allEvents.find(e => String(e.id) === String(id));
+  if (!ev) return;
+  startEdit(ev);
+  setTimeout(() => document.getElementById('f-price').focus({ preventScroll: true }), 400);
+}
+
+// Blok bovenaan zodra er prijsvoorstellen klaarstaan (zelfde telling als het filter)
+function renderPriceSuggestionsNotice() {
+  const n = allEvents.filter(hasPriceSuggestion).length;
+  document.getElementById('price-suggestions-card').hidden = n === 0;
+  document.getElementById('price-suggestions-count').textContent = n === 1 ? '1 inschrijfbedrag' : `${n} inschrijfbedragen`;
+}
+
+function showPriceSuggestions() {
+  document.getElementById('filter-status').value = 'prijsvoorstel';
+  renderEventsTable();
+  document.getElementById('events-card').scrollIntoView({ behavior: 'smooth' });
 }
 
 async function togglePublish(id, currentlyPublished) {
