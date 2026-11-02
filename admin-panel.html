@@ -190,6 +190,21 @@
       font-family: inherit; margin-top: 8px; margin-left: 8px;
     }
     .btn-cancel:hover { background: #e0e0e0; }
+    .price-suggestion {
+      margin-top: 4px; padding: 6px 8px; border-radius: 6px;
+      background: #fffbeb; border: 1px solid #ffd166; font-size: .78rem; max-width: 280px;
+    }
+    .price-suggestion q { display: block; color: #666; margin: 3px 0 5px; font-style: italic; }
+    .price-suggestion a { color: #4f7cff; }
+    .price-suggestion .warn { color: #b45309; font-weight: 600; display: block; margin-bottom: 4px; }
+    .btn-accept { background: #4FA89A; color: #fff; }
+    .btn-skip   { background: #e9ecef; color: #555; }
+    .btn-bulk {
+      padding: 9px 16px; border-radius: 8px; border: none; background: #7AB8D4; color: #fff;
+      font-size: .85rem; font-weight: 600; cursor: pointer; font-family: inherit;
+    }
+    .btn-bulk:hover { background: #5fa3c4; }
+    .btn-bulk:disabled { opacity: .6; cursor: default; }
   </style>
 </head>
 <body>
@@ -383,10 +398,20 @@
           <option value="west">West</option>
         </select>
       </div>
+      <div style="min-width:180px">
+        <label for="filter-status">Toon</label>
+        <select id="filter-status" onchange="renderEventsTable()">
+          <option value="">Alle evenementen</option>
+          <option value="concept">Alleen concepten</option>
+          <option value="gepubliceerd">Alleen gepubliceerd</option>
+          <option value="prijsvoorstel">Met prijsvoorstel</option>
+        </select>
+      </div>
       <div style="flex:1;min-width:200px">
         <label for="filter-zoek">Zoeken</label>
         <input type="search" id="filter-zoek" placeholder="Naam, stad of organisator…" oninput="renderEventsTable()" style="width:100%">
       </div>
+      <button type="button" class="btn-bulk" id="btn-publish-visible" onclick="publishVisibleConcepts()" hidden></button>
     </div>
     <h3 class="events-subheading">Aankomend</h3>
     <div class="table-scroll">
@@ -399,12 +424,13 @@
           <th>Regio</th>
           <th>Serie</th>
           <th>Editie</th>
+          <th>Prijs</th>
           <th>Status</th>
           <th>Acties</th>
         </tr>
       </thead>
       <tbody id="events-tbody">
-        <tr><td colspan="8" class="no-events">Laden…</td></tr>
+        <tr><td colspan="9" class="no-events">Laden…</td></tr>
       </tbody>
     </table>
     </div>
@@ -421,12 +447,13 @@
             <th>Regio</th>
             <th>Serie</th>
             <th>Editie</th>
+            <th>Prijs</th>
             <th>Status</th>
             <th>Acties</th>
           </tr>
         </thead>
         <tbody id="events-tbody-past">
-          <tr><td colspan="8" class="no-events">Laden…</td></tr>
+          <tr><td colspan="9" class="no-events">Laden…</td></tr>
         </tbody>
       </table>
       </div>
@@ -660,12 +687,18 @@ function provinceToRegio(province) {
 }
 
 let allEvents = [];
+let visibleConceptIds = []; // concepten in de lijst "Aankomend" met de huidige filters
+
+// Een voorstel telt alleen zolang er nog geen echte prijs is (leeg, "volgt" of "n.b.")
+function hasPriceSuggestion(ev) {
+  return !!ev.price_suggestion && /^\s*$|volgt|n\.?\s?b\.?|onbekend/i.test(ev.price || '');
+}
 
 async function loadEventsTable() {
   const tbody = document.getElementById('events-tbody');
   const tbodyPast = document.getElementById('events-tbody-past');
-  tbody.innerHTML = '<tr><td colspan="8" class="no-events">Laden…</td></tr>';
-  tbodyPast.innerHTML = '<tr><td colspan="8" class="no-events">Laden…</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="9" class="no-events">Laden…</td></tr>';
+  tbodyPast.innerHTML = '<tr><td colspan="9" class="no-events">Laden…</td></tr>';
   try {
     allEvents = await loadAllEventsAdmin();
     // Stabiele sortering: datum oplopend, bij gelijke datum op naam
@@ -676,10 +709,38 @@ async function loadEventsTable() {
     renderEventsTable();
     renderPriceReminder();
   } catch (err) {
-    const msg = `<tr><td colspan="8" class="no-events" style="color:#c0392b">Fout: ${err.message}</td></tr>`;
+    const msg = `<tr><td colspan="9" class="no-events" style="color:#c0392b">Fout: ${err.message}</td></tr>`;
     tbody.innerHTML = msg;
     tbodyPast.innerHTML = msg;
   }
+}
+
+// Tekst van buitenaf (het zinnetje van een organisatorsite) veilig in de HTML zetten
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+// Prijs + eventueel een voorstel van scraper/suggest-prices.js, met de zin
+// van de site erbij zodat je kunt zien of het echt het inschrijfgeld is
+function renderPriceCell(ev) {
+  const current = ev.price ? esc(formatPrice(ev.price)) : '<span style="color:#aaa">—</span>';
+  if (!hasPriceSuggestion(ev)) return current;
+  // Noemt de zin alleen een eerder jaar dan het evenement? Dan is het misschien de prijs van vorig jaar
+  const eventYear = Number((ev.date || '').slice(0, 4));
+  const years = ((ev.price_suggestion_quote || '').match(/\b20\d\d\b/g) || []).map(Number);
+  const oldYear = years.length && !years.includes(eventYear) && Math.max(...years) < eventYear;
+  const url = /^https?:\/\//i.test(ev.price_suggestion_url || '') ? ev.price_suggestion_url : '';
+  return `${current}
+    <div class="price-suggestion">
+      ${oldYear ? '<span class="warn">Let op: noemt ' + Math.max(...years) + ', mogelijk de prijs van vorig jaar</span>' : ''}
+      Voorstel: <strong>€${esc(ev.price_suggestion)}</strong>
+      ${ev.price_suggestion_quote ? `<q>${esc(ev.price_suggestion_quote)}</q>` : ''}
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+        <button class="btn-table btn-accept" onclick="acceptPriceSuggestion('${ev.id}')">Overnemen</button>
+        <button class="btn-table btn-skip" onclick="skipPriceSuggestion('${ev.id}')">Overslaan</button>
+        ${url ? `<a href="${esc(url)}" target="_blank" rel="noopener">bron</a>` : ''}
+      </div>
+    </div>`;
 }
 
 function renderEventRow(ev) {
@@ -692,6 +753,7 @@ function renderEventRow(ev) {
       <td>${regio ? REGIO_LABELS[regio] : '<span style="color:#aaa">—</span>'}</td>
       <td>${ev.serie || '<span style="color:#aaa">—</span>'}</td>
       <td>${ev.editie || '<span style="color:#aaa">—</span>'}</td>
+      <td>${renderPriceCell(ev)}</td>
       <td>
         <span class="badge ${ev.published ? 'badge-green' : 'badge-gray'}">
           ${ev.published ? 'Gepubliceerd' : 'Concept'}
@@ -722,7 +784,7 @@ function renderRowsWithYearDividers(events) {
   for (const ev of events) {
     const year = (ev.date || '').slice(0, 4);
     if (year && year !== lastYear) {
-      html += `<tr class="year-divider"><td colspan="8">${year}</td></tr>`;
+      html += `<tr class="year-divider"><td colspan="9">${year}</td></tr>`;
       lastYear = year;
     }
     html += renderEventRow(ev);
@@ -749,19 +811,33 @@ function renderEventsTable() {
       (ev.organizer || '').toLowerCase().includes(zoekFilter)
     );
   }
+  const statusFilter = document.getElementById('filter-status').value;
+  if (statusFilter === 'concept') events = events.filter(ev => !ev.published);
+  if (statusFilter === 'gepubliceerd') events = events.filter(ev => ev.published);
+  if (statusFilter === 'prijsvoorstel') events = events.filter(hasPriceSuggestion);
 
   const todayStr = new Date().toISOString().split('T')[0];
   const upcoming = groupMatchesTogether(events.filter(ev => (ev.end_date || ev.date || '') >= todayStr), isFourMijlGroningenOrHaren);
   const past = groupMatchesTogether(events.filter(ev => (ev.end_date || ev.date || '') < todayStr).reverse(), isFourMijlGroningenOrHaren); // meest recent verleden eerst
 
+  // Knop om alle concepten die nu in de lijst "Aankomend" staan in één keer te publiceren
+  visibleConceptIds = upcoming.filter(ev => !ev.published).map(ev => ev.id);
+  const bulkBtn = document.getElementById('btn-publish-visible');
+  bulkBtn.hidden = visibleConceptIds.length === 0;
+  bulkBtn.textContent = `Publiceer ${visibleConceptIds.length === 1 ? 'dit concept' : 'deze ' + visibleConceptIds.length + ' concepten'}`;
+
+  // Aantal prijsvoorstellen in het filtermenu, zodat je ziet of er iets klaarstaat
+  const nSuggestions = allEvents.filter(hasPriceSuggestion).length;
+  document.querySelector('#filter-status option[value="prijsvoorstel"]').textContent = `Met prijsvoorstel (${nSuggestions})`;
+
   tbodyUpcoming.innerHTML = upcoming.length
     ? renderRowsWithYearDividers(upcoming)
-    : '<tr><td colspan="8" class="no-events">Geen aankomende evenementen gevonden.</td></tr>';
+    : '<tr><td colspan="9" class="no-events">Geen aankomende evenementen gevonden.</td></tr>';
 
   pastCount.textContent = past.length;
   tbodyPast.innerHTML = past.length
     ? renderRowsWithYearDividers(past)
-    : '<tr><td colspan="8" class="no-events">Geen afgelopen evenementen gevonden.</td></tr>';
+    : '<tr><td colspan="9" class="no-events">Geen afgelopen evenementen gevonden.</td></tr>';
 }
 
 // Toont een herinneringsblok voor evenementen met prijs "volgt" die binnen
@@ -800,11 +876,63 @@ async function togglePublish(id, currentlyPublished) {
   try {
     await updateEvent(id, { published: !currentlyPublished });
     // Lokaal bijwerken — geen nieuwe fetch, volgorde blijft stabiel
-    const ev = allEvents.find(e => e.id === id);
+    // (id komt als tekst uit de knop, in allEvents is het een getal)
+    const ev = allEvents.find(e => String(e.id) === String(id));
     if (ev) ev.published = !currentlyPublished;
     renderEventsTable();
   } catch (err) {
     alert('Fout bij bijwerken: ' + err.message);
+  }
+}
+
+async function publishVisibleConcepts() {
+  const ids = visibleConceptIds.slice();
+  if (!ids.length) return;
+  if (!confirm(`${ids.length} ${ids.length === 1 ? 'concept' : 'concepten'} publiceren? Ze staan daarna direct op de site.`)) return;
+  const btn = document.getElementById('btn-publish-visible');
+  btn.disabled = true;
+  btn.textContent = 'Bezig met publiceren…';
+  try {
+    const { data, error } = await db.from('events').update({ published: true }).in('id', ids).select('id');
+    if (error) throw error;
+    if (!data || data.length === 0)
+      throw new Error('Niet opgeslagen — geen schrijfrechten (staat dit account in de admins-tabel?)');
+    const done = new Set(data.map(r => String(r.id)));
+    allEvents.forEach(ev => { if (done.has(String(ev.id))) ev.published = true; });
+    if (data.length < ids.length) alert(`${data.length} van de ${ids.length} gepubliceerd. Ververs de pagina en probeer de rest opnieuw.`);
+  } catch (err) {
+    alert('Fout bij publiceren: ' + err.message);
+  }
+  btn.disabled = false;
+  renderEventsTable();
+}
+
+// Voorstel wordt de echte prijs (en verschijnt dus op de site als het event gepubliceerd is)
+async function acceptPriceSuggestion(id) {
+  const ev = allEvents.find(e => String(e.id) === String(id));
+  if (!ev || !ev.price_suggestion) return;
+  const fields = { price: ev.price_suggestion, price_suggestion: null, price_suggestion_quote: null, price_suggestion_url: null };
+  try {
+    await updateEvent(id, fields);
+    Object.assign(ev, fields);
+    renderEventsTable();
+    renderPriceReminder();
+  } catch (err) {
+    alert('Fout bij opslaan: ' + err.message);
+  }
+}
+
+// Voorstel weg; hetzelfde bedrag wordt daarna niet opnieuw voorgesteld (wel een ander bedrag)
+async function skipPriceSuggestion(id) {
+  const ev = allEvents.find(e => String(e.id) === String(id));
+  if (!ev || !ev.price_suggestion) return;
+  const fields = { price_suggestion_rejected: ev.price_suggestion, price_suggestion: null, price_suggestion_quote: null, price_suggestion_url: null };
+  try {
+    await updateEvent(id, fields);
+    Object.assign(ev, fields);
+    renderEventsTable();
+  } catch (err) {
+    alert('Fout bij opslaan: ' + err.message);
   }
 }
 

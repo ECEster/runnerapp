@@ -204,6 +204,31 @@ Handmatig testen (zonder op een geplande datum te wachten): ga naar de
 workflow**. Is er op dat moment niets met prijs "volgt" binnen 4 maanden,
 dan wordt er ook geen e-mail verstuurd — dat is geen fout.
 
+## Prijsvoorstellen (inschrijfgeld van de organisatorsite)
+
+De drie bronnen noemen geen inschrijfgeld; dat staat alleen op de site van
+de organisator. `suggest-prices.js` (met `lib/extractPrice.js`) bezoekt de
+inschrijflink van komende evenementen zonder prijs (leeg, "volgt", "n.b.")
+en zoekt bedragen die na een woord als "inschrijfgeld", "kosten" of
+"tarief" staan. Gevonden bedragen worden een **voorstel**
+(`price_suggestion`, met het zinnetje van de site en de pagina), niet de
+echte prijs: in een proef met 40 evenementen vond hij bij ruim de helft een
+bedrag, maar soms ook een teamprijs of de prijs van vorig jaar.
+
+- **Eenmalig**: `migrations/0009_add_price_suggestion.sql` in de Supabase SQL
+  Editor uitvoeren.
+- **Wanneer**: automatisch na elke live scrape-run, elke maandag
+  (`.github/workflows/suggest-prices.yml`), en via Actions → "Zoek
+  inschrijfgeld" → Run workflow. Een evenement zonder vondst wordt pas na 14
+  dagen opnieuw bekeken.
+- **Beoordelen**: admin-paneel → Toon → "Met prijsvoorstel". Per voorstel
+  **Overnemen** (wordt de prijs op de site) of **Overslaan** (hetzelfde
+  bedrag wordt niet opnieuw voorgesteld; een ander bedrag wel). Noemt het
+  zinnetje alleen een eerder jaar dan het evenement, dan staat er een
+  waarschuwing bij.
+- Lokaal: `node suggest-prices.js` (dry-run) of `--live`; uitvoer in
+  `.cache/prijsvoorstellen.json`.
+
 ## Nog te bouwen / nog uit te voeren
 
 - **Serie/editie in productie zetten** (nieuw, nog niet gedaan): voer in deze volgorde uit in

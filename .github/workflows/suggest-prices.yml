@@ -1,0 +1,40 @@
+name: Zoek inschrijfgeld (prijsvoorstellen)
+
+# Zoekt op de organisatorsites het inschrijfgeld van komende evenementen
+# zonder prijs, en zet het als voorstel klaar in het admin-paneel (filter
+# "Met prijsvoorstel"). Op de site verandert niets tot je een voorstel
+# overneemt. Draait elke maandag, en handmatig via "Run workflow".
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+    inputs:
+      live:
+        description: "Voorstellen opslaan? (uit = alleen tonen in de log)"
+        type: boolean
+        default: true
+
+jobs:
+  suggest:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: scraper
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+
+      - name: Zoek prijzen
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          # Bij het schema is er geen invoer: dan altijd opslaan
+          if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ github.event.inputs.live }}" = "true" ]; then
+            node suggest-prices.js --live
+          else
+            node suggest-prices.js
+          fi
