@@ -36,6 +36,9 @@
     /* ─── Layout ─── */
     .panel { max-width: 1200px; margin: 32px auto; padding: 0 24px 60px; }
     .table-scroll { overflow-x: auto; }
+    /* Extra scrollbalk boven de tabel, loopt gelijk met die eronder */
+    .table-scroll-top { overflow-x: auto; overflow-y: hidden; margin-bottom: 4px; }
+    .table-scroll-top > div { height: 1px; }
 
     /* ─── Card ─── */
     .card {
@@ -947,6 +950,32 @@ async function confirmDelete(id, name) {
     alert('Fout bij verwijderen: ' + err.message);
   }
 }
+
+// Scrollbalk bovenaan elke brede tabel, zodat je niet eerst naar onderen
+// hoeft om naar links/rechts te scrollen. De bovenste balk krijgt dezelfde
+// breedte als de tabel en beide balken volgen elkaar.
+document.querySelectorAll('.table-scroll').forEach(bottom => {
+  const top = document.createElement('div');
+  top.className = 'table-scroll-top';
+  top.appendChild(document.createElement('div'));
+  bottom.before(top);
+  const table = bottom.querySelector('table');
+  const update = () => {
+    top.firstChild.style.width = table.scrollWidth + 'px';
+    top.hidden = table.scrollWidth <= bottom.clientWidth;
+  };
+  // Alleen bijzetten als de ander echt anders staat, anders blijven ze elkaar aansturen
+  top.addEventListener('scroll', () => {
+    if (bottom.scrollLeft !== top.scrollLeft) bottom.scrollLeft = top.scrollLeft;
+  });
+  bottom.addEventListener('scroll', () => {
+    if (top.scrollLeft !== bottom.scrollLeft) top.scrollLeft = bottom.scrollLeft;
+  });
+  // Tabelinhoud en schermbreedte veranderen (filters, inklapmenu openen, venster smaller)
+  new ResizeObserver(update).observe(table);
+  new ResizeObserver(update).observe(bottom);
+  update();
+});
 
 // Laad tabel bij openen pagina
 loadEventsTable();
