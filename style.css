@@ -847,8 +847,8 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
 @media (max-width: 768px) {
   .page-header--regio-zuid { background-position: 64% center; }
 }
-/* Noord: altijd de volle hoogte (beide voeten), zijkanten mogen wegvallen */
-.page-header--regio-noord { background-size: auto 100%; background-position: center; background-color: #6E7F86; }
+/* Noord: BannerNoord (loper in de sneeuw bij een molen, 1,8:1), uitsnede naar boven zodat het gezicht in beeld blijft */
+.page-header--regio-noord { background-size: cover; background-position: center 8%; background-color: #6E7F86; }
 /* Oost: BannerOost4, aan beide kanten verbreed met gespiegelde, vervaagde heide (6:1), zodat de loopster ook op brede schermen helemaal in beeld is */
 .page-header--regio-oost { background-size: cover; background-position: center; background-color: #6F6A55; }
 /* Over ons: geen oranje details, dus witte cijfers in de blokjes */
