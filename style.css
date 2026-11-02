@@ -1473,7 +1473,7 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
 .detail-gallery h3 { margin-bottom: 1rem; }
 .detail-gallery__grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.75rem;
 }
 .detail-gallery__grid img {
@@ -2062,7 +2062,7 @@ body.page-overons { background: var(--white); }
 
   .event-detail__content { grid-template-columns: 1fr; }
   .event-detail__sidebar { position: static; }
-  .detail-gallery__grid { grid-template-columns: repeat(3, 1fr); }
+  .detail-gallery__grid { grid-template-columns: repeat(2, 1fr); }
 
   .training-tips { grid-template-columns: 1fr; }
   .runs-layout { grid-template-columns: 1fr; }
