@@ -11,9 +11,11 @@
 // iets anders noemt.
 //
 // Vult in dezelfde ronde ook het maximaal aantal deelnemers in als de pagina
-// dat noemt en het nog leeg is (lib/extractMaxParticipants.js).
+// dat noemt en het nog leeg is (lib/extractMaxParticipants.js), en zoekt naar
+// een kidsrun die de bron niet noemde (lib/detectKidsrunText.js): duidelijk
+// (met afstand/tijd/prijs) = meteen aan, anders een voorstel in het admin-paneel.
 //
-// Vereist migratie 0011_add_availability.sql en 0013_add_max_participants.sql.
+// Vereist migraties 0011, 0013 en 0014.
 //
 // Draaien:  node check-uitverkocht.js          (dry-run)
 //           node check-uitverkocht.js --live   (slaat de voorstellen op)
@@ -26,6 +28,7 @@ try {
 
 import { htmlToText } from './lib/extractPrice.js'
 import { extractMaxParticipants } from './lib/extractMaxParticipants.js'
+import { detectKidsrunText } from './lib/detectKidsrunText.js'
 
 const URL_BASE = (process.env.SUPABASE_URL || '').replace(/\/$/, '')
 const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -112,7 +115,7 @@ async function main() {
   console.log(isLive ? '=== LIVE ===' : '=== DRY RUN (niets wordt opgeslagen) ===')
   const today = new Date().toISOString().slice(0, 10)
   const res = await fetch(
-    `${URL_BASE}/rest/v1/events?select=id,name_nl,date,registration_url,sold_out,sold_out_distances,sold_out_suggestion,sold_out_suggestion_rejected,max_participants&date=gte.${today}&published=eq.true&order=date`,
+    `${URL_BASE}/rest/v1/events?select=id,name_nl,date,registration_url,sold_out,sold_out_distances,sold_out_suggestion,sold_out_suggestion_rejected,max_participants,kidsrun,kidsrun_suggestion_quote,kidsrun_suggestion_rejected&date=gte.${today}&published=eq.true&order=date`,
     { headers: HEADERS },
   )
   if (!res.ok) throw new Error(`Kon events niet ophalen: HTTP ${res.status} (migratie 0011 al gedraaid?)`)
@@ -121,6 +124,7 @@ async function main() {
 
   const found = []
   const maxFound = []
+  const kidsFound = []
   const queue = [...events]
   let done = 0
   async function worker() {
@@ -131,6 +135,9 @@ async function main() {
       // Maximaal aantal deelnemers: alleen invullen als het nog leeg is
       const max = text && !ev.max_participants ? extractMaxParticipants(text) : null
       if (max) maxFound.push({ ev, ...max })
+      // Kidsrun op de site die de bron niet noemde
+      const kids = text && !ev.kidsrun && !ev.kidsrun_suggestion_quote && !ev.kidsrun_suggestion_rejected ? detectKidsrunText(text) : null
+      if (kids) kidsFound.push({ ev, ...kids })
       const r = text && !ev.sold_out && findSoldOut(text, Number(ev.date.slice(0, 4)))
       if (r && r.suggestion !== ev.sold_out_suggestion_rejected && r.suggestion !== ev.sold_out_distances && r.suggestion !== ev.sold_out_suggestion) {
         found.push({ ev, ...r })
@@ -150,7 +157,19 @@ Maximaal aantal deelnemers gevonden: ${maxFound.length}`)
   for (const f of maxFound) console.log(`  id ${f.ev.id} | ${f.ev.name_nl} -> ${f.value}
       "${f.quote}"`)
 
+  const kidsSure = kidsFound.filter((k) => k.sure)
+  console.log(`
+Kidsrun gevonden: ${kidsSure.length} zeker (direct aan), ${kidsFound.length - kidsSure.length} als voorstel`)
+  for (const k of kidsFound) console.log(`  ${k.sure ? '[zeker]   ' : '[voorstel]'} id ${k.ev.id} | ${k.ev.name_nl}
+      "${k.quote}"`)
+
   if (isLive) {
+    for (const k of kidsFound) {
+      const fields = k.sure
+        ? { kidsrun: true }
+        : { kidsrun_suggestion_quote: k.quote, kidsrun_suggestion_url: k.ev.registration_url }
+      await fetch(`${URL_BASE}/rest/v1/events?id=eq.${k.ev.id}`, { method: 'PATCH', headers: HEADERS, body: JSON.stringify(fields) })
+    }
     for (const f of maxFound) {
       await fetch(`${URL_BASE}/rest/v1/events?id=eq.${f.ev.id}`, { method: 'PATCH', headers: HEADERS, body: JSON.stringify({ max_participants: f.value }) })
     }

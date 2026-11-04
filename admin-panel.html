@@ -395,6 +395,7 @@
             <input type="checkbox" id="f-kidsrun">
             <label for="f-kidsrun">Bevat kinderloop</label>
           </div>
+          <div id="kidsrun-suggestion" class="price-suggestion" hidden></div>
           <div class="checkbox-row" style="margin-top:8px">
             <input type="checkbox" id="f-businessrun">
             <label for="f-businessrun">Business Run</label>
@@ -449,6 +450,7 @@
           <option value="gepubliceerd">Alleen gepubliceerd</option>
           <option value="prijsvoorstel">Met prijsvoorstel</option>
           <option value="uitverkocht">Met uitverkocht-voorstel</option>
+          <option value="kidsrun">Met kidsrun-voorstel</option>
         </select>
       </div>
       <div style="flex:1;min-width:200px">
@@ -608,6 +610,35 @@ async function skipSoldOutSuggestion() {
   renderSoldOutSuggestion(ev);
 }
 
+// Kidsrun-voorstel van scraper/check-uitverkocht.js
+function renderKidsrunSuggestion(ev) {
+  const box = document.getElementById('kidsrun-suggestion');
+  if (!ev.kidsrun_suggestion_quote || ev.kidsrun) { box.hidden = true; box.innerHTML = ''; return; }
+  const url = /^https?:\/\//i.test(ev.kidsrun_suggestion_url || '') ? ev.kidsrun_suggestion_url : '';
+  box.hidden = false;
+  box.innerHTML = `Mogelijk een kidsrun: <q>${esc(ev.kidsrun_suggestion_quote)}</q>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      <button type="button" class="btn-table btn-accept" onclick="useKidsrunSuggestion()">Aanvinken</button>
+      <button type="button" class="btn-table btn-skip" onclick="skipKidsrunSuggestion()">Overslaan</button>
+      ${url ? `<a href="${esc(url)}" target="_blank" rel="noopener">bron</a>` : ''}
+    </div>`;
+}
+
+// Vinkt alleen aan in het formulier; opslaan doe je zelf
+function useKidsrunSuggestion() {
+  document.getElementById('f-kidsrun').checked = true;
+  document.getElementById('kidsrun-suggestion').hidden = true;
+}
+
+async function skipKidsrunSuggestion() {
+  const ev = allEvents.find(x => x.id === editingId);
+  if (!ev) return;
+  const fields = { kidsrun_suggestion_rejected: true, kidsrun_suggestion_quote: null, kidsrun_suggestion_url: null };
+  await updateEvent(ev.id, fields);
+  Object.assign(ev, fields);
+  renderKidsrunSuggestion(ev);
+}
+
 function startEdit(ev) {
   editingId = ev.id;
   existingImageUrl = ev.image || '';
@@ -634,6 +665,7 @@ function startEdit(ev) {
   document.getElementById('f-max-part').value      = ev.max_participants || '';
   document.getElementById('f-sold-out').checked    = ev.sold_out || false;
   renderSoldOutSuggestion(ev);
+  renderKidsrunSuggestion(ev);
   document.getElementById('f-serie').value      = ev.serie || '';
   document.getElementById('f-editie').value     = ev.editie || '';
   document.getElementById('f-desc-nl').value    = ev.description_nl || '';
@@ -916,6 +948,7 @@ function renderEventsTable() {
   if (statusFilter === 'gepubliceerd') events = events.filter(ev => ev.published);
   if (statusFilter === 'prijsvoorstel') events = events.filter(hasPriceSuggestion);
   if (statusFilter === 'uitverkocht') events = events.filter(ev => !!ev.sold_out_suggestion);
+  if (statusFilter === 'kidsrun') events = events.filter(ev => !!ev.kidsrun_suggestion_quote && !ev.kidsrun);
 
   const todayStr = new Date().toISOString().split('T')[0];
   const upcoming = groupMatchesTogether(events.filter(ev => (ev.end_date || ev.date || '') >= todayStr), isFourMijlGroningenOrHaren);
@@ -932,6 +965,7 @@ function renderEventsTable() {
   document.querySelector('#filter-status option[value="prijsvoorstel"]').textContent = `Met prijsvoorstel (${nSuggestions})`;
   renderPriceSuggestionsNotice();
   document.querySelector('#filter-status option[value="uitverkocht"]').textContent = `Met uitverkocht-voorstel (${allEvents.filter(ev => !!ev.sold_out_suggestion).length})`;
+  document.querySelector('#filter-status option[value="kidsrun"]').textContent = `Met kidsrun-voorstel (${allEvents.filter(ev => !!ev.kidsrun_suggestion_quote && !ev.kidsrun).length})`;
 
   tbodyUpcoming.innerHTML = upcoming.length
     ? renderRowsWithYearDividers(upcoming)
