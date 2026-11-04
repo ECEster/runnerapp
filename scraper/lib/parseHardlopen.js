@@ -173,6 +173,8 @@ export async function collectHardlopenEvents(fetchHtml, { vanaf, tot } = {}) {
   const result = []
   for (const item of lijst) {
     if (/^trainingsloop$/i.test(item.soort)) continue
+    // Clinics, cursussen en oriëntatielopen zijn geen evenementen voor de agenda
+    if (/clinic|cursus|oriëntatieloop|orientatieloop/i.test(item.naam)) continue
     if ((vanaf && item.datum < vanaf) || (tot && item.datum > tot)) continue
     let detail = { onderdelen: [], organisatie: null, plaats: null, deadline: null, naInschrijving: null, maxDeelnemers: null }
     if (item.url) {
