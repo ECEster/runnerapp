@@ -252,6 +252,17 @@ bedrag, maar soms ook een teamprijs of de prijs van vorig jaar.
   lijntekening (hardloopschoen voor een hart), maar het bestand was niet terug te vinden. Opslaan
   in `images/`, dan omzetten naar een groenbeige icoon met doorzichtige achtergrond (of een
   vereenvoudigde versie, want de fijne lijnen verdwijnen op 18 pixels).
+- **Automatische controle van evenementen** (wens van 4 november 2026, voor later): een functie
+  die regelmatig controleert of
+  1. de links naar de websites van de evenementen (inschrijflink, organisator) nog werken;
+  2. evenementen niet volgeboekt zijn;
+  3. evenementen niet zijn afgelast.
+
+  Al aanwezig om op voort te bouwen: `check-uitverkocht.js` zoekt wekelijks naar
+  "uitverkocht"/"vol" op de inschrijfpagina (als voorstel in het admin-paneel), en de
+  linkcheck van 30 september (zie hieronder) was een eenmalige controle. Nog te bouwen:
+  de links automatisch nalopen (en melden wat niet meer werkt), en "afgelast"/"gaat niet door"
+  herkennen, met een label "Afgelast" op de kaart en de evenementpagina.
 
 ## Herinnering voor de volgende sessie: kapotte links (linkcheck 2026-09-30)
 
