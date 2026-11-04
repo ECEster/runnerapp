@@ -35,6 +35,19 @@ const TYPES = {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
+// hardlopen.nl geeft soms even een HTTP 5xx (bv. 521 bij drukte): tot 3 keer
+// opnieuw proberen, met steeds langer wachten
+async function fetchRetry(fetchHtml, url) {
+  for (let poging = 1; ; poging++) {
+    try {
+      return await fetchHtml(url)
+    } catch (err) {
+      if (poging >= 3) throw err
+      await sleep(poging * 5000)
+    }
+  }
+}
+
 function text(html) {
   return String(html)
     .replace(/<[^>]+>/g, ' ')
@@ -139,7 +152,15 @@ function prijsUit(onderdelen, naam) {
 export async function collectHardlopenEvents(fetchHtml, { vanaf, tot } = {}) {
   const lijst = []
   for (let page = 1; page <= MAX_PAGES; page++) {
-    const items = parseHardlopenList(await fetchHtml(`${BASE}/evenementen/?page=${page}`))
+    let html
+    try {
+      html = await fetchRetry(fetchHtml, `${BASE}/evenementen/?page=${page}`)
+    } catch (err) {
+      // Blijft een pagina onbereikbaar, ga dan verder met wat we al hebben
+      console.warn(`  hardlopen.nl: pagina ${page} niet bereikbaar (${err.message}), verder met ${lijst.length} evenementen`)
+      break
+    }
+    const items = parseHardlopenList(html)
     if (!items.length) break
     lijst.push(...items)
     await sleep(PAUSE_MS)
@@ -152,7 +173,7 @@ export async function collectHardlopenEvents(fetchHtml, { vanaf, tot } = {}) {
     let detail = { onderdelen: [], organisatie: null, plaats: null, deadline: null, naInschrijving: null }
     if (item.url) {
       try {
-        detail = parseHardlopenDetail(await fetchHtml(item.url))
+        detail = parseHardlopenDetail(await fetchRetry(fetchHtml, item.url))
       } catch {
         // detailpagina niet bereikbaar: verder met de gegevens uit de lijst
       }

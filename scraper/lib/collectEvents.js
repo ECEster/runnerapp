@@ -60,7 +60,12 @@ export async function collectEvents({ year, vanaf, tot }) {
   // hardlopen.nl (kalender van de Atletiekunie) als vijfde bron, ook achteraan:
   // vult vooral crossen, parkruns en clubwedstrijden aan die de andere bronnen
   // missen. Zie lib/parseHardlopen.js.
-  allEvents.push(...(await collectHardlopenEvents(fetchHtml, { vanaf, tot })))
+  try {
+    allEvents.push(...(await collectHardlopenEvents(fetchHtml, { vanaf, tot })))
+  } catch (err) {
+    // Een storing bij hardlopen.nl mag de andere vier bronnen niet tegenhouden
+    console.warn(`  hardlopen.nl overgeslagen: ${err.message}`)
+  }
   persistProvinceCache()
 
   return dedupeEvents(allEvents)
