@@ -29,8 +29,10 @@ const HEADERS = { apikey: KEY, Authorization: `Bearer ${KEY}`, 'Content-Type': '
 const isLive = process.argv.includes('--live')
 const SKIP_HOSTS = /(hardloopkalendernederland|runphy|loopjeloopje|facebook\.com|instagram\.com|google\.)/i
 
-const FULL = /uitverkocht|sold[\s-]?out|volgeboekt|\b(?:is|zijn|al)\s+vol\b|\bvol\s*=\s*vol\b|maximum\s+(?:aantal\s+)?(?:deelnemers|inschrijvingen)\s+(?:is\s+)?bereikt|maximaal\s+aantal\s+deelnemers\s+(?:is\s+)?bereikt/gi
-const NOT_FULL = /bijna|vrijwel|snel|voordat|voor\s+het|zodra|als\s+het|wanneer|vorig\s+jaar|vorige\s+editie|niet\s+(?:uitverkocht|vol)|nog\s+niet|t-?shirt|shirt|medaille|camping|parkeer|diner|pasta|vol=vol/i
+const FULL = /uitverkocht(?!e)|sold[\s-]?out|volgeboekt|\b(?:is|zijn|inmiddels)\s+vol\b(?!\s*(?:=|enthousiasme|energie|plezier|sfeer|verwachting))|maximum\s+(?:aantal\s+)?(?:deelnemers|inschrijvingen)\s+(?:is\s+)?bereikt|maximaal\s+aantal\s+deelnemers\s+(?:is\s+)?bereikt/gi
+const NOT_FULL = /bijna|vrijwel|snel|voordat|voor\s+het|zodra|als\s+(?:het|een)|wanneer|mits|tot\s+het\s+moment|vorig\s+jaar|vorige|voorgaande|\bwas\b|\bwaren\b|\bwerd\b|editie\s+van\s+20\d\d|niet\s+(?:uitverkocht|vol)|nog\s+niet|t-?shirt|shirt|medaille|camping|parkeer|diner|pasta|business|bedrijven|deal|passe.?partout|seizoen/i
+// Terugblik vlak na het woord: "uitverkocht in een week", "binnen 12 uur uitverkocht"
+const AFTER_PAST = /^\W{0,3}(?:in\s+een|binnen|met\s+het|en\s+daarom|!?\s*een\s+record)/i
 const PART = [
   [/kids\s?run|kinderloop|jeugd(?:loop)?|mini[\s-]?run|kidsloop/i, 'Kidsrun'],
   [/halve\s+marathon|21[,.]1\s?km/i, 'Halve marathon'],
@@ -81,8 +83,9 @@ export function findSoldOut(text, eventYear) {
   while ((m = FULL.exec(text))) {
     const from = Math.max(0, m.index - 70)
     const window = text.slice(from, m.index + m[0].length + 30)
-    const before = text.slice(Math.max(0, m.index - 25), m.index)
-    if (NOT_FULL.test(before) || NOT_FULL.test(m[0])) continue
+    const before = text.slice(Math.max(0, m.index - 40), m.index)
+    const after = text.slice(m.index + m[0].length, m.index + m[0].length + 25)
+    if (NOT_FULL.test(before) || NOT_FULL.test(m[0]) || AFTER_PAST.test(after)) continue
     // Noemt het stukje alleen een eerder jaar? Dan gaat het over vorig jaar
     const years = (window.match(/\b20\d\d\b/g) || []).map(Number)
     if (years.length && !years.includes(eventYear) && Math.max(...years) < eventYear) continue
