@@ -107,7 +107,7 @@ function renderList(lang) {
     var badgeClass = getBadgeClass(ev.type);
     var typeName = cardTypeName(ev, lang);
     var priceHtml = ev.paid ? '<span class="event-card__price">'+formatPrice(ev.price)+'</span>' : '<span class="event-card__price free">Gratis</span>';
-    var distChips = '<span class="event-card__distances-text">' + formatDistances(ev.distances) + '</span>' + soldOutNoteHtml(ev);
+    var distChips = '<span class="event-card__distances-text">' + formatDistances(ev.distances) + '</span>';
     return cardOpen('event-card', ev)+
       '<div class="event-card__img">'+
         '<img src="'+getEventImage(ev)+'" alt="" loading="lazy">'+
@@ -122,7 +122,7 @@ function renderList(lang) {
         cardLink(ev, name, 'event-card__title')+
         '<div class="event-card__meta"><span>'+titleCase(ev.city)+'</span></div>'+
         '<div class="event-card__distances">'+distChips+'</div>'+
-        '<div class="event-card__footer">'+priceHtml+'</div>'+
+        '<div class="event-card__footer">'+priceHtml+soldOutNoteHtml(ev, true)+'</div>'+
       '</div>'+
     cardClose(ev);
   }).join('');

@@ -2209,7 +2209,7 @@ body.page-overons { background: var(--white); }
 
 /* Uitverkocht en inschrijven */
 .event-card__photo-badge--soldout { background: rgba(17,24,39,0.85); border-color: rgba(255,255,255,0.6); }
-.event-card__soldout-note { font-weight: 700; color: var(--dark); white-space: nowrap; }
+.event-card__soldout-note { font-size: 0.75rem; font-weight: 700; color: var(--dark); white-space: nowrap; margin-left: -0.35rem; } /* dicht achter de prijs (de footer heeft een gap) */
 .detail-info-value--lines { line-height: 1.6; }
 .detail-info-note { font-size: 0.82rem; color: var(--dark3); }
 

@@ -146,16 +146,17 @@ function matchesDistanceFilter(ev, filter) {
 }
 
 // Uitverkocht: helemaal (label op de foto) of alleen sommige onderdelen
-// (korte tekst achter de afstanden, bv. "Kidsrun vol"). Altijd in woorden,
+// (korte tekst achter de prijs, bv. "€15 - 17 · Kidsrun vol"). Altijd in woorden,
 // niet alleen met kleur of doorhalen.
 function soldOutBadgeHtml(ev) {
   return ev.sold_out ? '<span class="event-card__photo-badge event-card__photo-badge--soldout">' + t('badge_sold_out') + '</span>' : '';
 }
 
-function soldOutNoteHtml(ev) {
+// afterPrice: staat er een prijs vóór, dan met " · " ertussen
+function soldOutNoteHtml(ev, afterPrice) {
   if (ev.sold_out || !ev.sold_out_distances) return '';
   var safe = String(ev.sold_out_distances).replace(/[&<>"]/g, function(c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; });
-  return '<span class="event-card__soldout-note"> · ' + safe + ' ' + t('sold_out_full') + '</span>';
+  return '<span class="event-card__soldout-note">' + (afterPrice ? '· ' : '') + safe + ' ' + t('sold_out_full') + '</span>';
 }
 
 // Prijsfilter: "gratis", of een bereik "van-tot" in euro's ("50-" = meer dan 50).
