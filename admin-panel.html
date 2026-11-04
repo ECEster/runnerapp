@@ -203,6 +203,9 @@
     .price-suggestion .warn { color: #b45309; font-weight: 600; display: block; margin-bottom: 4px; }
     .btn-accept { background: #4FA89A; color: #fff; }
     .btn-skip   { background: #e9ecef; color: #555; }
+    .price-suggestion__edit { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+    .price-suggestion__edit label { font-size: .75rem; color: #555; }
+    .price-suggestion__edit input { width: 140px; padding: 4px 6px; font-size: .82rem; }
     .btn-bulk {
       padding: 9px 16px; border-radius: 8px; border: none; background: #7AB8D4; color: #fff;
       font-size: .85rem; font-weight: 600; cursor: pointer; font-family: inherit;
@@ -869,9 +872,14 @@ function renderPriceCell(ev) {
       ${ev.price_suggestion_quote ? `<q>${esc(ev.price_suggestion_quote)}</q>` : ''}
       <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
         <button class="btn-table btn-accept" onclick="acceptPriceSuggestion('${ev.id}')">Overnemen</button>
-        <button class="btn-table btn-skip" onclick="skipPriceSuggestion('${ev.id}')">Overslaan</button>
+        <button class="btn-table btn-skip" onclick="editPriceSuggestion('${ev.id}')">Bewerken</button>
         ${url ? `<a href="${esc(url)}" target="_blank" rel="noopener">bron</a>` : ''}
       </div>
+      <form class="price-suggestion__edit" id="ps-edit-${ev.id}" hidden onsubmit="event.preventDefault(); acceptPriceSuggestion('${ev.id}', this.elements.price.value)">
+        <label for="ps-input-${ev.id}">Prijs (€)</label>
+        <input type="text" id="ps-input-${ev.id}" name="price" value="${esc(ev.price_suggestion)}" placeholder="bijv. 10 - 15 of gratis">
+        <button type="submit" class="btn-table btn-accept">Opslaan</button>
+      </form>
     </div>`;
 }
 
@@ -1066,10 +1074,21 @@ async function publishVisibleConcepts() {
 }
 
 // Voorstel wordt de echte prijs (en verschijnt dus op de site als het event gepubliceerd is)
-async function acceptPriceSuggestion(id) {
+// Bewerken: invulveld met het voorstel, zodat je het bedrag kunt aanpassen voor je het opslaat
+function editPriceSuggestion(id) {
+  const form = document.getElementById('ps-edit-' + id);
+  if (!form) return;
+  form.hidden = !form.hidden;
+  if (!form.hidden) form.elements.price.focus();
+}
+
+// price (optioneel): het aangepaste bedrag uit "Bewerken"; anders het voorstel zelf
+async function acceptPriceSuggestion(id, price) {
   const ev = allEvents.find(e => String(e.id) === String(id));
   if (!ev || !ev.price_suggestion) return;
-  const fields = { price: ev.price_suggestion, price_suggestion: null, price_suggestion_quote: null, price_suggestion_url: null };
+  const value = (price ?? ev.price_suggestion).trim();
+  if (!value) return;
+  const fields = { price: value, price_suggestion: null, price_suggestion_quote: null, price_suggestion_url: null };
   try {
     await updateEvent(id, fields);
     Object.assign(ev, fields);
