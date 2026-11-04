@@ -253,6 +253,7 @@ var IMAGE_VARIANTS = {
   'images/cross.jpg': ['images/cross.jpg', 'images/cross2.jpg'],
   'images/trail.jpg': ['images/trail.jpg', 'images/trail2.jpg'],
   'images/wegevenement.jpg': ['images/wegevenement.jpg', 'images/wegevenement2.jpg', 'images/wegevenement3.jpg', 'images/wegevenement4.jpg'],
+  'images/gemengd-parcours.png': ['images/gemengd-parcours.png', 'images/gemengd-parcours2.jpg'],
 };
 var IMAGE_VARIANT_COUNT = {};
 
