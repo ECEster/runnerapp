@@ -8,10 +8,10 @@ en de `regio-*.html`-pagina's).
 
 | Regio | Provincies | Actief? | Bronnen |
 |---|---|---|---|
-| **Noord** | Groningen, Friesland, Drenthe | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl + inschrijven.nl |
-| **Oost** | Overijssel, Gelderland, Flevoland | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl + inschrijven.nl |
-| **Zuid** | Noord-Brabant, Limburg | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl + inschrijven.nl |
-| **West** | Noord-Holland, Zuid-Holland, Utrecht, Zeeland | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl + inschrijven.nl |
+| **Noord** | Groningen, Friesland, Drenthe | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl + inschrijven.nl + hardlopen.nl |
+| **Oost** | Overijssel, Gelderland, Flevoland | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl + inschrijven.nl + hardlopen.nl |
+| **Zuid** | Noord-Brabant, Limburg | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl + inschrijven.nl + hardlopen.nl |
+| **West** | Noord-Holland, Zuid-Holland, Utrecht, Zeeland | ✅ Ja | runphy.nl + hardloopkalendernederland.nl + loopjeloopje.nl + inschrijven.nl + hardlopen.nl |
 
 **Sinds 2026-09-30 worden alle 12 provincies gescraped** — zie `PROVINCES` in
 `lib/collectEvents.js`. Let op: hardloopkalendernederland.nl schrijft de
@@ -142,3 +142,14 @@ direct ingevuld; één van beide → voorstel in het admin-paneel. Bestaande pri
 worden niet overschreven. Bedragen boven € 60 bij afstanden t/m 21,1 km worden
 genegeerd (dat zijn teamprijzen). Draait wekelijks in `suggest-prices.yml`,
 vóór `suggest-prices.js`.
+
+## hardlopen.nl (kalender van de Atletiekunie)
+
+Vijfde bron, sinds 2026-11-04 (`lib/parseHardlopen.js`). Landelijke lijst
+`/evenementen/?page=N` (10 per pagina) plus per evenement de detailpagina met
+inschrijfgeld per afstand, jeugdonderdelen en organisatie. Provincie via PDOK.
+Trainingslopen (clubtrainingen) worden overgeslagen; parkruns komen erin als
+gratis parkloop. Levert ook het kenmerk "aangesloten bij de Atletiekunie"
+(kolom `atletiekunie`, migratie 0010). `hardlopen-aanvullen.js` zet dat
+kenmerk, en een lege organisator/prijs, bij evenementen die we al via een
+andere bron hadden.

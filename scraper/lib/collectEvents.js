@@ -6,6 +6,7 @@ import { parseRunphyEvents } from './parseRunphy.js'
 import { parseHardloopkalenderEvents } from './parseHardloopkalender.js'
 import { parseLoopjeLoopjeEvents } from './parseLoopjeLoopje.js'
 import { collectInschrijvenEvents } from './parseInschrijven.js'
+import { collectHardlopenEvents } from './parseHardlopen.js'
 import { persistProvinceCache } from './resolveProvince.js'
 import { dedupeEvents } from './dedupe.js'
 
@@ -56,6 +57,10 @@ export async function collectEvents({ year, vanaf, tot }) {
   // hierboven blijft het event van die bron staan (zie lib/dedupe.js), zodat
   // bestaande series hetzelfde blijven. Zie lib/parseInschrijven.js.
   allEvents.push(...(await collectInschrijvenEvents(fetchHtml, { vanaf, tot })))
+  // hardlopen.nl (kalender van de Atletiekunie) als vijfde bron, ook achteraan:
+  // vult vooral crossen, parkruns en clubwedstrijden aan die de andere bronnen
+  // missen. Zie lib/parseHardlopen.js.
+  allEvents.push(...(await collectHardlopenEvents(fetchHtml, { vanaf, tot })))
   persistProvinceCache()
 
   return dedupeEvents(allEvents)

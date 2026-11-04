@@ -55,6 +55,8 @@ jobs:
             node geocode-events.js --live
             # Organisator zoeken op de site van nieuwe evenementen (alleen bij een duidelijke naam)
             node find-organizers.js --live
+            # Atletiekunie-kenmerk, organisator en prijs van hardlopen.nl bij bestaande evenementen
+            node hardlopen-aanvullen.js --live
             # Inschrijfgeld zoeken op de site van evenementen zonder prijs (als voorstel in het admin-paneel)
             node suggest-prices.js --live
           else

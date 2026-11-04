@@ -55,8 +55,12 @@ export function mapToSupabaseShape(event) {
     registration_url: decodeHtmlEntities(event.organisator_url),
     source_url: decodeHtmlEntities(event.bron_url),
     image: event.afbeelding_url,
-    type: detectSurvivalrun(event) ? 'survivalrun' : /trail/i.test(event.naam) ? 'trail' : 'wegevenement',
-    organizer: null,
+    // hardlopen.nl geeft het soort evenement zelf mee; anders afleiden uit de naam
+    type: event.type || (detectSurvivalrun(event) ? 'survivalrun' : /trail/i.test(event.naam) ? 'trail' : 'wegevenement'),
+    organizer: event.organisator || null,
+    atletiekunie: !!event.atletiekunie,
+    // hardlopen.nl noemt het inschrijfgeld per afstand op de detailpagina
+    ...(event.prijs && { price: event.prijs }),
     published: false,
     kidsrun: detectKidsrun(event),
     // Aangepast sporten (rolstoel, handbike, framerunning, G-atletiek), alleen als het in de naam staat
