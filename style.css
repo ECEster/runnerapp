@@ -2206,3 +2206,9 @@ body.page-overons { background: var(--white); }
 .schema-intro p { margin: 0; }
 .schema-intro__title { font-family: var(--font-head); font-size: 1.05rem; font-weight: 700; color: var(--dark); margin: 0 0 0.3rem; text-transform: none; letter-spacing: 0; }
 .schema-note { margin: -1rem 0 1.5rem; font-size: 0.85rem; color: var(--dark3); max-width: 80ch; }
+
+/* Uitverkocht en inschrijven */
+.event-card__photo-badge--soldout { background: rgba(17,24,39,0.85); border-color: rgba(255,255,255,0.6); }
+.event-card__soldout-note { font-weight: 700; color: var(--dark); white-space: nowrap; }
+.detail-info-value--lines { line-height: 1.6; }
+.detail-info-note { font-size: 0.82rem; color: var(--dark3); }

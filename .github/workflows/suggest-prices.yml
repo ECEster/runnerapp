@@ -37,9 +37,12 @@ jobs:
             # Eerst entryfee.run (prijzen per afstand, al gecontroleerd), daarna zelf zoeken voor de rest
             node entryfee-prices.js --live
             node suggest-prices.js --live
+            # Uitverkocht/vol op de inschrijfpagina? Als voorstel in het admin-paneel
+            node check-uitverkocht.js --live
           else
             node entryfee-prices.js
             node suggest-prices.js
+            node check-uitverkocht.js
           fi
 
       - name: Bepaal of er nieuwe prijsvoorstellen zijn

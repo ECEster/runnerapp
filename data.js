@@ -145,6 +145,19 @@ function matchesDistanceFilter(ev, filter) {
   });
 }
 
+// Uitverkocht: helemaal (label op de foto) of alleen sommige onderdelen
+// (korte tekst achter de afstanden, bv. "Kidsrun vol"). Altijd in woorden,
+// niet alleen met kleur of doorhalen.
+function soldOutBadgeHtml(ev) {
+  return ev.sold_out ? '<span class="event-card__photo-badge event-card__photo-badge--soldout">' + t('badge_sold_out') + '</span>' : '';
+}
+
+function soldOutNoteHtml(ev) {
+  if (ev.sold_out || !ev.sold_out_distances) return '';
+  var safe = String(ev.sold_out_distances).replace(/[&<>"]/g, function(c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; });
+  return '<span class="event-card__soldout-note"> · ' + safe + ' ' + t('sold_out_full') + '</span>';
+}
+
 // Prijsfilter: "gratis", of een bereik "van-tot" in euro's ("50-" = meer dan 50).
 // Een evenement met een prijsbereik ("5 - 12,50") telt mee als dat bereik de
 // categorie raakt. Evenementen zonder bekende prijs vallen buiten de categorieen.

@@ -51,6 +51,12 @@ async function loadEventsFromDB() {
         // Gratis als de prijs 'gratis'/'free' of 0 is; anders betaald
         paid:             !/^\s*(gratis|free|€?\s*0([.,]0+)?)\s*$/i.test(e.price || ''),
         atletiekunie:     e.atletiekunie || false,
+        // Beschikbaarheid en inschrijven (migratie 0011)
+        sold_out:                e.sold_out || false,
+        sold_out_distances:      e.sold_out_distances || '',
+        availability_checked_at: e.availability_checked_at || null,
+        registration_deadline:   e.registration_deadline || null,
+        late_registration:       e.late_registration,
         capacity:         null,
         youtube_url:      ''
     }));

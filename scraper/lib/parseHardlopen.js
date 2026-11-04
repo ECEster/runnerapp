@@ -107,8 +107,17 @@ export function parseHardlopenDetail(html) {
   const adres = lines.indexOf('Adres start:')
   // Postcode + plaats, bv. "8801 ET Franeker"
   const plaatsRegel = adres !== -1 ? lines.slice(adres + 1, adres + 4).find((l) => /^\d{4}\s?[A-Z]{2}\s+\S/.test(l)) : null
+  // "Inschrijving gesloten:" -> "zondag, 01 nov 2026"; "Na-inschrijving toegestaan?" -> "Ja"/"Nee"
+  const sluit = lines.indexOf('Inschrijving gesloten:')
+  const sluitDatum = sluit !== -1 ? /(\d{1,2}) (\w{3}) (\d{4})/.exec(lines[sluit + 1] || '') : null
+  const na = lines.indexOf('Na-inschrijving toegestaan?')
+  const naWaarde = na !== -1 ? (lines[na + 1] || '').toLowerCase() : ''
   return {
     onderdelen,
+    deadline: sluitDatum && MONTHS[sluitDatum[2].toLowerCase()]
+      ? `${sluitDatum[3]}-${String(MONTHS[sluitDatum[2].toLowerCase()]).padStart(2, '0')}-${sluitDatum[1].padStart(2, '0')}`
+      : null,
+    naInschrijving: naWaarde === 'ja' ? true : naWaarde === 'nee' ? false : null,
     organisatie: org !== -1 && lines[org + 1] && !/:$/.test(lines[org + 1]) ? lines[org + 1] : null,
     plaats: plaatsRegel ? plaatsRegel.replace(/^\d{4}\s?[A-Z]{2}\s+/, '') : null,
   }
@@ -140,7 +149,7 @@ export async function collectHardlopenEvents(fetchHtml, { vanaf, tot } = {}) {
   for (const item of lijst) {
     if (/^trainingsloop$/i.test(item.soort)) continue
     if ((vanaf && item.datum < vanaf) || (tot && item.datum > tot)) continue
-    let detail = { onderdelen: [], organisatie: null, plaats: null }
+    let detail = { onderdelen: [], organisatie: null, plaats: null, deadline: null, naInschrijving: null }
     if (item.url) {
       try {
         detail = parseHardlopenDetail(await fetchHtml(item.url))
@@ -170,6 +179,8 @@ export async function collectHardlopenEvents(fetchHtml, { vanaf, tot } = {}) {
       atletiekunie: item.atletiekunie,
       prijs: prijsUit(detail.onderdelen, item.naam),
       organisator: detail.organisatie,
+      inschrijf_deadline: detail.deadline,
+      na_inschrijving: detail.naInschrijving,
     })
   }
   return result

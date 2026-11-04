@@ -333,6 +333,31 @@
           <input type="url" id="f-reg-url" placeholder="https://...">
         </div>
 
+        <!-- Inschrijven en beschikbaarheid -->
+        <div>
+          <label for="f-reg-deadline">Inschrijven kan t/m (deadline)</label>
+          <input type="date" id="f-reg-deadline">
+        </div>
+        <div>
+          <label for="f-late-reg">Inschrijven op de dag zelf</label>
+          <select id="f-late-reg">
+            <option value="">Onbekend</option>
+            <option value="ja">Ja</option>
+            <option value="nee">Nee</option>
+          </select>
+        </div>
+        <div>
+          <label for="f-sold-out-dist">Volle afstanden (bv. Kidsrun of 10 km)</label>
+          <input type="text" id="f-sold-out-dist" placeholder="leeg = alles nog open">
+        </div>
+        <div>
+          <div class="checkbox-row" style="margin-top:26px">
+            <input type="checkbox" id="f-sold-out">
+            <label for="f-sold-out">Helemaal uitverkocht</label>
+          </div>
+          <div id="sold-out-suggestion" class="price-suggestion" hidden></div>
+        </div>
+
         <div>
           <label for="f-serie">Serie (koppelt jaargangen van hetzelfde evenement)</label>
           <input type="text" id="f-serie" placeholder="bijv. 4-mijl-van-groningen">
@@ -419,6 +444,7 @@
           <option value="concept">Alleen concepten</option>
           <option value="gepubliceerd">Alleen gepubliceerd</option>
           <option value="prijsvoorstel">Met prijsvoorstel</option>
+          <option value="uitverkocht">Met uitverkocht-voorstel</option>
         </select>
       </div>
       <div style="flex:1;min-width:200px">
@@ -544,6 +570,40 @@ document.querySelectorAll('#f-type option').forEach(o => {
   document.getElementById('f-type2').appendChild(o.cloneNode(true));
 });
 
+// Voorstel van scraper/check-uitverkocht.js, met het zinnetje van de site
+function renderSoldOutSuggestion(ev) {
+  const box = document.getElementById('sold-out-suggestion');
+  if (!ev.sold_out_suggestion) { box.hidden = true; box.innerHTML = ''; return; }
+  const url = /^https?:\/\//i.test(ev.sold_out_suggestion_url || '') ? ev.sold_out_suggestion_url : '';
+  box.hidden = false;
+  box.innerHTML = `Voorstel: <strong>${esc(ev.sold_out_suggestion)}</strong>
+    ${ev.sold_out_suggestion_quote ? `<q>${esc(ev.sold_out_suggestion_quote)}</q>` : ''}
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      <button type="button" class="btn-table btn-accept" onclick="useSoldOutSuggestion()">Invullen</button>
+      <button type="button" class="btn-table btn-skip" onclick="skipSoldOutSuggestion()">Overslaan</button>
+      ${url ? `<a href="${esc(url)}" target="_blank" rel="noopener">bron</a>` : ''}
+    </div>`;
+}
+
+// Zet het voorstel in het formulier; opslaan doe je zelf met de knop
+function useSoldOutSuggestion() {
+  const ev = allEvents.find(x => x.id === editingId);
+  if (!ev || !ev.sold_out_suggestion) return;
+  if (/^uitverkocht$/i.test(ev.sold_out_suggestion)) document.getElementById('f-sold-out').checked = true;
+  else document.getElementById('f-sold-out-dist').value = ev.sold_out_suggestion;
+  document.getElementById('sold-out-suggestion').hidden = true;
+  ev._clearSoldOutSuggestion = true;
+}
+
+async function skipSoldOutSuggestion() {
+  const ev = allEvents.find(x => x.id === editingId);
+  if (!ev) return;
+  const fields = { sold_out_suggestion_rejected: ev.sold_out_suggestion, sold_out_suggestion: null, sold_out_suggestion_quote: null, sold_out_suggestion_url: null };
+  await updateEvent(ev.id, fields);
+  Object.assign(ev, fields);
+  renderSoldOutSuggestion(ev);
+}
+
 function startEdit(ev) {
   editingId = ev.id;
   existingImageUrl = ev.image || '';
@@ -564,6 +624,11 @@ function startEdit(ev) {
   document.getElementById('f-price').value      = ev.price || '';
   document.getElementById('f-organizer').value  = ev.organizer || '';
   document.getElementById('f-reg-url').value    = ev.registration_url || '';
+  document.getElementById('f-reg-deadline').value  = ev.registration_deadline || '';
+  document.getElementById('f-late-reg').value      = ev.late_registration === true ? 'ja' : ev.late_registration === false ? 'nee' : '';
+  document.getElementById('f-sold-out-dist').value = ev.sold_out_distances || '';
+  document.getElementById('f-sold-out').checked    = ev.sold_out || false;
+  renderSoldOutSuggestion(ev);
   document.getElementById('f-serie').value      = ev.serie || '';
   document.getElementById('f-editie').value     = ev.editie || '';
   document.getElementById('f-desc-nl').value    = ev.description_nl || '';
@@ -637,6 +702,10 @@ document.getElementById('event-form').addEventListener('submit', async e => {
       price:            document.getElementById('f-price').value.trim(),
       organizer:        document.getElementById('f-organizer').value.trim(),
       registration_url: document.getElementById('f-reg-url').value.trim(),
+      registration_deadline: document.getElementById('f-reg-deadline').value || null,
+      late_registration: { ja: true, nee: false }[document.getElementById('f-late-reg').value] ?? null,
+      sold_out:         document.getElementById('f-sold-out').checked,
+      sold_out_distances: document.getElementById('f-sold-out-dist').value.trim() || null,
       serie:            document.getElementById('f-serie').value.trim() || null,
       editie:           document.getElementById('f-editie').value ? parseInt(document.getElementById('f-editie').value, 10) : null,
       description_nl:   descNl,
@@ -650,6 +719,16 @@ document.getElementById('event-form').addEventListener('submit', async e => {
       published:        document.getElementById('f-published').checked,
     };
 
+    // Uitverkocht-status gewijzigd? Dan is vandaag de controledatum
+    const before = editingId ? allEvents.find(x => x.id === editingId) : null;
+    if ((event.sold_out || event.sold_out_distances) &&
+        (!before || before.sold_out !== event.sold_out || (before.sold_out_distances || null) !== event.sold_out_distances)) {
+      event.availability_checked_at = new Date().toISOString().slice(0, 10);
+    }
+
+    if (before && before._clearSoldOutSuggestion) {
+      Object.assign(event, { sold_out_suggestion: null, sold_out_suggestion_quote: null, sold_out_suggestion_url: null });
+    }
     if (editingId) {
       await updateEvent(editingId, event);
       // Lokaal bijwerken — geen nieuwe fetch, volgorde blijft stabiel
@@ -830,6 +909,7 @@ function renderEventsTable() {
   if (statusFilter === 'concept') events = events.filter(ev => !ev.published);
   if (statusFilter === 'gepubliceerd') events = events.filter(ev => ev.published);
   if (statusFilter === 'prijsvoorstel') events = events.filter(hasPriceSuggestion);
+  if (statusFilter === 'uitverkocht') events = events.filter(ev => !!ev.sold_out_suggestion);
 
   const todayStr = new Date().toISOString().split('T')[0];
   const upcoming = groupMatchesTogether(events.filter(ev => (ev.end_date || ev.date || '') >= todayStr), isFourMijlGroningenOrHaren);
@@ -845,6 +925,7 @@ function renderEventsTable() {
   const nSuggestions = allEvents.filter(hasPriceSuggestion).length;
   document.querySelector('#filter-status option[value="prijsvoorstel"]').textContent = `Met prijsvoorstel (${nSuggestions})`;
   renderPriceSuggestionsNotice();
+  document.querySelector('#filter-status option[value="uitverkocht"]').textContent = `Met uitverkocht-voorstel (${allEvents.filter(ev => !!ev.sold_out_suggestion).length})`;
 
   tbodyUpcoming.innerHTML = upcoming.length
     ? renderRowsWithYearDividers(upcoming)

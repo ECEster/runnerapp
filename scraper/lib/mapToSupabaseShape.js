@@ -59,6 +59,9 @@ export function mapToSupabaseShape(event) {
     type: event.type || (detectSurvivalrun(event) ? 'survivalrun' : /trail/i.test(event.naam) ? 'trail' : 'wegevenement'),
     organizer: event.organisator || null,
     atletiekunie: !!event.atletiekunie,
+    // hardlopen.nl: laatste inschrijfdag en of na-inschrijving (op de dag zelf) kan
+    registration_deadline: event.inschrijf_deadline || null,
+    late_registration: event.na_inschrijving ?? null,
     // hardlopen.nl noemt het inschrijfgeld per afstand op de detailpagina
     ...(event.prijs && { price: event.prijs }),
     published: false,

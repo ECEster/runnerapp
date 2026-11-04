@@ -121,11 +121,11 @@ function renderEventCard(ev, lang) {
   var badgeClass = getBadgeClass(ev.type);
   var typeName = cardTypeName(ev, lang);
   var priceHtml = makePriceHtml(ev, lang);
-  var distChips = '<span class="event-card__distances-text">' + formatDistances(ev.distances) + '</span>';
+  var distChips = '<span class="event-card__distances-text">' + formatDistances(ev.distances) + '</span>' + soldOutNoteHtml(ev);
   return cardOpen('event-card', ev) +
     '<div class="event-card__img">' +
       '<img src="' + getEventImage(ev) + '" alt="" loading="lazy">' +
-      '<span class="event-card__photo-badges">' +
+      '<span class="event-card__photo-badges">' + soldOutBadgeHtml(ev) +
         '<span class="event-card__photo-badge">' + typeName + '</span>' +
         (ev.type2 ? '<span class="event-card__photo-badge">' + badgeTypeName(ev.type2, lang) + '</span>' : '') +
         (ev.rolstoel ? '<span class="event-card__photo-badge">' + t('badge_rolstoel') + '</span>' : '')+

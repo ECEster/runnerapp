@@ -179,6 +179,10 @@
           <input type="checkbox" id="f-rolstoel">
           <span><span data-i18n="filter_rolstoel">Aangepast sporten</span><br><small class="filter-hint" data-i18n="filter_rolstoel_hint">Rolstoel, handbike, framerunning, G-atletiek</small></span>
         </label>
+        <label class="filter-checkbox" for="f-available">
+          <input type="checkbox" id="f-available">
+          <span data-i18n="filter_available">Alleen met plaatsen vrij</span>
+        </label>
         <label class="filter-checkbox" for="f-atletiekunie">
           <input type="checkbox" id="f-atletiekunie">
           <span data-i18n="filter_atletiekunie">Atletiekunie gecertificeerd</span>
@@ -294,6 +298,7 @@ function getFilters() {
     estafette: document.getElementById('f-estafette').checked,
     rolstoel: document.getElementById('f-rolstoel').checked,
     price: document.getElementById('f-price').value,
+    available: document.getElementById('f-available').checked,
     atletiekunie: document.getElementById('f-atletiekunie').checked,
     postal: document.getElementById('f-postal').value.trim(),
     radius: document.getElementById('f-radius').value,
@@ -318,6 +323,7 @@ function filterEvents() {
     if (f.estafette && !ev.estafette) return false;
     if (f.rolstoel && !ev.rolstoel) return false;
     if (f.price && !matchesPriceFilter(ev, f.price)) return false;
+    if (f.available && ev.sold_out) return false;
     if (f.atletiekunie && !ev.atletiekunie) return false;
     if (f.search && !matchesSearch(ev, f.search)) return false;
     // Postcode zonder gekozen straal: standaard 25 km
@@ -356,7 +362,7 @@ function applyFilters() {
 function listEvents() {
   var f = getFilters();
   var anyFilter = f.type || f.province || f.distance || f.dateFrom || f.dateTo ||
-    f.kidsrun || f.estafette || f.rolstoel || f.price || f.atletiekunie ||
+    f.kidsrun || f.estafette || f.rolstoel || f.price || f.available || f.atletiekunie ||
     f.postal.length === 4 || f.search;
   if (anyFilter) return filteredEvents;
   return filteredEvents.filter(function(ev) {
@@ -379,11 +385,11 @@ function renderList(lang) {
     var badgeClass = getBadgeClass(ev.type);
     var typeName = cardTypeName(ev, lang);
     var priceHtml = makePriceHtml(ev, lang);
-    var distChips = '<span class="event-card__distances-text">'+formatDistances(ev.distances)+'</span>';
+    var distChips = '<span class="event-card__distances-text">'+formatDistances(ev.distances)+'</span>'+soldOutNoteHtml(ev);
     return cardOpen('event-card', ev)+
       '<div class="event-card__img">'+
         '<img src="'+getEventImage(ev)+'" alt="" loading="lazy">'+
-        '<span class="event-card__photo-badges">'+
+        '<span class="event-card__photo-badges">'+soldOutBadgeHtml(ev)+
           '<span class="event-card__photo-badge">'+typeName+'</span>'+
           (ev.type2 ? '<span class="event-card__photo-badge">'+badgeTypeName(ev.type2, lang)+'</span>' : '')+
           (ev.rolstoel ? '<span class="event-card__photo-badge">' + t('badge_rolstoel') + '</span>' : '')+
@@ -508,6 +514,7 @@ function renderFilterChips(f, lang) {
   if (f.estafette) chips.push({key:'estafette', label: 'Estafette'});
   if (f.rolstoel) chips.push({key:'rolstoel', label: t('filter_rolstoel')});
   if (f.price) { var pSel = document.getElementById('f-price'); chips.push({key:'price', label: pSel.options[pSel.selectedIndex].text}); }
+  if (f.available) chips.push({key:'available', label: t('filter_available')});
   if (f.atletiekunie) chips.push({key:'atletiekunie', label: 'Atletiekunie'});
   if (f.postal) chips.push({key:'postal', label: f.postal + (f.radius ? ' +'+f.radius+'km' : '')});
   if (f.search) chips.push({key:'search', label: '"'+f.search+'"'});
@@ -527,6 +534,7 @@ function removeFilter(key) {
   else if (key==='estafette') document.getElementById('f-estafette').checked=false;
   else if (key==='rolstoel') document.getElementById('f-rolstoel').checked=false;
   else if (key==='price') document.getElementById('f-price').value='';
+  else if (key==='available') document.getElementById('f-available').checked=false;
   else if (key==='atletiekunie') document.getElementById('f-atletiekunie').checked=false;
   else if (key==='postal') { document.getElementById('f-postal').value=''; document.getElementById('f-radius').value=''; }
   else if (key==='search') document.getElementById('f-search').value='';
@@ -543,6 +551,7 @@ function clearFilters() {
   document.getElementById('f-estafette').checked=false;
   document.getElementById('f-rolstoel').checked=false;
   document.getElementById('f-price').value='';
+  document.getElementById('f-available').checked=false;
   document.getElementById('f-atletiekunie').checked=false;
   document.getElementById('f-postal').value='';
   document.getElementById('f-radius').value='';
@@ -559,6 +568,7 @@ function saveFiltersToHash(f) {
   if (f.dateTo) parts.push('to='+f.dateTo);
   if (f.price) parts.push('price='+encodeURIComponent(f.price));
   if (f.rolstoel) parts.push('rolstoel=1');
+  if (f.available) parts.push('vrij=1');
   if (f.atletiekunie) parts.push('au=1');
   if (f.postal) parts.push('postal='+f.postal);
   if (f.radius) parts.push('radius='+f.radius);
@@ -579,6 +589,7 @@ function loadFiltersFromHash() {
   if (params.price) document.getElementById('f-price').value=params.price;
   else if (params.free) document.getElementById('f-price').value='gratis'; // oude links
   if (params.rolstoel) document.getElementById('f-rolstoel').checked=true;
+  if (params.vrij) document.getElementById('f-available').checked=true;
   if (params.au) document.getElementById('f-atletiekunie').checked=true;
   if (params.postal) document.getElementById('f-postal').value=params.postal;
   if (params.radius) document.getElementById('f-radius').value=params.radius;

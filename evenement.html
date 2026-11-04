@@ -148,6 +148,7 @@ function renderEvent(ev, lang) {
         '<div class="detail-info-row"><div><div class="detail-info-label">'+t('province_label')+'</div><div class="detail-info-value">'+ev.province+'</div></div></div>'+
         '<div class="detail-info-row"><div><div class="detail-info-label">'+t('distances_label')+'</div><div class="detail-info-value">'+distList+'</div></div></div>'+
         '<div class="detail-info-row"><div><div class="detail-info-label">'+t('price_label')+'</div><div class="detail-info-value">'+(!ev.paid ? t('free') : (ev.price ? formatPrice(ev.price) : (ev.registration_url ? '<a href="'+ev.registration_url+'" target="_blank" rel="noopener noreferrer" style="color:var(--mid);font-size:0.9rem;">Zie website</a>' : 'Zie website')))+'</div></div></div>'+
+        registrationInfoHtml(ev, lang)+
         '<div class="detail-info-row"><div><div class="detail-info-label">'+t('categories_label')+'</div><div class="detail-info-value">'+catList+'</div></div></div>'+
         (ev.organizer ? '<div class="detail-info-row"><div><div class="detail-info-label">'+t('organizer_label')+'</div><div class="detail-info-value">'+ev.organizer+'</div></div></div>' : '')+ // leeg = kopje weglaten
         (ev.registration_url ? '<a href="'+ev.registration_url+'" target="_blank" rel="noopener noreferrer" class="event-detail__register" data-i18n="register_btn">'+t('register_btn')+'</a>' : '')+
@@ -157,6 +158,32 @@ function renderEvent(ev, lang) {
 }
 
 // ── Kruimelpad: Home › Agenda › naam van het evenement ──────────────
+// Blok "Inschrijven": uitverkocht/vol per onderdeel, deadline en of je op de
+// dag zelf kunt inschrijven. Alleen wat bekend is; niets bekend = geen blok.
+function registrationInfoHtml(ev, lang) {
+  function fmt(iso) {
+    return new Date(iso + 'T12:00:00').toLocaleDateString(lang === 'en' ? 'en-GB' : 'nl-NL', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
+  }
+  var lines = [];
+  if (ev.sold_out) lines.push('<strong>' + t('reg_sold_out') + '</strong>');
+  else if (ev.sold_out_distances) {
+    lines.push('<strong>' + t('reg_full_parts') + ' ' + escapeHtml(ev.sold_out_distances) + '</strong>');
+    lines.push(t('reg_other_open'));
+  }
+  if ((ev.sold_out || ev.sold_out_distances) && ev.availability_checked_at) {
+    lines.push('<span class="detail-info-note">' + t('reg_checked').replace('{date}', fmt(ev.availability_checked_at)) + '</span>');
+  }
+  if (ev.registration_deadline) {
+    var today = new Date().toISOString().slice(0, 10);
+    lines.push((ev.registration_deadline < today ? t('reg_closed') : t('reg_deadline')).replace('{date}', fmt(ev.registration_deadline)));
+  }
+  if (ev.late_registration === true) lines.push(t('reg_late_yes'));
+  if (ev.late_registration === false) lines.push(t('reg_late_no'));
+  if (!lines.length) return '';
+  return '<div class="detail-info-row"><div><div class="detail-info-label">' + t('detail_registration') + '</div>' +
+    '<div class="detail-info-value detail-info-value--lines">' + lines.join('<br>') + '</div></div></div>';
+}
+
 function escapeHtml(str) {
   return String(str).replace(/[&<>"']/g, function(c) {
     return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];

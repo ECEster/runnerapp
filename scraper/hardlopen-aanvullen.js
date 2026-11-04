@@ -3,6 +3,7 @@
 //   - atletiekunie: true als hardlopen.nl het evenement als aangesloten toont
 //   - organizer: alleen als die nog leeg is
 //   - price: alleen als die nog leeg is ("", "volgt", "n.b.")
+//   - registration_deadline / late_registration: alleen als die nog leeg zijn
 // Koppelen: zelfde provincie en datum, en een naam die erop lijkt (of dezelfde
 // plaats), net als scraper/entryfee-prices.js.
 //
@@ -57,7 +58,7 @@ async function main() {
   console.log(`${items.length} evenementen op hardlopen.nl (zonder trainingslopen)`)
 
   const res = await fetch(
-    `${URL_BASE}/rest/v1/events?select=id,name_nl,date,end_date,city,province,price,organizer,atletiekunie&date=gte.${today}`,
+    `${URL_BASE}/rest/v1/events?select=id,name_nl,date,end_date,city,province,price,organizer,atletiekunie,registration_deadline,late_registration&date=gte.${today}`,
     { headers: HEADERS },
   )
   if (!res.ok) throw new Error(`Kon events niet ophalen: HTTP ${res.status} (migratie 0010 al gedraaid?)`)
@@ -72,11 +73,13 @@ async function main() {
     if (item.atletiekunie && !ev.atletiekunie) fields.atletiekunie = true
     if (sure && item.organisator && !ev.organizer) fields.organizer = item.organisator
     if (sure && item.prijs && NEEDS_PRICE.test(ev.price || '')) fields.price = item.prijs
+    if (sure && item.inschrijf_deadline && !ev.registration_deadline) fields.registration_deadline = item.inschrijf_deadline
+    if (sure && item.na_inschrijving !== null && ev.late_registration === null) fields.late_registration = item.na_inschrijving
     if (Object.keys(fields).length) updates.push({ ev, item, fields })
   }
 
   const count = (k) => updates.filter((u) => k in u.fields).length
-  console.log(`\nAan te vullen: ${updates.length} evenementen (Atletiekunie ${count('atletiekunie')}, organisator ${count('organizer')}, prijs ${count('price')})`)
+  console.log(`\nAan te vullen: ${updates.length} evenementen (Atletiekunie ${count('atletiekunie')}, organisator ${count('organizer')}, prijs ${count('price')}, deadline ${count('registration_deadline')}, op de dag zelf ${count('late_registration')})`)
   for (const { ev, fields } of updates) console.log(`  id ${ev.id} | ${ev.date} | ${ev.name_nl} -> ${JSON.stringify(fields)}`)
 
   if (isLive) {
