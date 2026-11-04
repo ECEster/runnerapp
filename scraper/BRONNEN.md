@@ -131,3 +131,14 @@ de organisator staat:
 **Controleer daarom sowieso** `type`, `kidsrun`, en of er een kidsrun/
 Atletiekunie-keurmerk/capaciteit ontbreekt tijdens het reviewen in het
 admin-paneel — zie ook "Bekende beperkingen" in `README.md`.
+
+## Prijzen: entryfee.run
+
+`entryfee-prices.js` haalt inschrijfgelden van `entryfee.run/nl/province/<slug>`
+(12 provinciepagina's; Friesland heet daar `fryslan`). entryfee.run controleert
+elke prijs dagelijks op de site van de organisator en toont hem per afstand.
+Koppelen gaat op provincie + datum + naam/plaats: naam én plaats gelijk → prijs
+direct ingevuld; één van beide → voorstel in het admin-paneel. Bestaande prijzen
+worden niet overschreven. Bedragen boven € 60 bij afstanden t/m 21,1 km worden
+genegeerd (dat zijn teamprijzen). Draait wekelijks in `suggest-prices.yml`,
+vóór `suggest-prices.js`.

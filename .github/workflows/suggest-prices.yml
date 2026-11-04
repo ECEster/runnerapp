@@ -34,8 +34,11 @@ jobs:
         run: |
           # Bij het schema is er geen invoer: dan altijd opslaan
           if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ github.event.inputs.live }}" = "true" ]; then
+            # Eerst entryfee.run (prijzen per afstand, al gecontroleerd), daarna zelf zoeken voor de rest
+            node entryfee-prices.js --live
             node suggest-prices.js --live
           else
+            node entryfee-prices.js
             node suggest-prices.js
           fi
 
