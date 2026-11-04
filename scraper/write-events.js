@@ -159,6 +159,10 @@ async function main() {
   }
 
   if (toInsert.length > MAX_INSERTS_PER_RUN) {
+    // Eerst laten zien wát er nieuw zou zijn, zodat je kunt beoordelen of het klopt
+    console.log(`
+Nieuwe events (${toInsert.length}, met bron):`)
+    for (const e of toInsert) console.log(`  - ${e.naam} | ${e.datum} | ${e.plaats} | ${(e.bron_url || '').replace(/^https?:\/\/(www\.)?([^/]+).*$/, '$2')}`)
     console.error(
       `\n⚠️  STOP: deze run zou ${toInsert.length} nieuwe events wegschrijven — dat is meer dan de ` +
         `veiligheidslimiet van ${MAX_INSERTS_PER_RUN}. Dit is een signaal dat er mogelijk iets mis is met ` +
