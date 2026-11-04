@@ -263,6 +263,20 @@ bedrag, maar soms ook een teamprijs of de prijs van vorig jaar.
   linkcheck van 30 september (zie hieronder) was een eenmalige controle. Nog te bouwen:
   de links automatisch nalopen (en melden wat niet meer werkt), en "afgelast"/"gaat niet door"
   herkennen, met een label "Afgelast" op de kaart en de evenementpagina.
+- **Organisatorpagina's nalopen bij het scrapen** (wens van 4 november 2026): bij het scrapen
+  ook de site van de organisator bekijken op
+  1. een jeugdloop/kidsrun;
+  2. de leeftijdsgroepen (bv. "4 t/m 7 jaar", "geboren in 2015 of later");
+  3. het soort evenement (weg, trail, cross, parkloop, survivalrun, ...): dat staat nu vaak
+     nog verkeerd, omdat de meeste bronnen het niet noemen en de scraper dan "wegevenement"
+     invult.
+
+  Al aanwezig om op voort te bouwen: `check-uitverkocht.js` leest wekelijks de inschrijfpagina
+  en zet een kidsrun aan (`lib/detectKidsrunText.js`) en vult de leeftijden in
+  (`lib/extractKidsAges.js`), maar alleen voor gepubliceerde evenementen en pas na het
+  toevoegen. Nog te bouwen: dit al bij het scrapen doen (vóór het toevoegen), en het soort
+  evenement herkennen (bv. "trail", "door de duinen", "onverhard", "cross", "obstakels") —
+  bij twijfel als voorstel in het admin-paneel.
 
 ## Herinnering voor de volgende sessie: kapotte links (linkcheck 2026-09-30)
 
