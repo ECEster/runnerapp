@@ -34,7 +34,8 @@ import { extractPrice } from './extractPrice.js'
 const BASE = 'https://inschrijven.nl'
 const MONTHS = { JAN: 1, FEB: 2, MRT: 3, APR: 4, MEI: 5, JUN: 6, JUL: 7, AUG: 8, SEP: 9, OKT: 10, NOV: 11, DEC: 12 }
 const LEADING_ORDINAL_RE = /^\d{1,3}(?:e|de|ste)\s+/i
-// Ook geen clinics, cursussen en oriëntatielopen: dat zijn geen loopevenementen voor de agenda\nconst SKIP_NAME_RE = /competitie|circuit\s*$|clinic|cursus|oriëntatieloop|orientatieloop/i
+// Ook geen clinics, cursussen en oriëntatielopen: dat zijn geen loopevenementen voor de agenda
+const SKIP_NAME_RE = /competitie|circuit\s*$|clinic|cursus|oriëntatieloop|orientatieloop/i
 const NO_PLACE_RE = /meerdere|diverse|verschillende|div\.|nader te bepalen|n\.?t\.?b|online|virtueel|^(groningen|friesland|drenthe|overijssel|gelderland|flevoland|utrecht|noord-holland|zuid-holland|zeeland|noord-brabant|limburg|nederland)$/i
 const KIDS_RE = /kids|kinder|jeugd|mini|pupil|benjamin|t\/m\s*1[0-5]\s*j|\b[4-9]\s*(?:-|t\/m)\s*1[0-5]\s*j/i
 const PAUSE_MS = 1000
