@@ -180,7 +180,7 @@ function matchesPriceFilter(ev, value) {
 }
 
 // Geeft de juiste prijs-HTML terug voor een eventcard:
-// gratis → groene badge, prijs bekend → toon prijs, prijs onbekend → "Zie website"
+// gratis → groene badge, prijs bekend → toon prijs, prijs onbekend → "Prijs onbekend"
 function makePriceHtml(ev, lang) {
   if (!ev.paid) {
     return '<span class="event-card__price free">' + (lang === 'en' ? 'Free' : 'Gratis') + '</span>';
@@ -188,7 +188,7 @@ function makePriceHtml(ev, lang) {
   if (ev.price) {
     return '<span class="event-card__price">' + formatPrice(ev.price) + '</span>';
   }
-  return '';
+  return '<span class="event-card__price event-card__price--unknown">' + t('price_unknown') + '</span>';
 }
 
 // Geeft de afbeelding voor een evenement terug. Baanevenementen tonen altijd

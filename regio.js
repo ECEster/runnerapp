@@ -106,7 +106,7 @@ function renderList(lang) {
     var dateStr = formatEventDate(ev, lang);
     var badgeClass = getBadgeClass(ev.type);
     var typeName = cardTypeName(ev, lang);
-    var priceHtml = ev.paid ? '<span class="event-card__price">'+formatPrice(ev.price)+'</span>' : '<span class="event-card__price free">Gratis</span>';
+    var priceHtml = makePriceHtml(ev, lang);
     var distChips = '<span class="event-card__distances-text">' + formatDistances(ev.distances) + '</span>';
     return cardOpen('event-card', ev)+
       '<div class="event-card__img">'+
