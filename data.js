@@ -145,6 +145,26 @@ function matchesDistanceFilter(ev, filter) {
   });
 }
 
+// Prijsfilter: "gratis", of een bereik "van-tot" in euro's ("50-" = meer dan 50).
+// Een evenement met een prijsbereik ("5 - 12,50") telt mee als dat bereik de
+// categorie raakt. Evenementen zonder bekende prijs vallen buiten de categorieen.
+function priceRange(ev) {
+  var nums = (String(ev.price || '').match(/\d+(?:[.,]\d+)?/g) || []).map(function(n) { return parseFloat(n.replace(',', '.')); });
+  if (!nums.length) return null;
+  return { lo: Math.min.apply(null, nums), hi: Math.max.apply(null, nums) };
+}
+
+function matchesPriceFilter(ev, value) {
+  if (value === 'gratis') return !ev.paid;
+  if (!ev.paid) return false;
+  var r = priceRange(ev);
+  if (!r) return false;
+  var parts = value.split('-');
+  var from = parseFloat(parts[0]) || 0;
+  var to = parts[1] ? parseFloat(parts[1]) : Infinity;
+  return r.lo <= to && r.hi >= from;
+}
+
 // Geeft de juiste prijs-HTML terug voor een eventcard:
 // gratis → groene badge, prijs bekend → toon prijs, prijs onbekend → "Zie website"
 function makePriceHtml(ev, lang) {

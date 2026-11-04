@@ -126,6 +126,19 @@
         </select>
       </div>
 
+      <!-- Price -->
+      <div class="filter-group">
+        <label for="f-price" data-i18n="filter_price">Prijs</label>
+        <select id="f-price">
+          <option value="" data-i18n="filter_price_all">— Alle prijzen —</option>
+          <option value="gratis" data-i18n="filter_price_free">Gratis</option>
+          <option value="0-10">t/m € 10</option>
+          <option value="10-25">€ 10 – € 25</option>
+          <option value="25-50">€ 25 – € 50</option>
+          <option value="50-">Meer dan € 50</option>
+        </select>
+      </div>
+
       <!-- Date range -->
       <fieldset class="filter-group filter-fieldset">
         <legend data-i18n="filter_period">Periode</legend>
@@ -155,10 +168,6 @@
         <label class="filter-checkbox" for="f-rolstoel">
           <input type="checkbox" id="f-rolstoel">
           <span><span data-i18n="filter_rolstoel">Aangepast sporten</span><br><small class="filter-hint" data-i18n="filter_rolstoel_hint">Rolstoel, handbike, framerunning, G-atletiek</small></span>
-        </label>
-        <label class="filter-checkbox" for="f-free">
-          <input type="checkbox" id="f-free">
-          <span data-i18n="filter_free_only">Alleen gratis</span>
         </label>
         <label class="filter-checkbox" for="f-atletiekunie">
           <input type="checkbox" id="f-atletiekunie">

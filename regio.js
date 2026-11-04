@@ -28,7 +28,7 @@ function getFilters() {
     kidsrun:      document.getElementById('f-kidsrun').checked,
     estafette:    document.getElementById('f-estafette').checked,
     rolstoel:     document.getElementById('f-rolstoel').checked,
-    freeOnly:     document.getElementById('f-free').checked,
+    price:        document.getElementById('f-price').value,
     atletiekunie: document.getElementById('f-atletiekunie').checked,
     postal:   document.getElementById('f-postal').value.trim(),
     radius:   document.getElementById('f-radius').value,
@@ -52,7 +52,7 @@ function filterEvents() {
     if (f.kidsrun && !ev.kidsrun) return false;
     if (f.estafette && !ev.estafette) return false;
     if (f.rolstoel && !ev.rolstoel) return false;
-    if (f.freeOnly && ev.paid) return false;
+    if (f.price && !matchesPriceFilter(ev, f.price)) return false;
     if (f.atletiekunie && !ev.atletiekunie) return false;
     // Postcode zonder gekozen straal: standaard 25 km
     if (postalCoords) {
@@ -84,7 +84,7 @@ function applyFilters() {
 function listEvents() {
   var f = getFilters();
   if (f.type || f.province || f.distance || f.dateFrom || f.dateTo || f.kidsrun ||
-      f.estafette || f.rolstoel || f.freeOnly || f.atletiekunie || f.postal.length === 4 || f.search) return filteredEvents;
+      f.estafette || f.rolstoel || f.price || f.atletiekunie || f.postal.length === 4 || f.search) return filteredEvents;
   return filteredEvents.filter(function(ev) {
     return eventInMonth(ev, calYear, calMonth);
   });
@@ -212,7 +212,7 @@ function clearFilters() {
   document.getElementById('f-kidsrun').checked=false;
   document.getElementById('f-estafette').checked=false;
   document.getElementById('f-rolstoel').checked=false;
-  document.getElementById('f-free').checked=false;
+  document.getElementById('f-price').value='';
   document.getElementById('f-atletiekunie').checked=false;
   document.getElementById('f-postal').value='';
   document.getElementById('f-radius').value='';
