@@ -2212,3 +2212,11 @@ body.page-overons { background: var(--white); }
 .event-card__soldout-note { font-weight: 700; color: var(--dark); white-space: nowrap; }
 .detail-info-value--lines { line-height: 1.6; }
 .detail-info-note { font-size: 0.82rem; color: var(--dark3); }
+
+/* Mijn Runs: herinneringen */
+.reminder-form { display: grid; gap: 0.75rem; margin-top: 0.75rem; max-width: 560px; }
+.reminder-form__row { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.reminder-form__row label { font-size: 0.9rem; color: var(--dark3); }
+.reminder-form__row select { min-width: 140px; }
+.reminder-form__actions { display: flex; align-items: center; gap: 0.75rem; }
+#rem-status { font-size: 0.85rem; color: var(--dark3); }

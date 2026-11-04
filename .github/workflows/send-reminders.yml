@@ -1,0 +1,43 @@
+name: Herinneringen versturen
+
+# Stuurt elke ochtend de herinneringen voor opgeslagen runs (Mijn Runs →
+# Herinneringen). Zie scraper/send-reminders.js. Handmatig te starten via
+# "Run workflow" (uit = alleen tonen in de log, niets versturen).
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+    inputs:
+      live:
+        description: "E-mails echt versturen?"
+        type: boolean
+        default: true
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: scraper
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+
+      - name: Installeer nodemailer
+        run: npm install --no-save --no-package-lock nodemailer@6.9.16
+
+      - name: Verstuur herinneringen
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GMAIL_SENDER_ADDRESS: ${{ secrets.GMAIL_SENDER_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ github.event.inputs.live }}" = "true" ]; then
+            node send-reminders.js --live
+          else
+            node send-reminders.js
+          fi

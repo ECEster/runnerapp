@@ -209,6 +209,20 @@ async function getFavoriteIds() {
     return data.map(r => r.event_id);
 }
 
+// ─── Herinneringen (Mijn Runs) ─────────────────────────────────────────
+// Eén rij per gebruiker; scraper/send-reminders.js verstuurt de e-mails.
+async function getReminderSettings() {
+    const { data, error } = await db.from('reminder_settings').select('enabled, days_before, deadline_reminder').maybeSingle();
+    if (error) throw error;
+    return data || { enabled: false, days_before: 3, deadline_reminder: false };
+}
+
+async function saveReminderSettings(settings) {
+    const { data: { user } } = await db.auth.getUser();
+    const { error } = await db.from('reminder_settings').upsert({ user_id: user.id, ...settings, updated_at: new Date().toISOString() });
+    if (error) throw error;
+}
+
 // ─── Contact (publiek contactformulier) ─────────────────────────────────
 
 async function submitContactMessage(msg) {

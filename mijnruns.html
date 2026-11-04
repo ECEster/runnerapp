@@ -134,6 +134,35 @@
       <div id="favorites-list" class="events-grid" style="margin-top:1rem;"></div>
     </div>
 
+    <!-- Herinneringen per e-mail -->
+    <div class="runs-card" id="reminders" style="margin-bottom:2rem;">
+      <h3 data-i18n="rem_title">Herinneringen</h3>
+      <form id="reminder-form" class="reminder-form" onsubmit="saveReminders(event)">
+        <label class="filter-checkbox" for="rem-enabled">
+          <input type="checkbox" id="rem-enabled">
+          <span data-i18n="rem_enabled">Stuur me een e-mail als een opgeslagen run eraan komt</span>
+        </label>
+        <div class="reminder-form__row">
+          <label for="rem-days" data-i18n="rem_days">Hoeveel dagen van tevoren?</label>
+          <select id="rem-days">
+            <option value="1" data-i18n="rem_days_1">1 dag</option>
+            <option value="2" data-i18n="rem_days_2">2 dagen</option>
+            <option value="3" data-i18n="rem_days_3">3 dagen</option>
+            <option value="7" data-i18n="rem_days_7">1 week</option>
+            <option value="14" data-i18n="rem_days_14">2 weken</option>
+          </select>
+        </div>
+        <label class="filter-checkbox" for="rem-deadline">
+          <input type="checkbox" id="rem-deadline">
+          <span data-i18n="rem_deadline">Ook een herinnering 3 dagen voor de inschrijfdeadline</span>
+        </label>
+        <div class="reminder-form__actions">
+          <button type="submit" class="btn btn--dark btn--sm" data-i18n="rem_save">Opslaan</button>
+          <span id="rem-status" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+    </div>
+
     <!-- Stats strip -->
     <div id="stats-strip" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;"></div>
 
@@ -350,7 +379,34 @@ async function showLoggedIn() {
   document.getElementById('r-date').value = today;
   // Best-effort: pull in events added via the admin panel too
   await loadEventsFromDB().catch(function(){ return false; });
-  await Promise.all([refreshRuns(), refreshFavorites()]);
+  await Promise.all([refreshRuns(), refreshFavorites(), loadReminders()]);
+}
+
+async function loadReminders() {
+  try {
+    var s = await getReminderSettings();
+    document.getElementById('rem-enabled').checked = !!s.enabled;
+    document.getElementById('rem-days').value = String(s.days_before || 3);
+    document.getElementById('rem-deadline').checked = !!s.deadline_reminder;
+  } catch (err) {
+    console.warn('Kon herinneringen niet laden:', err.message);
+  }
+}
+
+async function saveReminders(e) {
+  e.preventDefault();
+  var status = document.getElementById('rem-status');
+  try {
+    await saveReminderSettings({
+      enabled: document.getElementById('rem-enabled').checked,
+      days_before: parseInt(document.getElementById('rem-days').value, 10),
+      deadline_reminder: document.getElementById('rem-deadline').checked
+    });
+    status.textContent = t('rem_saved');
+  } catch (err) {
+    status.textContent = t('rem_error');
+  }
+  setTimeout(function() { status.textContent = ''; }, 4000);
 }
 
 function showLoggedOut() {
