@@ -163,7 +163,7 @@
         </label>
         <div class="filter-kids-age">
           <label for="f-kids-age" data-i18n="filter_kids_age">Leeftijd van je kind</label>
-          <input type="number" id="f-kids-age" min="1" max="18" inputmode="numeric" placeholder="bv. 8" aria-describedby="f-kids-age-hint">
+          <input type="text" id="f-kids-age" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" placeholder="bv. 8" aria-describedby="f-kids-age-hint" oninput="this.value=this.value.replace(/\D/g,'')">
           <small id="f-kids-age-hint" class="filter-hint" data-i18n="filter_kids_age_hint">Toont kidsruns die bij deze leeftijd passen</small>
         </div>
         <label class="filter-checkbox" for="f-estafette">

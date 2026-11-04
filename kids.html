@@ -80,7 +80,7 @@
 
     <div class="kids-age-filter">
       <label for="kids-age" data-i18n="kids_age_label">Leeftijd kind</label>
-      <input type="number" id="kids-age" min="1" max="18" inputmode="numeric" placeholder="bv. 8" oninput="renderKidsEvents(getLang())">
+      <input type="text" id="kids-age" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" placeholder="bv. 8" oninput="this.value=this.value.replace(/\D/g,''); renderKidsEvents(getLang())">
       <small class="filter-hint" data-i18n="filter_kids_age_hint">Toont kidsruns die bij deze leeftijd passen</small>
     </div>
     <div class="kids-events-grid" id="kids-events-grid"></div>
