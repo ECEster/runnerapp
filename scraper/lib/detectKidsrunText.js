@@ -24,7 +24,7 @@ export function detectKidsrunText(text) {
   const check = (m) => {
     const before = text.slice(Math.max(0, m.index - 40), m.index)
     const after = text.slice(m.index + m[0].length, m.index + m[0].length + 30)
-    if (NOT.test(before) || /^\s*(?:vervalt|gaat\s+niet|is\s+afgelast|dit\s+jaar\s+niet)/i.test(after)) return
+    if (NOT.test(before) || /^\s*(?:is\s+|wordt\s+)?(?:helaas\s+|dit\s+jaar\s+)?(?:vervalt|vervallen|gaat\s+niet|afgelast|geschrapt|niet)/i.test(after)) return
     const around = text.slice(Math.max(0, m.index - 50), m.index + m[0].length + 60)
     const sure = DETAIL.test(around)
     const quote = around.trim().slice(0, 200)
