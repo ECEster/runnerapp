@@ -350,6 +350,14 @@
           </select>
         </div>
         <div>
+          <label for="f-kids-min">Kidsrun: leeftijd van – tot (jaar)</label>
+          <div style="display:flex;gap:6px;align-items:center">
+            <input type="number" id="f-kids-min" min="0" max="18" placeholder="van" style="width:80px" aria-label="Jongste leeftijd kidsrun">
+            <span>–</span>
+            <input type="number" id="f-kids-max" min="0" max="18" placeholder="tot" style="width:80px" aria-label="Oudste leeftijd kidsrun">
+          </div>
+        </div>
+        <div>
           <label for="f-max-part">Maximaal aantal deelnemers</label>
           <input type="number" id="f-max-part" min="1" placeholder="bijv. 500">
         </div>
@@ -666,6 +674,8 @@ function startEdit(ev) {
   document.getElementById('f-late-reg').value      = ev.late_registration === true ? 'ja' : ev.late_registration === false ? 'nee' : '';
   document.getElementById('f-sold-out-dist').value = ev.sold_out_distances || '';
   document.getElementById('f-max-part').value      = ev.max_participants || '';
+  document.getElementById('f-kids-min').value      = ev.kids_min_age ?? '';
+  document.getElementById('f-kids-max').value      = ev.kids_max_age ?? '';
   document.getElementById('f-sold-out').checked    = ev.sold_out || false;
   renderSoldOutSuggestion(ev);
   renderKidsrunSuggestion(ev);
@@ -747,6 +757,8 @@ document.getElementById('event-form').addEventListener('submit', async e => {
       sold_out:         document.getElementById('f-sold-out').checked,
       sold_out_distances: document.getElementById('f-sold-out-dist').value.trim() || null,
       max_participants: parseInt(document.getElementById('f-max-part').value, 10) || null,
+      kids_min_age:     document.getElementById('f-kids-min').value === '' ? null : parseInt(document.getElementById('f-kids-min').value, 10),
+      kids_max_age:     document.getElementById('f-kids-max').value === '' ? null : parseInt(document.getElementById('f-kids-max').value, 10),
       serie:            document.getElementById('f-serie').value.trim() || null,
       editie:           document.getElementById('f-editie').value ? parseInt(document.getElementById('f-editie').value, 10) : null,
       description_nl:   descNl,

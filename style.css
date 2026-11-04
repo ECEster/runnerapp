@@ -2222,3 +2222,10 @@ body.page-overons { background: var(--white); }
 #rem-status { font-size: 0.85rem; color: var(--dark3); }
 
 .event-card__price--unknown { font-weight: 500; color: var(--dark3); }
+
+/* Leeftijdsfilter Kids & jeugd */
+.filter-kids-age { display: grid; gap: 0.25rem; margin: 0 0 0.85rem 1.6rem; }
+.filter-kids-age label { font-size: 0.82rem; font-weight: 600; color: var(--dark3); }
+.filter-kids-age input { width: 6rem; }
+.events-split-heading { grid-column: 1 / -1; margin: 1.5rem 0 0; padding-top: 1.25rem; border-top: 1px solid var(--light); font-size: 1.1rem; }
+.events-split-note { grid-column: 1 / -1; margin: 0.25rem 0 0.5rem; color: var(--dark3); font-size: 0.9rem; }

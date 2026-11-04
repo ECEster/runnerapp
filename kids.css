@@ -274,3 +274,9 @@
 @media (max-width: 768px) {
   .kids-hero { height: 210px; }
 }
+
+/* Leeftijd invullen boven de kidsruns */
+.kids-age-filter { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin: 1.5rem 0 1rem; }
+.kids-age-filter label { font-weight: 700; }
+.kids-age-filter input { width: 6rem; padding: 0.45rem 0.6rem; border: 1px solid #c9ccd1; border-radius: 8px; font: inherit; }
+.kids-event-card__age { font-weight: 700; margin-top: 0.25rem; }

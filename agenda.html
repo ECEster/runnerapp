@@ -169,8 +169,13 @@
         <legend data-i18n="filter_features">Kenmerken</legend>
         <label class="filter-checkbox filter-checkbox--kids" for="f-kidsrun">
           <input type="checkbox" id="f-kidsrun">
-          <span>Kids Runs</span>
+          <span data-i18n="filter_kids">Kids &amp; jeugd</span>
         </label>
+        <div class="filter-kids-age">
+          <label for="f-kids-age" data-i18n="filter_kids_age">Leeftijd van je kind</label>
+          <input type="number" id="f-kids-age" min="1" max="18" inputmode="numeric" placeholder="bv. 8" aria-describedby="f-kids-age-hint">
+          <small id="f-kids-age-hint" class="filter-hint" data-i18n="filter_kids_age_hint">Toont kidsruns die bij deze leeftijd passen</small>
+        </div>
         <label class="filter-checkbox" for="f-estafette">
           <input type="checkbox" id="f-estafette">
           <span>Estafette</span>
@@ -295,6 +300,7 @@ function getFilters() {
     dateFrom: document.getElementById('f-date-from').value,
     dateTo: document.getElementById('f-date-to').value,
     kidsrun: document.getElementById('f-kidsrun').checked,
+    age: parseInt(document.getElementById('f-kids-age').value, 10) || null,
     estafette: document.getElementById('f-estafette').checked,
     rolstoel: document.getElementById('f-rolstoel').checked,
     price: document.getElementById('f-price').value,
@@ -320,6 +326,7 @@ function filterEvents() {
     if (f.dateFrom && eventEnd(ev) < f.dateFrom) return false;
     if (f.dateTo && ev.date > f.dateTo) return false;
     if (f.kidsrun && !ev.kidsrun) return false;
+    if (f.age && kidsAgeStatus(ev, f.age) === 'no') return false;
     if (f.estafette && !ev.estafette) return false;
     if (f.rolstoel && !ev.rolstoel) return false;
     if (f.price && !matchesPriceFilter(ev, f.price)) return false;
@@ -362,7 +369,7 @@ function applyFilters() {
 function listEvents() {
   var f = getFilters();
   var anyFilter = f.type || f.province || f.distance || f.dateFrom || f.dateTo ||
-    f.kidsrun || f.estafette || f.rolstoel || f.price || f.available || f.atletiekunie ||
+    f.kidsrun || f.age || f.estafette || f.rolstoel || f.price || f.available || f.atletiekunie ||
     f.postal.length === 4 || f.search;
   if (anyFilter) return filteredEvents;
   return filteredEvents.filter(function(ev) {
@@ -379,7 +386,7 @@ function renderList(lang) {
     el.innerHTML = '<div class="no-events-msg" style="grid-column:1/-1"><div class="no-events-msg__icon">🏃</div><h3 data-i18n="no_events">' + t('no_events') + '</h3><p>' + t('no_events_sub') + '</p></div>';
     return;
   }
-  el.innerHTML = events.map(function(ev) {
+  var renderCard = function(ev) {
     var name = lang==='en'?ev.name_en:ev.name_nl;
     var dateStr = formatEventDate(ev, lang);
     var badgeClass = getBadgeClass(ev.type);
@@ -404,7 +411,8 @@ function renderList(lang) {
         '</div>'+
       '</div>'+
     cardClose(ev);
-  }).join('');
+  };
+  el.innerHTML = renderSplitByAge(events, renderCard, getFilters().age);
   revealOnScroll(el.querySelectorAll('.event-card'));
 }
 
@@ -511,6 +519,8 @@ function renderFilterChips(f, lang) {
   if (f.distance) { var dSel = document.getElementById('f-distance'); chips.push({key:'distance', label: dSel.options[dSel.selectedIndex].text}); }
   if (f.dateFrom) chips.push({key:'dateFrom', label: t('filter_date_from')+': '+f.dateFrom});
   if (f.dateTo) chips.push({key:'dateTo', label: t('filter_date_to')+': '+f.dateTo});
+  if (f.kidsrun) chips.push({key:'kidsrun', label: t('filter_kids')});
+  if (f.age) chips.push({key:'age', label: t('chip_kids_age').replace('{age}', f.age)});
   if (f.estafette) chips.push({key:'estafette', label: 'Estafette'});
   if (f.rolstoel) chips.push({key:'rolstoel', label: t('filter_rolstoel')});
   if (f.price) { var pSel = document.getElementById('f-price'); chips.push({key:'price', label: pSel.options[pSel.selectedIndex].text}); }
@@ -531,6 +541,7 @@ function removeFilter(key) {
   else if (key==='dateFrom') document.getElementById('f-date-from').value='';
   else if (key==='dateTo') document.getElementById('f-date-to').value='';
   else if (key==='kidsrun') document.getElementById('f-kidsrun').checked=false;
+  else if (key==='age') document.getElementById('f-kids-age').value='';
   else if (key==='estafette') document.getElementById('f-estafette').checked=false;
   else if (key==='rolstoel') document.getElementById('f-rolstoel').checked=false;
   else if (key==='price') document.getElementById('f-price').value='';
@@ -548,6 +559,7 @@ function clearFilters() {
   document.getElementById('f-date-from').value='';
   document.getElementById('f-date-to').value='';
   document.getElementById('f-kidsrun').checked=false;
+  document.getElementById('f-kids-age').value='';
   document.getElementById('f-estafette').checked=false;
   document.getElementById('f-rolstoel').checked=false;
   document.getElementById('f-price').value='';
@@ -568,6 +580,8 @@ function saveFiltersToHash(f) {
   if (f.dateTo) parts.push('to='+f.dateTo);
   if (f.price) parts.push('price='+encodeURIComponent(f.price));
   if (f.rolstoel) parts.push('rolstoel=1');
+  if (f.kidsrun) parts.push('kids=1');
+  if (f.age) parts.push('leeftijd='+f.age);
   if (f.available) parts.push('vrij=1');
   if (f.atletiekunie) parts.push('au=1');
   if (f.postal) parts.push('postal='+f.postal);
@@ -588,6 +602,8 @@ function loadFiltersFromHash() {
   if (params.to) document.getElementById('f-date-to').value=params.to;
   if (params.price) document.getElementById('f-price').value=params.price;
   else if (params.free) document.getElementById('f-price').value='gratis'; // oude links
+  if (params.kids) document.getElementById('f-kidsrun').checked=true;
+  if (params.leeftijd) document.getElementById('f-kids-age').value=params.leeftijd;
   if (params.rolstoel) document.getElementById('f-rolstoel').checked=true;
   if (params.vrij) document.getElementById('f-available').checked=true;
   if (params.au) document.getElementById('f-atletiekunie').checked=true;

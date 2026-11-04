@@ -58,6 +58,8 @@ async function loadEventsFromDB() {
         registration_deadline:   e.registration_deadline || null,
         late_registration:       e.late_registration,
         max_participants:        e.max_participants || null,
+        kids_min_age:            e.kids_min_age ?? null,
+        kids_max_age:            e.kids_max_age ?? null,
         capacity:         null,
         youtube_url:      ''
     }));

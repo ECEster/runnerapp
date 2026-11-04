@@ -159,6 +159,42 @@ function soldOutNoteHtml(ev, afterPrice) {
   return '<span class="event-card__soldout-note">' + (afterPrice ? '· ' : '') + safe + ' ' + t('sold_out_full') + '</span>';
 }
 
+// Leeftijdsfilter (Kids & jeugd): past de kidsrun bij de leeftijd van het kind?
+//   'match'   kidsrun en de leeftijd valt binnen min/max
+//   'unknown' kidsrun, maar geen leeftijden bekend (komt apart onderaan)
+//   'no'      geen kidsrun, of de leeftijd valt erbuiten
+function kidsAgeStatus(ev, age) {
+  if (!ev.kidsrun) return 'no';
+  var lo = ev.kids_min_age, hi = ev.kids_max_age;
+  if (lo == null && hi == null) return 'unknown';
+  if ((lo != null && age < lo) || (hi != null && age > hi)) return 'no';
+  return 'match';
+}
+
+// "4 t/m 12 jaar", "t/m 12 jaar", "vanaf 6 jaar", of '' als onbekend
+function kidsAgeLabel(ev) {
+  var lo = ev.kids_min_age, hi = ev.kids_max_age;
+  if (lo != null && hi != null) return t('kids_age_range').replace('{min}', lo).replace('{max}', hi);
+  if (hi != null) return t('kids_age_upto').replace('{max}', hi);
+  if (lo != null) return t('kids_age_from').replace('{min}', lo);
+  return '';
+}
+
+// Kaarten met leeftijdsfilter: eerst de passende, dan apart de kidsruns
+// zonder leeftijdsinformatie (met een kopje ertussen)
+function renderSplitByAge(events, renderCard, age) {
+  if (!age) return events.map(renderCard).join('');
+  var matches = events.filter(function(ev) { return kidsAgeStatus(ev, age) === 'match'; });
+  var unknown = events.filter(function(ev) { return kidsAgeStatus(ev, age) === 'unknown'; });
+  var html = matches.length ? matches.map(renderCard).join('')
+    : '<p class="events-split-note">' + t('kids_age_none').replace('{age}', age) + '</p>';
+  if (unknown.length) {
+    html += '<h3 class="events-split-heading">' + t('kids_age_unknown_heading') + '</h3>' +
+      '<p class="events-split-note">' + t('kids_age_unknown_note') + '</p>' + unknown.map(renderCard).join('');
+  }
+  return html;
+}
+
 // Prijsfilter: "gratis", of een bereik "van-tot" in euro's ("50-" = meer dan 50).
 // Een evenement met een prijsbereik ("5 - 12,50") telt mee als dat bereik de
 // categorie raakt. Evenementen zonder bekende prijs vallen buiten de categorieen.

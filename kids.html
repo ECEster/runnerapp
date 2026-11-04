@@ -78,6 +78,11 @@
       <div class="day-panel__list" id="day-panel-list"></div>
     </div>
 
+    <div class="kids-age-filter">
+      <label for="kids-age" data-i18n="kids_age_label">Leeftijd kind</label>
+      <input type="number" id="kids-age" min="1" max="18" inputmode="numeric" placeholder="bv. 8" oninput="renderKidsEvents(getLang())">
+      <small class="filter-hint" data-i18n="filter_kids_age_hint">Toont kidsruns die bij deze leeftijd passen</small>
+    </div>
     <div class="kids-events-grid" id="kids-events-grid"></div>
   </div>
 </section>
@@ -364,7 +369,9 @@ function renderKidsEvents(lang) {
   if (!kidsEvents.length) {
     el.innerHTML = '<p style="text-align:center;color:#666;">Geen kids evenementen gevonden.</p>';
   } else {
-    el.innerHTML = kidsEvents.map(function(ev) {
+    var age = parseInt(document.getElementById('kids-age').value, 10) || null;
+    if (age) kidsEvents = kidsEvents.filter(function(ev) { return kidsAgeStatus(ev, age) !== 'no'; });
+    el.innerHTML = renderSplitByAge(kidsEvents, function(ev) {
       var name = lang==='en' ? ev.name_en : ev.name_nl;
       var dateStr = formatEventDate(ev, lang);
       var price = !ev.paid ? (lang==='en' ? 'Free' : 'Gratis') : (ev.price ? formatPrice(ev.price) : '');
@@ -376,9 +383,10 @@ function renderKidsEvents(lang) {
           '<div class="kids-event-card__date">'+dateStr+'</div>'+
           '<h4>'+cardLink(ev, name)+'</h4>'+
           '<p>'+titleCase(ev.city)+' &nbsp;|&nbsp; '+ev.distances.join(', ')+'&nbsp;|&nbsp; '+price+'</p>'+
+          (kidsAgeLabel(ev) ? '<p class="kids-event-card__age">'+kidsAgeLabel(ev)+'</p>' : '')+
         '</div>'+
       cardClose(ev);
-    }).join('');
+    }, age);
     revealOnScroll(el.querySelectorAll('.kids-event-card'));
   }
   renderCalendar(lang);

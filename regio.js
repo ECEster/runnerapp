@@ -26,6 +26,7 @@ function getFilters() {
     dateFrom: document.getElementById('f-date-from').value,
     dateTo:   document.getElementById('f-date-to').value,
     kidsrun:      document.getElementById('f-kidsrun').checked,
+    age:          parseInt(document.getElementById('f-kids-age').value, 10) || null,
     estafette:    document.getElementById('f-estafette').checked,
     rolstoel:     document.getElementById('f-rolstoel').checked,
     price:        document.getElementById('f-price').value,
@@ -51,6 +52,7 @@ function filterEvents() {
     if (f.dateFrom && eventEnd(ev) < f.dateFrom) return false;
     if (f.dateTo && ev.date > f.dateTo) return false;
     if (f.kidsrun && !ev.kidsrun) return false;
+    if (f.age && kidsAgeStatus(ev, f.age) === 'no') return false;
     if (f.estafette && !ev.estafette) return false;
     if (f.rolstoel && !ev.rolstoel) return false;
     if (f.price && !matchesPriceFilter(ev, f.price)) return false;
@@ -85,7 +87,7 @@ function applyFilters() {
 // zien — behalve als er een filter aan staat, dan alle resultaten.
 function listEvents() {
   var f = getFilters();
-  if (f.type || f.province || f.distance || f.dateFrom || f.dateTo || f.kidsrun ||
+  if (f.type || f.province || f.distance || f.dateFrom || f.dateTo || f.kidsrun || f.age ||
       f.estafette || f.rolstoel || f.price || f.available || f.atletiekunie || f.postal.length === 4 || f.search) return filteredEvents;
   return filteredEvents.filter(function(ev) {
     return eventInMonth(ev, calYear, calMonth);
@@ -101,7 +103,7 @@ function renderList(lang) {
     el.innerHTML = '<div class="no-events-msg" style="grid-column:1/-1"><h3>Geen evenementen gevonden</h3><p>Pas de filters aan om meer evenementen te zien.</p></div>';
     return;
   }
-  el.innerHTML = events.map(function(ev) {
+  var renderCard = function(ev) {
     var name = lang==='en' ? ev.name_en : ev.name_nl;
     var dateStr = formatEventDate(ev, lang);
     var badgeClass = getBadgeClass(ev.type);
@@ -125,7 +127,8 @@ function renderList(lang) {
         '<div class="event-card__footer">'+priceHtml+soldOutNoteHtml(ev, true)+'</div>'+
       '</div>'+
     cardClose(ev);
-  }).join('');
+  };
+  el.innerHTML = renderSplitByAge(events, renderCard, getFilters().age);
   revealOnScroll(el.querySelectorAll('.event-card'));
 }
 
@@ -212,6 +215,7 @@ function clearFilters() {
   document.getElementById('f-date-from').value='';
   document.getElementById('f-date-to').value='';
   document.getElementById('f-kidsrun').checked=false;
+  document.getElementById('f-kids-age').value='';
   document.getElementById('f-estafette').checked=false;
   document.getElementById('f-rolstoel').checked=false;
   document.getElementById('f-price').value='';
