@@ -347,6 +347,10 @@
           </select>
         </div>
         <div>
+          <label for="f-max-part">Maximaal aantal deelnemers</label>
+          <input type="number" id="f-max-part" min="1" placeholder="bijv. 500">
+        </div>
+        <div>
           <label for="f-sold-out-dist">Volle afstanden (bv. Kidsrun of 10 km)</label>
           <input type="text" id="f-sold-out-dist" placeholder="leeg = alles nog open">
         </div>
@@ -627,6 +631,7 @@ function startEdit(ev) {
   document.getElementById('f-reg-deadline').value  = ev.registration_deadline || '';
   document.getElementById('f-late-reg').value      = ev.late_registration === true ? 'ja' : ev.late_registration === false ? 'nee' : '';
   document.getElementById('f-sold-out-dist').value = ev.sold_out_distances || '';
+  document.getElementById('f-max-part').value      = ev.max_participants || '';
   document.getElementById('f-sold-out').checked    = ev.sold_out || false;
   renderSoldOutSuggestion(ev);
   document.getElementById('f-serie').value      = ev.serie || '';
@@ -706,6 +711,7 @@ document.getElementById('event-form').addEventListener('submit', async e => {
       late_registration: { ja: true, nee: false }[document.getElementById('f-late-reg').value] ?? null,
       sold_out:         document.getElementById('f-sold-out').checked,
       sold_out_distances: document.getElementById('f-sold-out-dist').value.trim() || null,
+      max_participants: parseInt(document.getElementById('f-max-part').value, 10) || null,
       serie:            document.getElementById('f-serie').value.trim() || null,
       editie:           document.getElementById('f-editie').value ? parseInt(document.getElementById('f-editie').value, 10) : null,
       description_nl:   descNl,

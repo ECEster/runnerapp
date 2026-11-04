@@ -125,8 +125,12 @@ export function parseHardlopenDetail(html) {
   const sluitDatum = sluit !== -1 ? /(\d{1,2}) (\w{3}) (\d{4})/.exec(lines[sluit + 1] || '') : null
   const na = lines.indexOf('Na-inschrijving toegestaan?')
   const naWaarde = na !== -1 ? (lines[na + 1] || '').toLowerCase() : ''
+  // "Maximaal aantal deelnemers:" -> "1.000"
+  const max = lines.indexOf('Maximaal aantal deelnemers:')
+  const maxN = max !== -1 ? parseInt((lines[max + 1] || '').replace(/\./g, ''), 10) : NaN
   return {
     onderdelen,
+    maxDeelnemers: maxN > 0 ? maxN : null,
     deadline: sluitDatum && MONTHS[sluitDatum[2].toLowerCase()]
       ? `${sluitDatum[3]}-${String(MONTHS[sluitDatum[2].toLowerCase()]).padStart(2, '0')}-${sluitDatum[1].padStart(2, '0')}`
       : null,
@@ -170,7 +174,7 @@ export async function collectHardlopenEvents(fetchHtml, { vanaf, tot } = {}) {
   for (const item of lijst) {
     if (/^trainingsloop$/i.test(item.soort)) continue
     if ((vanaf && item.datum < vanaf) || (tot && item.datum > tot)) continue
-    let detail = { onderdelen: [], organisatie: null, plaats: null, deadline: null, naInschrijving: null }
+    let detail = { onderdelen: [], organisatie: null, plaats: null, deadline: null, naInschrijving: null, maxDeelnemers: null }
     if (item.url) {
       try {
         detail = parseHardlopenDetail(await fetchRetry(fetchHtml, item.url))
@@ -201,6 +205,7 @@ export async function collectHardlopenEvents(fetchHtml, { vanaf, tot } = {}) {
       prijs: prijsUit(detail.onderdelen, item.naam),
       organisator: detail.organisatie,
       inschrijf_deadline: detail.deadline,
+      max_deelnemers: detail.maxDeelnemers,
       na_inschrijving: detail.naInschrijving,
     })
   }

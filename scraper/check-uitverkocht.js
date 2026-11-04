@@ -10,7 +10,10 @@
 // Een overgeslagen voorstel wordt niet opnieuw voorgesteld, tenzij de site
 // iets anders noemt.
 //
-// Vereist migratie 0011_add_availability.sql.
+// Vult in dezelfde ronde ook het maximaal aantal deelnemers in als de pagina
+// dat noemt en het nog leeg is (lib/extractMaxParticipants.js).
+//
+// Vereist migratie 0011_add_availability.sql en 0013_add_max_participants.sql.
 //
 // Draaien:  node check-uitverkocht.js          (dry-run)
 //           node check-uitverkocht.js --live   (slaat de voorstellen op)
@@ -22,6 +25,7 @@ try {
 }
 
 import { htmlToText } from './lib/extractPrice.js'
+import { extractMaxParticipants } from './lib/extractMaxParticipants.js'
 
 const URL_BASE = (process.env.SUPABASE_URL || '').replace(/\/$/, '')
 const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -108,21 +112,26 @@ async function main() {
   console.log(isLive ? '=== LIVE ===' : '=== DRY RUN (niets wordt opgeslagen) ===')
   const today = new Date().toISOString().slice(0, 10)
   const res = await fetch(
-    `${URL_BASE}/rest/v1/events?select=id,name_nl,date,registration_url,sold_out,sold_out_distances,sold_out_suggestion,sold_out_suggestion_rejected&date=gte.${today}&published=eq.true&order=date`,
+    `${URL_BASE}/rest/v1/events?select=id,name_nl,date,registration_url,sold_out,sold_out_distances,sold_out_suggestion,sold_out_suggestion_rejected,max_participants&date=gte.${today}&published=eq.true&order=date`,
     { headers: HEADERS },
   )
   if (!res.ok) throw new Error(`Kon events niet ophalen: HTTP ${res.status} (migratie 0011 al gedraaid?)`)
-  const events = (await res.json()).filter((ev) => !ev.sold_out && ev.registration_url && /^https?:\/\//i.test(ev.registration_url) && !SKIP_HOSTS.test(ev.registration_url))
+  const events = (await res.json()).filter((ev) => ev.registration_url && /^https?:\/\//i.test(ev.registration_url) && !SKIP_HOSTS.test(ev.registration_url))
   console.log(`${events.length} komende evenementen om te bekijken`)
 
   const found = []
+  const maxFound = []
   const queue = [...events]
   let done = 0
   async function worker() {
     while (queue.length) {
       const ev = queue.shift()
       const html = await fetchPage(ev.registration_url)
-      const r = html && findSoldOut(htmlToText(html), Number(ev.date.slice(0, 4)))
+      const text = html ? htmlToText(html) : ''
+      // Maximaal aantal deelnemers: alleen invullen als het nog leeg is
+      const max = text && !ev.max_participants ? extractMaxParticipants(text) : null
+      if (max) maxFound.push({ ev, ...max })
+      const r = text && !ev.sold_out && findSoldOut(text, Number(ev.date.slice(0, 4)))
       if (r && r.suggestion !== ev.sold_out_suggestion_rejected && r.suggestion !== ev.sold_out_distances && r.suggestion !== ev.sold_out_suggestion) {
         found.push({ ev, ...r })
       }
@@ -136,7 +145,15 @@ async function main() {
   console.log(`\n${found.length} voorstellen:`)
   for (const f of found) console.log(`  id ${f.ev.id} | ${f.ev.date} | ${f.ev.name_nl} -> ${f.suggestion}\n      "${f.quote}"`)
 
+  console.log(`
+Maximaal aantal deelnemers gevonden: ${maxFound.length}`)
+  for (const f of maxFound) console.log(`  id ${f.ev.id} | ${f.ev.name_nl} -> ${f.value}
+      "${f.quote}"`)
+
   if (isLive) {
+    for (const f of maxFound) {
+      await fetch(`${URL_BASE}/rest/v1/events?id=eq.${f.ev.id}`, { method: 'PATCH', headers: HEADERS, body: JSON.stringify({ max_participants: f.value }) })
+    }
     let ok = 0
     for (const f of found) {
       const r = await fetch(`${URL_BASE}/rest/v1/events?id=eq.${f.ev.id}`, {

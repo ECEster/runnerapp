@@ -62,6 +62,7 @@ export function mapToSupabaseShape(event) {
     // hardlopen.nl: laatste inschrijfdag en of na-inschrijving (op de dag zelf) kan
     registration_deadline: event.inschrijf_deadline || null,
     late_registration: event.na_inschrijving ?? null,
+    max_participants: event.max_deelnemers || null,
     // hardlopen.nl noemt het inschrijfgeld per afstand op de detailpagina
     ...(event.prijs && { price: event.prijs }),
     published: false,

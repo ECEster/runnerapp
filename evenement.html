@@ -177,6 +177,7 @@ function registrationInfoHtml(ev, lang) {
     var today = new Date().toISOString().slice(0, 10);
     lines.push((ev.registration_deadline < today ? t('reg_closed') : t('reg_deadline')).replace('{date}', fmt(ev.registration_deadline)));
   }
+  if (ev.max_participants) lines.push(t('reg_max').replace('{n}', ev.max_participants.toLocaleString('nl-NL')));
   if (ev.late_registration === true) lines.push(t('reg_late_yes'));
   if (ev.late_registration === false) lines.push(t('reg_late_no'));
   if (!lines.length) return '';

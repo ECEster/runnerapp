@@ -58,7 +58,7 @@ async function main() {
   console.log(`${items.length} evenementen op hardlopen.nl (zonder trainingslopen)`)
 
   const res = await fetch(
-    `${URL_BASE}/rest/v1/events?select=id,name_nl,date,end_date,city,province,price,organizer,atletiekunie,registration_deadline,late_registration&date=gte.${today}`,
+    `${URL_BASE}/rest/v1/events?select=id,name_nl,date,end_date,city,province,price,organizer,atletiekunie,registration_deadline,late_registration,max_participants&date=gte.${today}`,
     { headers: HEADERS },
   )
   if (!res.ok) throw new Error(`Kon events niet ophalen: HTTP ${res.status} (migratie 0010 al gedraaid?)`)
@@ -75,11 +75,12 @@ async function main() {
     if (sure && item.prijs && NEEDS_PRICE.test(ev.price || '')) fields.price = item.prijs
     if (sure && item.inschrijf_deadline && !ev.registration_deadline) fields.registration_deadline = item.inschrijf_deadline
     if (sure && item.na_inschrijving !== null && ev.late_registration === null) fields.late_registration = item.na_inschrijving
+    if (sure && item.max_deelnemers && !ev.max_participants) fields.max_participants = item.max_deelnemers
     if (Object.keys(fields).length) updates.push({ ev, item, fields })
   }
 
   const count = (k) => updates.filter((u) => k in u.fields).length
-  console.log(`\nAan te vullen: ${updates.length} evenementen (Atletiekunie ${count('atletiekunie')}, organisator ${count('organizer')}, prijs ${count('price')}, deadline ${count('registration_deadline')}, op de dag zelf ${count('late_registration')})`)
+  console.log(`\nAan te vullen: ${updates.length} evenementen (Atletiekunie ${count('atletiekunie')}, organisator ${count('organizer')}, prijs ${count('price')}, deadline ${count('registration_deadline')}, op de dag zelf ${count('late_registration')}, max. deelnemers ${count('max_participants')})`)
   for (const { ev, fields } of updates) console.log(`  id ${ev.id} | ${ev.date} | ${ev.name_nl} -> ${JSON.stringify(fields)}`)
 
   if (isLive) {

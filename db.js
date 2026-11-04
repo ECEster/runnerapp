@@ -57,6 +57,7 @@ async function loadEventsFromDB() {
         availability_checked_at: e.availability_checked_at || null,
         registration_deadline:   e.registration_deadline || null,
         late_registration:       e.late_registration,
+        max_participants:        e.max_participants || null,
         capacity:         null,
         youtube_url:      ''
     }));
