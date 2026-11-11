@@ -1378,7 +1378,7 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
 .event-detail__hero {
   border-radius: var(--radius-lg);
   overflow: hidden;
-  margin-bottom: 0.8rem; /* gegevenskaart een halve centimeter dichter bij de foto (was 2rem) */
+  margin-bottom: 0; /* gegevenskaart direct tegen de foto aan */
   position: relative;
 }
 .event-detail__hero img {
@@ -2283,3 +2283,8 @@ body.page-overons { background: var(--white); }
 /* Evenementpagina: typelabel rechtsboven op de foto (optie B) */
 .event-detail__labels { position: absolute; top: 16px; right: 16px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
 .event-detail__labels .detail-type-label { margin: 0; }
+
+/* Evenementpagina: gegevenskaart vast aan de onderkant van de foto, zonder witruimte.
+   De kaart komt als eerste onder de foto (eventuele labels/beschrijving daaronder). */
+.event-detail__hero { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+.event-detail__content .event-detail__sidebar { order: -1; border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
