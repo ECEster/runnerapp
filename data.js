@@ -283,22 +283,23 @@ function isKidsOnlyEvent(ev) {
   return kms.length > 0 && kms.every(function(km) { return km <= 3; });
 }
 
-// Standaardfoto's met meerdere varianten: om en om in de volgorde waarin de
-// kaarten getekend worden, zodat kaarten naast elkaar niet dezelfde foto tonen.
+// Standaardfoto's met meerdere varianten (zie pickImageVariant: per evenement vast).
 var IMAGE_VARIANTS = {
   'images/cross.jpg': ['images/cross.jpg', 'images/cross2.jpg'],
   'images/trail.jpg': ['images/trail.jpg', 'images/trail2.jpg'],
   'images/wegevenement.jpg': ['images/wegevenement.jpg', 'images/wegevenement2.jpg', 'images/wegevenement3.jpg', 'images/wegevenement4.jpg'],
   'images/gemengd-parcours.png': ['images/gemengd-parcours.png', 'images/gemengd-parcours2.jpg'],
 };
-var IMAGE_VARIANT_COUNT = {};
 
+// De variant hangt af van het evenement zelf (id), niet van de volgorde op het
+// scherm: zo toont de eventcard dezelfde foto als de evenementpagina. Evenementen
+// krijgen meestal opeenvolgende id's, dus kaarten naast elkaar wisselen toch af.
 function pickImageVariant(src, ev) {
   var list = IMAGE_VARIANTS[src];
   if (!list) return src;
-  var i = IMAGE_VARIANT_COUNT[src] || 0;
-  IMAGE_VARIANT_COUNT[src] = i + 1;
-  return list[i % list.length];
+  var id = String(ev && ev.id != null ? ev.id : '');
+  var n = /^\d+$/.test(id) ? parseInt(id, 10) : id.split('').reduce(function(h, c) { return (h * 31 + c.charCodeAt(0)) >>> 0; }, 0);
+  return list[n % list.length];
 }
 
 function getEventImage(ev) {
