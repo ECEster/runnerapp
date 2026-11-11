@@ -496,7 +496,22 @@ function cardOpen(cls, ev) {
 }
 function cardClose(ev) { return '</article>' + bookmarkButton(ev) + '</div>'; }
 function cardLink(ev, name, cls) {
-  return '<a class="card-link' + (cls ? ' ' + cls : '') + '" href="'+eventUrl(ev)+'">' + name + '</a>';
+  return '<a class="card-link' + (cls ? ' ' + cls : '') + '" href="'+eventUrl(ev)+'">' + softHyphenate(name) + '</a>';
+}
+
+// Lange namen netjes afbreken: in lange woorden een onzichtbaar afbreekpunt
+// (&shy;) vóór gangbare woorddelen, bv. "Hobbeldebobbel-loop". Past de regel
+// niet, dan toont de browser daar een streepje en gaat verder op de volgende
+// regel. Werkt ook in browsers zonder Nederlands afbreekwoordenboek
+// (de CSS-regel hyphens: auto doet de rest).
+var SOFT_HYPHEN_PARTS = /(loop|lopen|run|cross|marathon|trail|tocht|race|mijl|wandeling|festival|challenge|competitie|circuit)$/i;
+function softHyphenate(name) {
+  return String(name == null ? '' : name).replace(/[A-Za-zÀ-ÿ']{12,}/g, function(word) {
+    var m = SOFT_HYPHEN_PARTS.exec(word);
+    if (m && word.length - m[0].length >= 4) word = word.slice(0, word.length - m[0].length) + '\u00AD' + m[0];
+    // Ook tussen dubbele medeklinkers, zoals in de Nederlandse afbreking: hob-bel, bob-bel
+    return word.replace(/([bdfgklmnprst])\1(?=[a-zà-ÿ]{2})/g, function(dd, c, pos) { return pos >= 2 ? c + '\u00AD' + c : dd; });
+  });
 }
 
 // ── Opslaan in Mijn Runs (bladwijzer) ──────────────────────────────────

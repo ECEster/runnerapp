@@ -2231,3 +2231,15 @@ body.page-overons { background: var(--white); }
 .hero__control-icon--pause { display: none; }
 .hero__control.is-playing .hero__control-icon--pause { display: block; }
 .hero__control.is-playing .hero__control-icon--play { display: none; }
+
+/* Lange evenementnamen (bv. "Hobbeldebobbelloop") afbreken met een streepje
+   in plaats van buiten de kaart te lopen. Nederlandse afbreekregels via
+   lang="nl"; lukt afbreken niet, dan breekt overflow-wrap het woord alsnog. */
+.event-card__title,
+.event-detail__title,
+.day-panel__item {
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
