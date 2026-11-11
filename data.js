@@ -689,3 +689,68 @@ function markActiveMobileNav() {
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', markActiveMobileNav);
 else markActiveMobileNav();
+
+
+// ── Datumvelden in Nederlandse notatie (dd-mm-jjjj) ─────────────────────
+// Een <input type="date"> volgt de taal van de computer van de bezoeker
+// (op een Engelse computer mm/dd/jjjj). Daarom gewone tekstvelden met
+// data-nl-date: je typt cijfers en de streepjes komen er vanzelf tussen,
+// en een kalenderknopje ernaast opent de kalender van de browser.
+function nlDateToIso(value) {
+  var m = /^\s*(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})\s*$/.exec(value || '');
+  if (!m) return '';
+  var d = +m[1], mo = +m[2], y = +m[3];
+  var dt = new Date(Date.UTC(y, mo - 1, d));
+  if (dt.getUTCFullYear() !== y || dt.getUTCMonth() !== mo - 1 || dt.getUTCDate() !== d) return '';
+  return y + '-' + String(mo).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+}
+
+function isoToNlDate(iso) {
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+  return m ? m[3] + '-' + m[2] + '-' + m[1] : '';
+}
+
+function initNlDateInputs() {
+  document.querySelectorAll('input[data-nl-date]').forEach(function(input) {
+    if (input.dataset.nlDateReady) return;
+    input.dataset.nlDateReady = '1';
+    var wrap = document.createElement('span');
+    wrap.className = 'date-field';
+    input.parentNode.insertBefore(wrap, input);
+    wrap.appendChild(input);
+
+    // Typen: alleen cijfers, streepjes na dag en maand
+    input.addEventListener('input', function() {
+      var digits = input.value.replace(/\D/g, '').slice(0, 8);
+      var out = digits.slice(0, 2);
+      if (digits.length > 2) out += '-' + digits.slice(2, 4);
+      if (digits.length > 4) out += '-' + digits.slice(4);
+      input.value = out;
+      input.setAttribute('aria-invalid', String(out.length === 10 && !nlDateToIso(out)));
+    });
+
+    // Kalenderknopje met daaronder een onzichtbaar datumveld van de browser
+    var native = document.createElement('input');
+    native.type = 'date';
+    native.className = 'date-field__native';
+    native.tabIndex = -1;
+    native.setAttribute('aria-hidden', 'true');
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'date-field__btn';
+    btn.setAttribute('aria-label', (getLang() === 'en' ? 'Choose date: ' : 'Kies datum: ') + (document.querySelector('label[for="' + input.id + '"]') || {}).textContent);
+    btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>';
+    btn.addEventListener('click', function() {
+      native.value = nlDateToIso(input.value);
+      try { native.showPicker(); } catch (e) { native.focus(); native.click(); }
+    });
+    native.addEventListener('change', function() {
+      input.value = isoToNlDate(native.value);
+      input.setAttribute('aria-invalid', 'false');
+    });
+    wrap.appendChild(btn);
+    wrap.appendChild(native);
+  });
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initNlDateInputs);
+else initNlDateInputs();

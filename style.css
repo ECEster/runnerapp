@@ -2243,3 +2243,18 @@ body.page-overons { background: var(--white); }
   overflow-wrap: break-word;
   min-width: 0;
 }
+
+/* Datumvelden dd-mm-jjjj met kalenderknopje */
+.date-field { position: relative; display: flex; align-items: stretch; width: 100%; }
+.date-field input[data-nl-date] { flex: 1; min-width: 0; padding-right: 2.2rem; }
+.date-field input[aria-invalid="true"] { border-color: #b3412f; }
+.date-field__btn {
+  position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+  width: 28px; height: 28px; display: grid; place-items: center;
+  background: none; border: 0; border-radius: 6px; color: var(--dark3); cursor: pointer;
+}
+.date-field__btn:hover { background: var(--surface2); color: var(--dark); }
+.date-field__btn:focus-visible { outline: 2px solid var(--btn); outline-offset: 1px; }
+.date-field__native { position: absolute; right: 0; bottom: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; border: 0; padding: 0; }
+/* Periode: datumvelden onder elkaar, zodat dd-mm-jjjj er helemaal in past */
+.filter-fieldset .filter-group--row { display: grid; grid-template-columns: 1fr; gap: 0.6rem; }

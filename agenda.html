@@ -166,11 +166,11 @@
         <div class="filter-group--row">
           <div>
             <label for="f-date-from" data-i18n="filter_date_from">Datum vanaf</label>
-            <input type="date" id="f-date-from">
+            <input type="text" id="f-date-from" data-nl-date inputmode="numeric" maxlength="10" placeholder="dd-mm-jjjj" autocomplete="off">
           </div>
           <div>
             <label for="f-date-to" data-i18n="filter_date_to">Datum t/m</label>
-            <input type="date" id="f-date-to">
+            <input type="text" id="f-date-to" data-nl-date inputmode="numeric" maxlength="10" placeholder="dd-mm-jjjj" autocomplete="off">
           </div>
         </div>
       </fieldset>
@@ -308,8 +308,8 @@ function getFilters() {
     type: document.getElementById('f-type').value,
     province: document.getElementById('f-province').value,
     distance: document.getElementById('f-distance').value,
-    dateFrom: document.getElementById('f-date-from').value,
-    dateTo: document.getElementById('f-date-to').value,
+    dateFrom: nlDateToIso(document.getElementById('f-date-from').value),
+    dateTo: nlDateToIso(document.getElementById('f-date-to').value),
     kidsrun: document.getElementById('f-kidsrun').checked,
     age: parseInt(document.getElementById('f-kids-age').value, 10) || null,
     estafette: document.getElementById('f-estafette').checked,
@@ -528,8 +528,8 @@ function renderFilterChips(f, lang) {
   if (f.type) chips.push({key:'type', label: getTypeName(f.type, lang)});
   if (f.province) chips.push({key:'province', label: f.province});
   if (f.distance) { var dSel = document.getElementById('f-distance'); chips.push({key:'distance', label: dSel.options[dSel.selectedIndex].text}); }
-  if (f.dateFrom) chips.push({key:'dateFrom', label: t('filter_date_from')+': '+f.dateFrom});
-  if (f.dateTo) chips.push({key:'dateTo', label: t('filter_date_to')+': '+f.dateTo});
+  if (f.dateFrom) chips.push({key:'dateFrom', label: t('filter_date_from')+': '+isoToNlDate(f.dateFrom)});
+  if (f.dateTo) chips.push({key:'dateTo', label: t('filter_date_to')+': '+isoToNlDate(f.dateTo)});
   if (f.kidsrun) chips.push({key:'kidsrun', label: t('filter_kids')});
   if (f.age) chips.push({key:'age', label: t('chip_kids_age').replace('{age}', f.age)});
   if (f.estafette) chips.push({key:'estafette', label: 'Estafette'});
@@ -609,8 +609,8 @@ function loadFiltersFromHash() {
   if (params.type) document.getElementById('f-type').value=params.type;
   if (params.prov) document.getElementById('f-province').value=params.prov;
   if (params.dist) document.getElementById('f-distance').value=params.dist;
-  if (params.from) document.getElementById('f-date-from').value=params.from;
-  if (params.to) document.getElementById('f-date-to').value=params.to;
+  if (params.from) document.getElementById('f-date-from').value=isoToNlDate(params.from);
+  if (params.to) document.getElementById('f-date-to').value=isoToNlDate(params.to);
   if (params.price) document.getElementById('f-price').value=params.price;
   else if (params.free) document.getElementById('f-price').value='gratis'; // oude links
   if (params.kids) document.getElementById('f-kidsrun').checked=true;
