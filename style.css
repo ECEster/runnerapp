@@ -1246,7 +1246,13 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
 .calendar-day.other-month { background: var(--white); }
 .calendar-day.other-month .cal-day-num { color: var(--light); }
 .calendar-day.today { background: var(--white); }
-.calendar-day.today .cal-day-num { color: var(--dark); font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+/* Vandaag: datum in een transparante marine cirkel */
+.calendar-day.today .cal-day-num {
+  color: var(--dark); font-weight: 800;
+  display: inline-grid; place-items: center;
+  min-width: 2em; height: 2em; margin: -0.4em 0 0 -0.45em; padding: 0 0.25em;
+  border-radius: 999px; background: rgba(42,59,94,0.22);
+}
 .calendar-day.has-events { cursor: pointer; }
 .calendar-day.selected { background: #E6EBF5; outline: 2px solid var(--accent); }
 .cal-day-num {
@@ -1263,8 +1269,8 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
   margin-top: 1px;
 }
 .cal-dot {
-  width: 7px;
-  height: 7px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -1272,7 +1278,7 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
 /* Alle stipjes in één kleur: net iets lichter blauw dan de kalenderkop (--dark) */
 .cal-dots .cal-dot { background: #2A3B5E; } /* effen stippen, zonder kleurverloop of schaduw */
 .cal-dots { align-items: center; gap: 3px; }
-.cal-dot-more { font: 700 0.62rem/1 var(--font-head); color: #2A3B5E; }
+.cal-dot-more { font: 700 0.72rem/1 var(--font-head); color: #2A3B5E; }
 
 /* Day panel */
 .day-panel {
@@ -2286,5 +2292,5 @@ body.page-overons { background: var(--white); }
 
 /* Evenementpagina: gegevenskaart vast aan de onderkant van de foto, zonder witruimte.
    De kaart komt als eerste onder de foto (eventuele labels/beschrijving daaronder). */
-.event-detail__hero { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
-.event-detail__content .event-detail__sidebar { order: -1; border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+/* Optie C: foto en kaart allebei rond afgewerkt, ze raken elkaar op de horizontale lijn */
+.event-detail__content .event-detail__sidebar { order: -1; }
