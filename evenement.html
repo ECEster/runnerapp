@@ -268,6 +268,9 @@ async function init() {
   var ev = EVENTS.find(function(e){ return e.id === id; });
   var root = document.getElementById('event-detail-root');
   if (ev) {
+    // Zelfde foto als op de kaart waar je op klikte (&foto=), anders vast per evenement
+    var foto = parseInt(params.get('foto'), 10);
+    ev._fotoVariant = foto >= 0 ? foto : 'id';
     root.innerHTML = renderEvent(ev, lang);
     document.title = (lang==='en' ? ev.name_en : ev.name_nl) + ' — RunningNederland.nl';
     setBreadcrumbJsonLd(lang==='en' ? ev.name_en : ev.name_nl);

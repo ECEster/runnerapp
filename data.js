@@ -283,7 +283,7 @@ function isKidsOnlyEvent(ev) {
   return kms.length > 0 && kms.every(function(km) { return km <= 3; });
 }
 
-// Standaardfoto's met meerdere varianten (zie pickImageVariant: per evenement vast).
+// Standaardfoto's met meerdere varianten (zie pickImageVariant).
 var IMAGE_VARIANTS = {
   'images/cross.jpg': ['images/cross.jpg', 'images/cross2.jpg'],
   'images/trail.jpg': ['images/trail.jpg', 'images/trail2.jpg'],
@@ -291,15 +291,27 @@ var IMAGE_VARIANTS = {
   'images/gemengd-parcours.png': ['images/gemengd-parcours.png', 'images/gemengd-parcours2.jpg'],
 };
 
-// De variant hangt af van het evenement zelf (id), niet van de volgorde op het
-// scherm: zo toont de eventcard dezelfde foto als de evenementpagina. Evenementen
-// krijgen meestal opeenvolgende id's, dus kaarten naast elkaar wisselen toch af.
+// Kaarten wisselen om en om af in de volgorde waarin ze getekend worden, zodat
+// kaarten naast elkaar niet dezelfde foto tonen. De gekozen variant gaat mee in
+// de link naar de evenementpagina (&foto=), zodat je daar dezelfde foto ziet.
+// Op de evenementpagina zelf: de variant uit de link, of (zonder &foto=, bv. een
+// oude of gedeelde link) een vaste keuze op basis van het id.
+var IMAGE_VARIANT_COUNT = {};
+
 function pickImageVariant(src, ev) {
   var list = IMAGE_VARIANTS[src];
   if (!list) return src;
-  var id = String(ev && ev.id != null ? ev.id : '');
-  var n = /^\d+$/.test(id) ? parseInt(id, 10) : id.split('').reduce(function(h, c) { return (h * 31 + c.charCodeAt(0)) >>> 0; }, 0);
-  return list[n % list.length];
+  var i;
+  if (typeof ev._fotoVariant === 'number') i = ev._fotoVariant;
+  else if (ev._fotoVariant === 'id') {
+    var id = String(ev.id != null ? ev.id : '');
+    i = /^\d+$/.test(id) ? parseInt(id, 10) : id.split('').reduce(function(h, c) { return (h * 31 + c.charCodeAt(0)) >>> 0; }, 0);
+  } else {
+    i = IMAGE_VARIANT_COUNT[src] || 0;
+    IMAGE_VARIANT_COUNT[src] = i + 1;
+    ev._cardVariant = i % list.length;
+  }
+  return list[i % list.length];
 }
 
 function getEventImage(ev) {
@@ -486,7 +498,8 @@ function calDotsHtml(evs, lang) {
   return dots;
 }
 
-function eventUrl(ev) { return 'evenement.html?id=' + ev.id; }
+// Met de fotovariant van de kaart erbij (zie pickImageVariant)
+function eventUrl(ev) { return 'evenement.html?id=' + ev.id + (typeof ev._cardVariant === 'number' ? '&foto=' + ev._cardVariant : ''); }
 // De bladwijzerknop staat náást de link (in een wrapper), niet erin: een knop
 // binnen een link is ongeldige HTML en lastig met toetsenbord en schermlezer.
 // Kaart als <article>; alleen de titel is een link (cardLink), die via CSS
