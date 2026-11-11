@@ -76,7 +76,11 @@ function getTypeName(type, lang) {
 // Vinkje in een rondje voor het label 'aangepast sporten' onder de foto
 var DETAIL_CHECK_SVG = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.5l2.7 2.7L16 9.6"/></svg>';
 
+// Geen knop of link naar een andere agenda-site, alleen naar de organisator
+var AGGREGATOR_URL = /^https?:\/\/(?:www\.)?(?:hardlopen\.nl|hardloopkalendernederland\.nl|runphy\.nl|loopjeloopje\.nl|entryfee\.run)\b/i;
+
 function renderEvent(ev, lang) {
+  var regUrl = ev.registration_url && !AGGREGATOR_URL.test(ev.registration_url) ? ev.registration_url : '';
   var name = lang==='en' ? ev.name_en : ev.name_nl;
   var desc = lang==='en' ? ev.description_en : ev.description_nl;
   var dateStr = formatEventDate(ev, lang);
@@ -135,7 +139,7 @@ function renderEvent(ev, lang) {
         '<div class="detail-info-row"><div><div class="detail-info-label">'+t('location_label')+'</div><div class="detail-info-value">'+titleCase(ev.city)+'</div></div></div>'+
         '<div class="detail-info-row"><div><div class="detail-info-label">'+t('province_label')+'</div><div class="detail-info-value">'+ev.province+'</div></div></div>'+
         '<div class="detail-info-row"><div><div class="detail-info-label">'+t('distances_label')+'</div><div class="detail-info-value">'+distList+'</div></div></div>'+
-        '<div class="detail-info-row"><div><div class="detail-info-label">'+t('price_label')+'</div><div class="detail-info-value">'+(!ev.paid ? t('free') : (ev.price ? formatPrice(ev.price) : (t('price_unknown') + (ev.registration_url ? ' · <a href="'+ev.registration_url+'" target="_blank" rel="noopener noreferrer" style="color:var(--dark3);font-size:0.9rem;">'+t('see_website')+'</a>' : ''))))+'</div></div></div>'+
+        '<div class="detail-info-row"><div><div class="detail-info-label">'+t('price_label')+'</div><div class="detail-info-value">'+(!ev.paid ? t('free') : (ev.price ? formatPrice(ev.price) : (t('price_unknown') + (regUrl ? ' · <a href="'+regUrl+'" target="_blank" rel="noopener noreferrer" style="color:var(--dark3);font-size:0.9rem;">'+t('see_website')+'</a>' : ''))))+'</div></div></div>'+
         (ev.kidsrun ? '<div class="detail-info-row"><div><div class="detail-info-label">'+t('detail_kids')+'</div><div class="detail-info-value">'+(kidsAgeLabel(ev) || t('kids_age_unknown'))+'</div></div></div>' : '')+
         registrationInfoHtml(ev, lang)+
         (catList !== '—' ? '<div class="detail-info-row"><div><div class="detail-info-label">'+t('categories_label')+'</div><div class="detail-info-value">'+catList+'</div></div></div>' : '')+ // leeg = weglaten
@@ -143,10 +147,10 @@ function renderEvent(ev, lang) {
         // Geen organisator bekend maar wel aangesloten: dan alleen dat.
         (ev.organizer || ev.atletiekunie ? '<div class="detail-info-row"><div><div class="detail-info-label">'+t('organizer_label')+'</div><div class="detail-info-value">'+
           (ev.organizer || '') +
-          (ev.atletiekunie ? '<span class="detail-info-note" data-i18n="atletiekunie_badge">'+t('atletiekunie_badge')+'</span>' : '')+
+          (ev.atletiekunie ? '<span class="detail-info-note">'+t('atletiekunie_badge').replace(/(Atletiekunie|Athletics Union)/, '<strong>$1</strong>')+'</span>' : '')+
         '</div></div></div>' : '')+
         '</div>'+
-        (ev.registration_url ? '<a href="'+ev.registration_url+'" target="_blank" rel="noopener noreferrer" class="event-detail__register" data-i18n="register_btn">'+t('register_btn')+'</a>' : '')+
+        (regUrl ? '<a href="'+regUrl+'" target="_blank" rel="noopener noreferrer" class="event-detail__register" data-i18n="register_btn">'+t('register_btn')+'</a>' : '')+
       '</section>'+
       ytHtml+
     '</div>'+

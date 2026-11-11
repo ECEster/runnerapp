@@ -43,6 +43,10 @@ function normalizeerAfstand(afstand) {
 //   niet bedoeld om aan bezoekers te tonen.
 // - serie/editie: NIEUWE kolommen (migratie 0002) — zie lib/buildSerie.js en
 //   lib/extractEditie.js voor hoe deze worden afgeleid.
+// Andere agenda-sites: daar mag de knop "Info & Inschrijven" niet naartoe linken,
+// alleen naar de organisator of zijn inschrijfplatform (zoals inschrijven.nl)
+export const AGGREGATOR_URL = /^https?:\/\/(?:www\.)?(?:hardlopen\.nl|hardloopkalendernederland\.nl|runphy\.nl|loopjeloopje\.nl|entryfee\.run)\b/i
+
 export function mapToSupabaseShape(event) {
   return {
     // Naam leesbaar maken (&amp; -> &); de serie blijft op de ruwe naam, zodat
@@ -52,7 +56,7 @@ export function mapToSupabaseShape(event) {
     city: titleCase(event.plaats),
     province: event.provincie,
     distances: event.afstanden.map(normalizeerAfstand).join(', '),
-    registration_url: decodeHtmlEntities(event.organisator_url),
+    registration_url: AGGREGATOR_URL.test(event.organisator_url || '') ? null : decodeHtmlEntities(event.organisator_url),
     source_url: decodeHtmlEntities(event.bron_url),
     image: event.afbeelding_url,
     // hardlopen.nl geeft het soort evenement zelf mee; anders afleiden uit de naam

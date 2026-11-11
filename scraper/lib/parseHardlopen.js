@@ -13,8 +13,8 @@
 // - De prijs komt van de detailpagina (laagste - hoogste bedrag, jeugd
 //   inbegrepen), dus geen voorstel maar de prijs zelf; nieuwe events staan
 //   sowieso als concept in het admin-paneel.
-// - registration_url wordt de detailpagina op hardlopen.nl: de site van de
-//   organisator staat daar niet bij.
+// - registration_url wordt de "Evenementwebsite" van de organisator als
+//   hardlopen.nl die noemt, anders leeg (nooit een link naar hardlopen.nl zelf).
 // - De provincie komt uit PDOK via de plaats (lib/resolveProvince.js); lukt
 //   dat niet, dan valt het evenement af.
 
@@ -125,11 +125,14 @@ export function parseHardlopenDetail(html) {
   const sluitDatum = sluit !== -1 ? /(\d{1,2}) (\w{3}) (\d{4})/.exec(lines[sluit + 1] || '') : null
   const na = lines.indexOf('Na-inschrijving toegestaan?')
   const naWaarde = na !== -1 ? (lines[na + 1] || '').toLowerCase() : ''
+  // "Evenementwebsite:" -> de site van de organisator (niet altijd aanwezig)
+  const site = /<strong>\s*Evenementwebsite:\s*<\/strong>[\s\S]{0,200}?href="(https?:\/\/[^"]+)"/i.exec(html)
   // "Maximaal aantal deelnemers:" -> "1.000"
   const max = lines.indexOf('Maximaal aantal deelnemers:')
   const maxN = max !== -1 ? parseInt((lines[max + 1] || '').replace(/\./g, ''), 10) : NaN
   return {
     onderdelen,
+    website: site ? site[1] : null,
     maxDeelnemers: maxN > 0 ? maxN : null,
     deadline: sluitDatum && MONTHS[sluitDatum[2].toLowerCase()]
       ? `${sluitDatum[3]}-${String(MONTHS[sluitDatum[2].toLowerCase()]).padStart(2, '0')}-${sluitDatum[1].padStart(2, '0')}`
@@ -176,7 +179,7 @@ export async function collectHardlopenEvents(fetchHtml, { vanaf, tot } = {}) {
     // Clinics, cursussen en oriëntatielopen zijn geen evenementen voor de agenda
     if (/clinic|cursus|oriëntatieloop|orientatieloop/i.test(item.naam)) continue
     if ((vanaf && item.datum < vanaf) || (tot && item.datum > tot)) continue
-    let detail = { onderdelen: [], organisatie: null, plaats: null, deadline: null, naInschrijving: null, maxDeelnemers: null }
+    let detail = { onderdelen: [], organisatie: null, plaats: null, deadline: null, naInschrijving: null, maxDeelnemers: null, website: null }
     if (item.url) {
       try {
         detail = parseHardlopenDetail(await fetchRetry(fetchHtml, item.url))
@@ -199,7 +202,8 @@ export async function collectHardlopenEvents(fetchHtml, { vanaf, tot } = {}) {
       plaats,
       provincie,
       afstanden,
-      organisator_url: item.url,
+      // Alleen de eigen site van de organisator; geen link naar hardlopen.nl zelf
+      organisator_url: detail.website || null,
       bron_url: item.url,
       afbeelding_url: null,
       type: TYPES[item.soort.toLowerCase()] || null,
