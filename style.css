@@ -2264,8 +2264,7 @@ body.page-overons { background: var(--white); }
 
 /* Evenementpagina: labels + knoppen op één regel, gegevens in twee kolommen */
 .event-detail__content { grid-template-columns: 1fr; gap: 1.25rem; }
-.event-detail__intro { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem 1.5rem; flex-wrap: wrap; }
-.event-detail__actions { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; margin-left: auto; }
+.event-detail__actions { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; justify-content: flex-end; margin-bottom: 0.75rem; }
 .detail-badges { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .detail-badge {
   display: inline-flex; align-items: center; gap: 0.4rem;
@@ -2279,5 +2278,4 @@ body.page-overons { background: var(--white); }
 .detail-info-grid .detail-info-row { margin-bottom: 0; }
 @media (max-width: 640px) {
   .detail-info-grid { grid-template-columns: 1fr; }
-  .event-detail__actions { margin-left: 0; }
 }

@@ -73,7 +73,7 @@ function getTypeName(type, lang) {
   return (names[lang]||names.nl)[type]||type;
 }
 
-// Vinkje in een rondje voor de labels onder de foto (Atletiekunie, aangepast sporten)
+// Vinkje in een rondje voor het label 'aangepast sporten' onder de foto
 var DETAIL_CHECK_SVG = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.5l2.7 2.7L16 9.6"/></svg>';
 
 function renderEvent(ev, lang) {
@@ -88,8 +88,7 @@ function renderEvent(ev, lang) {
   var rolstoelHtml = ev.rolstoel ?
     '<span class="detail-badge">'+DETAIL_CHECK_SVG+'<span>'+t('detail_rolstoel')+'</span></span>' : '';
 
-  var atletiekHtml = ev.atletiekunie ?
-    '<span class="detail-badge">'+DETAIL_CHECK_SVG+'<span data-i18n="atletiekunie_badge">'+t('atletiekunie_badge')+'</span></span>' : '';
+
 
   var ytHtml = '';
   if (ev.youtube_url) {
@@ -115,9 +114,10 @@ function renderEvent(ev, lang) {
       '</div>'+
     '</div>'+
     '<div class="event-detail__content">'+
-      // Labels en knoppen op één regel onder de foto
-      '<div class="event-detail__intro">'+
-        ((atletiekHtml || rolstoelHtml) ? '<div class="detail-badges">'+atletiekHtml+rolstoelHtml+'</div>' : '')+
+      (rolstoelHtml ? '<div class="detail-badges">'+rolstoelHtml+'</div>' : '')+
+      (desc ? '<p class="event-detail__desc">'+desc+'</p>' : '')+
+      // Alle gegevens in één kaart, in twee kolommen (geen fotogalerij meer)
+      '<section class="event-detail__sidebar" aria-label="'+t('detail_info_label')+'">'+
         '<div class="event-detail__actions">'+
           '<button type="button" class="btn btn--ghost btn--sm bookmark-inline" data-fav-id="'+ev.id+'" aria-pressed="false" onclick="toggleBookmark(event, '+ev.id+')">'+
             BOOKMARK_SVG+'<span class="bookmark-btn__label">'+t('bookmark_save')+'</span>'+
@@ -130,10 +130,6 @@ function renderEvent(ev, lang) {
           '</button>'+
           '<span class="share-status" role="status" aria-live="polite"></span>'+
         '</div>'+
-      '</div>'+
-      (desc ? '<p class="event-detail__desc">'+desc+'</p>' : '')+
-      // Alle gegevens in één kaart, in twee kolommen (geen fotogalerij meer)
-      '<section class="event-detail__sidebar" aria-label="'+t('detail_info_label')+'">'+
         '<div class="detail-info-grid">'+
         '<div class="detail-info-row"><div><div class="detail-info-label">'+t('date_label')+'</div><div class="detail-info-value">'+dateStr+'</div></div></div>'+
         '<div class="detail-info-row"><div><div class="detail-info-label">'+t('location_label')+'</div><div class="detail-info-value">'+titleCase(ev.city)+'</div></div></div>'+
@@ -143,7 +139,12 @@ function renderEvent(ev, lang) {
         (ev.kidsrun ? '<div class="detail-info-row"><div><div class="detail-info-label">'+t('detail_kids')+'</div><div class="detail-info-value">'+(kidsAgeLabel(ev) || t('kids_age_unknown'))+'</div></div></div>' : '')+
         registrationInfoHtml(ev, lang)+
         (catList !== '—' ? '<div class="detail-info-row"><div><div class="detail-info-label">'+t('categories_label')+'</div><div class="detail-info-value">'+catList+'</div></div></div>' : '')+ // leeg = weglaten
-        (ev.organizer ? '<div class="detail-info-row"><div><div class="detail-info-label">'+t('organizer_label')+'</div><div class="detail-info-value">'+ev.organizer+'</div></div></div>' : '')+ // leeg = kopje weglaten
+        // Organisator, met "aangesloten bij de Atletiekunie" als kleine regel eronder.
+        // Geen organisator bekend maar wel aangesloten: dan alleen dat.
+        (ev.organizer || ev.atletiekunie ? '<div class="detail-info-row"><div><div class="detail-info-label">'+t('organizer_label')+'</div><div class="detail-info-value">'+
+          (ev.organizer || '') +
+          (ev.atletiekunie ? '<span class="detail-info-note" data-i18n="atletiekunie_badge">'+t('atletiekunie_badge')+'</span>' : '')+
+        '</div></div></div>' : '')+
         '</div>'+
         (ev.registration_url ? '<a href="'+ev.registration_url+'" target="_blank" rel="noopener noreferrer" class="event-detail__register" data-i18n="register_btn">'+t('register_btn')+'</a>' : '')+
       '</section>'+
