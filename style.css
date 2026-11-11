@@ -1225,10 +1225,10 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
   padding: 0.35rem;
   font-size: 0.7rem;
   font-weight: 700;
-  color: var(--dark3);
+  color: var(--dark);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  background: rgba(196,181,123,0.6); /* #C4B57B, iets transparant */
+  background: var(--salie); /* salie vol (optie B), letters 8,6:1 */
   border-bottom: 1px solid var(--light);
 }
 .calendar-day {
@@ -1550,8 +1550,8 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
   font-size: 0.88rem;
 }
 .training-table th {
-  /* Zelfde groenbeige als de weekdagenrij in de kalender */
-  background: rgba(196,181,123,0.6);
+  /* Zelfde salie als de weekdagenrij in de kalender */
+  background: var(--salie);
   color: var(--dark3);
   padding: 0.7rem 1rem;
   text-align: left;
@@ -1817,17 +1817,17 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
 .run-cal-has-run:hover { background: #D3DCEE; }
 .run-cal-has-run.run-cal-today { background: #E6EBF5; }
 .run-cal-empty { color: var(--light); cursor: default; }
-/* Kop van de hardloopkalender: groenbeige balk over de volle breedte van de kaart */
+/* Kop van de hardloopkalender: salie balk over de volle breedte van de kaart */
 .run-cal-nav {
   display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;
   margin: -1.5rem -1.5rem 1rem; padding: 0.75rem 1.5rem;
-  background: rgba(196,181,123,0.6); border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--salie); border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 .runs-card .run-cal-nav h3 { margin: 0; padding: 0; border-bottom: none; }
-/* Mijn Runs: alle bloktitels in dezelfde groenbeige balk als de hardloopkalender */
+/* Mijn Runs: alle bloktitels in dezelfde salie balk als de hardloopkalender */
 .page-mijnruns .runs-card > h3 {
   margin: -1.5rem -1.5rem 1.25rem; padding: 0.95rem 1.5rem;
-  background: rgba(196,181,123,0.6); border-bottom: none;
+  background: var(--salie); border-bottom: none;
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 .run-cal-nav-title { font-weight: 600; font-size: 0.95rem; text-align: center; flex: 1; }
