@@ -165,25 +165,26 @@ function registrationInfoHtml(ev, lang) {
   function fmt(iso) {
     return new Date(iso + 'T12:00:00').toLocaleDateString(lang === 'en' ? 'en-GB' : 'nl-NL', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
   }
-  var lines = [];
-  if (ev.sold_out) lines.push('<strong>' + t('reg_sold_out') + '</strong>');
-  else if (ev.sold_out_distances) {
-    lines.push('<strong>' + t('reg_full_parts') + ' ' + escapeHtml(ev.sold_out_distances) + '</strong>');
-    lines.push(t('reg_other_open'));
+  // Elk punt een eigen klein kopje met de waarde eronder, zodat het geen
+  // doorlopende tekst wordt
+  var items = [];
+  function item(label, value, note) {
+    items.push('<div class="reg-item"><dt>' + label + '</dt><dd>' + value +
+      (note ? '<span class="reg-item__note">' + note + '</span>' : '') + '</dd></div>');
   }
-  if ((ev.sold_out || ev.sold_out_distances) && ev.availability_checked_at) {
-    lines.push('<span class="detail-info-note">' + t('reg_checked').replace('{date}', fmt(ev.availability_checked_at)) + '</span>');
-  }
+  var checked = ev.availability_checked_at ? t('reg_checked').replace('{date}', fmt(ev.availability_checked_at)) : '';
+  if (ev.sold_out) item(t('reg_lbl_avail'), t('reg_sold_out'), checked);
+  else if (ev.sold_out_distances) item(t('reg_lbl_avail'), t('reg_full_parts') + ' ' + escapeHtml(ev.sold_out_distances), t('reg_other_open') + (checked ? '<br>' + checked : ''));
   if (ev.registration_deadline) {
     var today = new Date().toISOString().slice(0, 10);
-    lines.push((ev.registration_deadline < today ? t('reg_closed') : t('reg_deadline')).replace('{date}', fmt(ev.registration_deadline)));
+    item(ev.registration_deadline < today ? t('reg_lbl_closed') : t('reg_lbl_deadline'), fmt(ev.registration_deadline));
   }
-  if (ev.max_participants) lines.push(t('reg_max').replace('{n}', ev.max_participants.toLocaleString('nl-NL')));
-  if (ev.late_registration === true) lines.push(t('reg_late_yes'));
-  if (ev.late_registration === false) lines.push(t('reg_late_no'));
-  if (!lines.length) return '';
-  return '<div class="detail-info-row"><div><div class="detail-info-label">' + t('detail_registration') + '</div>' +
-    '<div class="detail-info-value detail-info-value--lines">' + lines.join('<br>') + '</div></div></div>';
+  if (ev.max_participants) item(t('reg_lbl_max'), ev.max_participants.toLocaleString('nl-NL'));
+  if (ev.late_registration === true) item(t('reg_lbl_late'), t('yes'));
+  if (ev.late_registration === false) item(t('reg_lbl_late'), t('no'));
+  if (!items.length) return '';
+  return '<div class="detail-info-row"><div style="width:100%"><div class="detail-info-label">' + t('detail_registration') + '</div>' +
+    '<dl class="reg-list">' + items.join('') + '</dl></div></div>';
 }
 
 function escapeHtml(str) {

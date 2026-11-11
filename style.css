@@ -2258,3 +2258,10 @@ body.page-overons { background: var(--white); }
 .date-field__native { position: absolute; right: 0; bottom: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; border: 0; padding: 0; }
 /* Periode: datumvelden onder elkaar, zodat dd-mm-jjjj er helemaal in past */
 .filter-fieldset .filter-group--row { display: grid; grid-template-columns: 1fr; gap: 0.6rem; }
+
+/* Evenementpagina: blok Inschrijven als lijstje met kopjes */
+.reg-list { margin: 0.35rem 0 0; display: grid; gap: 0.7rem; }
+.reg-item { display: grid; gap: 0.1rem; padding-left: 0.7rem; border-left: 3px solid var(--salie); }
+.reg-item dt { font-size: 0.78rem; font-weight: 500; color: var(--dark3); }
+.reg-item dd { margin: 0; font-weight: 600; color: var(--dark); }
+.reg-item__note { display: block; margin-top: 0.15rem; font-size: 0.82rem; font-weight: 400; color: var(--dark3); }
