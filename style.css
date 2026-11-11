@@ -1378,7 +1378,7 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
 .event-detail__hero {
   border-radius: var(--radius-lg);
   overflow: hidden;
-  margin-bottom: 2rem;
+  margin-bottom: 0.8rem; /* gegevenskaart een halve centimeter dichter bij de foto (was 2rem) */
   position: relative;
 }
 .event-detail__hero img {
