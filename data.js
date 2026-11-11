@@ -119,17 +119,29 @@ function distanceKmValues(label) {
 // Afstanden voor op de kaarten: "0.9 | 1.8 | 10 KM". Getallen met een
 // decimale punt, KM één keer aan het eind. Labels die geen gewone km-afstand
 // zijn (bv. "4 mi", "10km - 40km") blijven staan, in hoofdletters.
+// Kidsrun-onderdelen ("Kidsrun 1.5km", "Jeugd 1 km") apart achteraan, in gewone
+// letters: "5 | 10 KM · Kidsrun 1.5 KM". Zo is duidelijk dat de kidsrun de
+// loop van 1,5 km is en niet een losse afstand naast een kidsrun.
+var KIDS_DISTANCE = /^\s*(?:kids\s?run|kidsloop|kinderloop|jeugd(?:loop)?|mini\s?run)\b\s*(.*)$/i;
 function formatDistances(distances) {
   var plain = /^\s*(\d+(?:[.,]\d+)?)\s*(km)?\s*$/i;
-  var list = (distances || []).filter(Boolean);
+  var all = (distances || []).filter(Boolean);
+  var list = all.filter(function(d) { return !KIDS_DISTANCE.test(d); });
+  var kids = all.filter(function(d) { return KIDS_DISTANCE.test(d); });
   function num(m) { return m[1].replace(',', '.'); }
+  var main;
   if (list.length && list.every(function(d) { return plain.test(d); })) {
-    return list.map(function(d) { return num(plain.exec(d)); }).join(' | ') + ' KM';
+    main = list.map(function(d) { return num(plain.exec(d)); }).join(' | ') + ' KM';
+  } else {
+    main = list.map(function(d) {
+      var m = plain.exec(d);
+      return m ? num(m) + ' KM' : String(d).toUpperCase().replace(/(\d),(\d)/g, '$1.$2').replace(/\s*KM\b/g, ' KM');
+    }).join(' | ');
   }
-  return list.map(function(d) {
-    var m = plain.exec(d);
-    return m ? num(m) + ' KM' : String(d).toUpperCase().replace(/(\d),(\d)/g, '$1.$2').replace(/\s*KM\b/g, ' KM');
-  }).join(' | ');
+  if (!kids.length) return main;
+  var kidsKm = kids.map(function(d) { var m = plain.exec(KIDS_DISTANCE.exec(d)[1]); return m ? num(m) : null; }).filter(Boolean);
+  var kidsText = 'Kidsrun' + (kidsKm.length ? ' ' + kidsKm.join(' | ') + ' KM' : '');
+  return main ? main + ' · ' + kidsText : kidsText;
 }
 
 // Afstandsfilter: 'max:10' = minstens één afstand t/m 10 km,

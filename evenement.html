@@ -73,11 +73,8 @@ function getTypeName(type, lang) {
   return (names[lang]||names.nl)[type]||type;
 }
 
-// Static gallery placeholder images
-var GALLERY_IMGS = [
-  'https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=600&q=70',
-  'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=600&q=70'
-];
+// Vinkje in een rondje voor de labels onder de foto (Atletiekunie, aangepast sporten)
+var DETAIL_CHECK_SVG = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M8 12.5l2.7 2.7L16 9.6"/></svg>';
 
 function renderEvent(ev, lang) {
   var name = lang==='en' ? ev.name_en : ev.name_nl;
@@ -89,10 +86,10 @@ function renderEvent(ev, lang) {
   var catList = (ev.categories || []).join(', ') || '—'; // evenementen uit de database hebben (nog) geen categorieën
 
   var rolstoelHtml = ev.rolstoel ?
-    '<div class="atletiekunie-badge"><span>'+t('detail_rolstoel')+'</span></div>' : '';
+    '<span class="detail-badge">'+DETAIL_CHECK_SVG+'<span>'+t('detail_rolstoel')+'</span></span>' : '';
 
   var atletiekHtml = ev.atletiekunie ?
-    '<div class="atletiekunie-badge">🏅 <span data-i18n="atletiekunie_badge">'+t('atletiekunie_badge')+'</span></div>' : '';
+    '<span class="detail-badge">'+DETAIL_CHECK_SVG+'<span data-i18n="atletiekunie_badge">'+t('atletiekunie_badge')+'</span></span>' : '';
 
   var ytHtml = '';
   if (ev.youtube_url) {
@@ -118,11 +115,10 @@ function renderEvent(ev, lang) {
       '</div>'+
     '</div>'+
     '<div class="event-detail__content">'+
-      '<div>'+
-        '<p class="event-detail__desc">'+desc+'</p>'+
-        atletiekHtml+
-        rolstoelHtml+
-        '<div style="margin-top:1.5rem;display:flex;gap:0.75rem;flex-wrap:wrap">'+
+      // Labels en knoppen op één regel onder de foto
+      '<div class="event-detail__intro">'+
+        ((atletiekHtml || rolstoelHtml) ? '<div class="detail-badges">'+atletiekHtml+rolstoelHtml+'</div>' : '')+
+        '<div class="event-detail__actions">'+
           '<button type="button" class="btn btn--ghost btn--sm bookmark-inline" data-fav-id="'+ev.id+'" aria-pressed="false" onclick="toggleBookmark(event, '+ev.id+')">'+
             BOOKMARK_SVG+'<span class="bookmark-btn__label">'+t('bookmark_save')+'</span>'+
           '</button>'+
@@ -134,15 +130,11 @@ function renderEvent(ev, lang) {
           '</button>'+
           '<span class="share-status" role="status" aria-live="polite"></span>'+
         '</div>'+
-        '<div class="detail-gallery" style="margin-top:2rem;">'+
-          '<h3>'+t('gallery_title')+'</h3>'+
-          '<div class="detail-gallery__grid">'+
-            GALLERY_IMGS.map(function(src){ return '<img src="'+src+'" alt="" loading="lazy">'; }).join('')+
-          '</div>'+
-        '</div>'+
-        ytHtml+
       '</div>'+
-      '<aside class="event-detail__sidebar">'+
+      (desc ? '<p class="event-detail__desc">'+desc+'</p>' : '')+
+      // Alle gegevens in één kaart, in twee kolommen (geen fotogalerij meer)
+      '<section class="event-detail__sidebar" aria-label="'+t('detail_info_label')+'">'+
+        '<div class="detail-info-grid">'+
         '<div class="detail-info-row"><div><div class="detail-info-label">'+t('date_label')+'</div><div class="detail-info-value">'+dateStr+'</div></div></div>'+
         '<div class="detail-info-row"><div><div class="detail-info-label">'+t('location_label')+'</div><div class="detail-info-value">'+titleCase(ev.city)+'</div></div></div>'+
         '<div class="detail-info-row"><div><div class="detail-info-label">'+t('province_label')+'</div><div class="detail-info-value">'+ev.province+'</div></div></div>'+
@@ -152,8 +144,10 @@ function renderEvent(ev, lang) {
         registrationInfoHtml(ev, lang)+
         (catList !== '—' ? '<div class="detail-info-row"><div><div class="detail-info-label">'+t('categories_label')+'</div><div class="detail-info-value">'+catList+'</div></div></div>' : '')+ // leeg = weglaten
         (ev.organizer ? '<div class="detail-info-row"><div><div class="detail-info-label">'+t('organizer_label')+'</div><div class="detail-info-value">'+ev.organizer+'</div></div></div>' : '')+ // leeg = kopje weglaten
+        '</div>'+
         (ev.registration_url ? '<a href="'+ev.registration_url+'" target="_blank" rel="noopener noreferrer" class="event-detail__register" data-i18n="register_btn">'+t('register_btn')+'</a>' : '')+
-      '</aside>'+
+      '</section>'+
+      ytHtml+
     '</div>'+
   '</div>';
 }
