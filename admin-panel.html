@@ -161,6 +161,18 @@
     .btn-del:hover   { background: #3d9085; }
     .no-events { text-align: center; color: #aaa; padding: 24px; font-size: .88rem; }
     .price-reminder { border: 1.5px solid #ffd166; background: #fffbeb; }
+    .missing-links { border: 1.5px solid #b6b88d; background: #fafaf4; }
+    .missing-links summary { cursor: pointer; }
+    .missing-links ul { list-style: none; margin: 0; padding: 0; }
+    .missing-links li { display: grid; grid-template-columns: minmax(220px, 1.1fr) minmax(240px, 1.4fr) auto; gap: 8px 12px; align-items: center; padding: 9px 0; border-bottom: 1px solid #ecebe0; font-size: .86rem; }
+    .missing-links li:last-child { border-bottom: none; }
+    .missing-links .ml-meta { color: #666; font-size: .78rem; }
+    .missing-links input[type="url"] { width: 100%; padding: 6px 8px; border: 1px solid #cfd2d6; border-radius: 6px; font-size: .84rem; }
+    .missing-links input[aria-invalid="true"] { border-color: #c0392b; }
+    .missing-links .ml-actions { display: flex; gap: 6px; align-items: center; white-space: nowrap; }
+    .missing-links .ml-actions a { color: #4f7cff; font-size: .8rem; font-weight: 600; }
+    .missing-links .ml-msg { grid-column: 1 / -1; font-size: .78rem; color: #c0392b; }
+    @media (max-width: 760px) { .missing-links li { grid-template-columns: 1fr; } }
     .price-reminder h2 { border-bottom-color: #ffe8a3; }
     .price-reminder li {
       display: flex; justify-content: space-between; align-items: center; gap: 10px;
@@ -245,6 +257,19 @@
       tijd om even op de organisatorsite te kijken of de prijs inmiddels bekend is.
     </p>
     <ul id="price-reminder-list" style="list-style:none"></ul>
+  </div>
+
+  <!-- Gepubliceerde komende evenementen zonder inschrijflink: link direct invullen -->
+  <div class="card missing-links" id="missing-links-card" hidden>
+    <details open>
+      <summary><h2 style="display:inline">🔗 Zonder inschrijflink (<span id="missing-links-count"></span>)</h2></summary>
+      <p style="font-size:.85rem;color:#666;margin:10px 0 12px">
+        Bij deze evenementen staat geen knop "Info &amp; Inschrijven" op de site, omdat er geen link naar de
+        organisator is. Zoek de site van de organisator op, plak de link en klik Opslaan. Links naar andere
+        agenda-sites (zoals hardlopen.nl) worden niet geaccepteerd.
+      </p>
+      <ul id="missing-links-list"></ul>
+    </details>
   </div>
 
   <!-- Formulier: nieuw event toevoegen / bewerken -->
@@ -806,7 +831,7 @@ document.getElementById('event-form').addEventListener('submit', async e => {
     msg.className = 'submit-msg ok';
     msg.style.display = 'block';
     renderEventsTable();
-    renderPriceReminder(); // prijs ingevuld? dan verdwijnt het event uit "Prijs nog niet bekend"
+    renderPriceReminder(); renderMissingLinks(); // prijs ingevuld? dan verdwijnt het event uit "Prijs nog niet bekend"
   } catch (err) {
     msg.textContent = '❌ Fout: ' + err.message;
     msg.className = 'submit-msg err';
@@ -854,7 +879,7 @@ async function loadEventsTable() {
       return d !== 0 ? d : (a.name_nl || '').localeCompare(b.name_nl || '');
     });
     renderEventsTable();
-    renderPriceReminder();
+    renderPriceReminder(); renderMissingLinks();
   } catch (err) {
     const msg = `<tr><td colspan="9" class="no-events" style="color:#c0392b">Fout: ${err.message}</td></tr>`;
     tbody.innerHTML = msg;
@@ -1001,6 +1026,59 @@ function renderEventsTable() {
 // 4 maanden plaatsvinden — zelfde signaal als de geplande e-mail
 // (scraper/check-pending-prices.js), maar dan meteen zichtbaar zodra je
 // inlogt, zonder op een vaste datum te hoeven wachten.
+// ─── Zonder inschrijflink ──────────────────────────────────────
+// Andere agenda-sites: geen inschrijflink (zie ook evenement.html)
+const AGGREGATOR_URL_ADMIN = /^https?:\/\/(?:www\.)?(?:hardlopen\.nl|hardloopkalendernederland\.nl|runphy\.nl|loopjeloopje\.nl|entryfee\.run)\b/i;
+
+function renderMissingLinks() {
+  const card = document.getElementById('missing-links-card');
+  const list = document.getElementById('missing-links-list');
+  const todayStr = new Date().toISOString().split('T')[0];
+  const missing = allEvents
+    .filter(ev => ev.published && (ev.date || '') >= todayStr && !(ev.registration_url || '').trim())
+    .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+  card.hidden = missing.length === 0;
+  document.getElementById('missing-links-count').textContent = missing.length;
+  list.innerHTML = missing.map(ev => {
+    const q = encodeURIComponent([ev.name_nl, ev.city, ev.organizer].filter(Boolean).join(' '));
+    return `<li data-id="${ev.id}">
+      <div><strong>${esc(ev.name_nl)}</strong><div class="ml-meta">${esc(ev.date || '')} · ${esc(ev.city || '')}${ev.organizer ? ' · ' + esc(ev.organizer) : ''}</div></div>
+      <input type="url" id="ml-${ev.id}" placeholder="https://site-van-de-organisator.nl/..." aria-label="Inschrijflink voor ${esc(ev.name_nl)}"
+        onkeydown="if (event.key === 'Enter') { event.preventDefault(); saveMissingLink('${ev.id}'); }">
+      <div class="ml-actions">
+        <button type="button" class="btn-table btn-accept" onclick="saveMissingLink('${ev.id}')">Opslaan</button>
+        <a href="https://www.google.com/search?q=${q}" target="_blank" rel="noopener">Zoeken ↗</a>
+      </div>
+      <div class="ml-msg" id="ml-msg-${ev.id}" role="alert"></div>
+    </li>`;
+  }).join('');
+}
+
+async function saveMissingLink(id) {
+  const input = document.getElementById('ml-' + id);
+  const msg = document.getElementById('ml-msg-' + id);
+  const url = (input.value || '').trim();
+  msg.textContent = '';
+  if (!/^https?:\/\/\S+\.\S+/i.test(url)) {
+    input.setAttribute('aria-invalid', 'true');
+    msg.textContent = 'Dit is geen geldige link. Begin met https:// en plak het hele adres.';
+    return;
+  }
+  if (AGGREGATOR_URL_ADMIN.test(url)) {
+    input.setAttribute('aria-invalid', 'true');
+    msg.textContent = 'Dit is een andere agenda-site. Gebruik de site van de organisator zelf.';
+    return;
+  }
+  try {
+    await updateEvent(id, { registration_url: url });
+    const ev = allEvents.find(e => String(e.id) === String(id));
+    if (ev) ev.registration_url = url;
+    renderMissingLinks();
+  } catch (err) {
+    msg.textContent = 'Opslaan lukte niet: ' + err.message;
+  }
+}
+
 function renderPriceReminder() {
   const card = document.getElementById('price-reminder-card');
   const list = document.getElementById('price-reminder-list');
@@ -1105,7 +1183,7 @@ async function acceptPriceSuggestion(id, price) {
     await updateEvent(id, fields);
     Object.assign(ev, fields);
     renderEventsTable();
-    renderPriceReminder();
+    renderPriceReminder(); renderMissingLinks();
   } catch (err) {
     alert('Fout bij opslaan: ' + err.message);
   }
