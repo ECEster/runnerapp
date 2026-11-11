@@ -150,7 +150,7 @@ function renderEvent(ev, lang) {
         '<div class="detail-info-row"><div><div class="detail-info-label">'+t('price_label')+'</div><div class="detail-info-value">'+(!ev.paid ? t('free') : (ev.price ? formatPrice(ev.price) : (t('price_unknown') + (ev.registration_url ? ' · <a href="'+ev.registration_url+'" target="_blank" rel="noopener noreferrer" style="color:var(--dark3);font-size:0.9rem;">'+t('see_website')+'</a>' : ''))))+'</div></div></div>'+
         (ev.kidsrun ? '<div class="detail-info-row"><div><div class="detail-info-label">'+t('detail_kids')+'</div><div class="detail-info-value">'+(kidsAgeLabel(ev) || t('kids_age_unknown'))+'</div></div></div>' : '')+
         registrationInfoHtml(ev, lang)+
-        '<div class="detail-info-row"><div><div class="detail-info-label">'+t('categories_label')+'</div><div class="detail-info-value">'+catList+'</div></div></div>'+
+        (catList !== '—' ? '<div class="detail-info-row"><div><div class="detail-info-label">'+t('categories_label')+'</div><div class="detail-info-value">'+catList+'</div></div></div>' : '')+ // leeg = weglaten
         (ev.organizer ? '<div class="detail-info-row"><div><div class="detail-info-label">'+t('organizer_label')+'</div><div class="detail-info-value">'+ev.organizer+'</div></div></div>' : '')+ // leeg = kopje weglaten
         (ev.registration_url ? '<a href="'+ev.registration_url+'" target="_blank" rel="noopener noreferrer" class="event-detail__register" data-i18n="register_btn">'+t('register_btn')+'</a>' : '')+
       '</aside>'+
@@ -165,12 +165,11 @@ function registrationInfoHtml(ev, lang) {
   function fmt(iso) {
     return new Date(iso + 'T12:00:00').toLocaleDateString(lang === 'en' ? 'en-GB' : 'nl-NL', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
   }
-  // Elk punt een eigen klein kopje met de waarde eronder, zodat het geen
-  // doorlopende tekst wordt
+  // Elk punt een eigen regel in de zijkolom (zelfde opmaak als Datum, Locatie, ...)
   var items = [];
   function item(label, value, note) {
-    items.push('<div class="reg-item"><dt>' + label + '</dt><dd>' + value +
-      (note ? '<span class="reg-item__note">' + note + '</span>' : '') + '</dd></div>');
+    items.push('<div class="detail-info-row"><div><div class="detail-info-label">' + label + '</div>' +
+      '<div class="detail-info-value">' + value + (note ? '<span class="detail-info-note">' + note + '</span>' : '') + '</div></div></div>');
   }
   var checked = ev.availability_checked_at ? t('reg_checked').replace('{date}', fmt(ev.availability_checked_at)) : '';
   if (ev.sold_out) item(t('reg_lbl_avail'), t('reg_sold_out'), checked);
@@ -182,9 +181,7 @@ function registrationInfoHtml(ev, lang) {
   if (ev.max_participants) item(t('reg_lbl_max'), ev.max_participants.toLocaleString('nl-NL'));
   if (ev.late_registration === true) item(t('reg_lbl_late'), t('yes'));
   if (ev.late_registration === false) item(t('reg_lbl_late'), t('no'));
-  if (!items.length) return '';
-  return '<div class="detail-info-row"><div style="width:100%"><div class="detail-info-label">' + t('detail_registration') + '</div>' +
-    '<dl class="reg-list">' + items.join('') + '</dl></div></div>';
+  return items.join('');
 }
 
 function escapeHtml(str) {

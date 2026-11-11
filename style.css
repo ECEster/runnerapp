@@ -1415,16 +1415,18 @@ a.day-panel__name:hover { text-decoration: underline; text-underline-offset: 3px
   top: 80px;
 }
 .detail-info-row {
+  /* Elk gegeven apart: salie streepje links, klein kopje, waarde vet eronder */
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid var(--surface2);
+  padding: 0.15rem 0 0.15rem 0.75rem;
+  margin-bottom: 0.85rem;
+  border-left: 3px solid var(--salie);
 }
-.detail-info-row:last-of-type { border-bottom: none; }
+.detail-info-row:last-of-type { margin-bottom: 0; }
 .detail-info-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
-.detail-info-label { font-size: 0.75rem; font-weight: 700; color: var(--mid); text-transform: uppercase; letter-spacing: 0.06em; }
-.detail-info-value { font-size: 0.92rem; font-weight: 600; color: var(--dark); margin-top: 0.15rem; }
+.detail-info-label { font-size: 0.78rem; font-weight: 500; color: var(--dark3); }
+.detail-info-value { font-size: 0.95rem; font-weight: 600; color: var(--dark); margin-top: 0.1rem; }
 .event-detail__register {
   margin-top: 1.25rem;
   display: block;
@@ -2197,7 +2199,7 @@ body.page-overons { background: var(--white); }
 .event-card__photo-badge--soldout { background: rgba(17,24,39,0.85); border-color: rgba(255,255,255,0.6); }
 .event-card__soldout-note { font-size: 0.75rem; font-weight: 700; color: var(--dark); white-space: nowrap; margin-left: -0.35rem; } /* dicht achter de prijs (de footer heeft een gap) */
 .detail-info-value--lines { line-height: 1.6; }
-.detail-info-note { font-size: 0.82rem; color: var(--dark3); }
+.detail-info-note { display: block; margin-top: 0.15rem; font-size: 0.82rem; font-weight: 400; color: var(--dark3); }
 
 /* Mijn Runs: herinneringen */
 .reminder-form { display: grid; gap: 0.75rem; margin-top: 0.75rem; max-width: 560px; }
@@ -2259,9 +2261,3 @@ body.page-overons { background: var(--white); }
 /* Periode: datumvelden onder elkaar, zodat dd-mm-jjjj er helemaal in past */
 .filter-fieldset .filter-group--row { display: grid; grid-template-columns: 1fr; gap: 0.6rem; }
 
-/* Evenementpagina: blok Inschrijven als lijstje met kopjes */
-.reg-list { margin: 0.35rem 0 0; display: grid; gap: 0.7rem; }
-.reg-item { display: grid; gap: 0.1rem; padding-left: 0.7rem; border-left: 3px solid var(--salie); }
-.reg-item dt { font-size: 0.78rem; font-weight: 500; color: var(--dark3); }
-.reg-item dd { margin: 0; font-weight: 600; color: var(--dark); }
-.reg-item__note { display: block; margin-top: 0.15rem; font-size: 0.82rem; font-weight: 400; color: var(--dark3); }
