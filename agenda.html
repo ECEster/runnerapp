@@ -48,12 +48,18 @@
 <!-- ── PAGE HEADER ─────────────────────────────────────────── -->
 <!-- Bannervideo (stond eerst op de homepagina) -->
 <section class="hero hero--agenda">
-  <video class="hero__video" id="hero-video" autoplay muted playsinline loop preload="auto" poster="images/bannervideo-start.jpg" aria-hidden="true">
+  <!-- Speelt één keer af en blijft dan staan op het laatste beeld -->
+  <video class="hero__video" id="hero-video" autoplay muted playsinline preload="auto" poster="images/bannervideo-start.jpg" aria-hidden="true">
     <source src="videos/bannervideo.mp4" type="video/mp4">
   </video>
   <div class="hero__content">
     <h1 data-i18n="agenda_title">Agenda</h1>
   </div>
+  <button type="button" class="hero__control" id="hero-video-btn" hidden>
+    <svg class="hero__control-icon hero__control-icon--pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+    <svg class="hero__control-icon hero__control-icon--play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>
+    <span class="hero__control-label"></span>
+  </button>
 </section>
 
 <!-- ── REGIO NAV ───────────────────────────────────────────── -->
@@ -625,6 +631,7 @@ function toggleLang() {
   var btnM = document.getElementById('lang-toggle-mobile');
   if (btnM) btnM.textContent = I18N[lang].nav_language;
   applyFilters();
+  document.dispatchEvent(new Event('langchange'));
 }
 function toggleMobileNav() { document.getElementById('mobile-nav').classList.toggle('open'); }
 
@@ -651,12 +658,41 @@ document.querySelectorAll('aside input').forEach(function(el) {
 })();
 </script>
 <script>
-// Bannervideo: bij "minder beweging" blijft de stilstaande foto staan
+// Bannervideo: speelt één keer af, pauzeert zodra je naar beneden scrolt (en
+// loopt verder als je weer bovenaan bent), en heeft een knop om te pauzeren of
+// opnieuw af te spelen. Bij "minder beweging" start hij niet vanzelf.
 (function () {
   var v = document.getElementById('hero-video');
-  if (v && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    v.removeAttribute('autoplay'); v.pause();
+  var btn = document.getElementById('hero-video-btn');
+  if (!v || !btn) return;
+  var label = btn.querySelector('.hero__control-label');
+  var userPaused = false;
+
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    v.removeAttribute('autoplay'); v.pause(); userPaused = true;
   }
+
+  function update() {
+    var playing = !v.paused && !v.ended;
+    btn.classList.toggle('is-playing', playing);
+    label.textContent = playing ? t('video_pause') : (v.ended ? t('video_replay') : t('video_play'));
+  }
+
+  btn.addEventListener('click', function () {
+    if (!v.paused && !v.ended) { userPaused = true; v.pause(); }
+    else { userPaused = false; if (v.ended) v.currentTime = 0; v.play().catch(function () {}); }
+  });
+  ['play', 'pause', 'ended'].forEach(function (e) { v.addEventListener(e, update); });
+
+  // Naar beneden gescrold: pauzeren; weer bovenaan: verder (tenzij zelf gepauzeerd of al afgelopen)
+  window.addEventListener('scroll', function () {
+    if (window.scrollY > 40) { if (!v.paused) v.pause(); }
+    else if (window.scrollY < 10 && v.paused && !v.ended && !userPaused) { v.play().catch(function () {}); }
+  }, { passive: true });
+
+  btn.hidden = false;
+  update();
+  document.addEventListener('langchange', update);
 })();
 </script>
 </body>
