@@ -58,7 +58,6 @@
   <button type="button" class="hero__control" id="hero-video-btn" hidden>
     <svg class="hero__control-icon hero__control-icon--pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
     <svg class="hero__control-icon hero__control-icon--play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>
-    <span class="hero__control-label"></span>
   </button>
 </section>
 
@@ -665,7 +664,6 @@ document.querySelectorAll('aside input').forEach(function(el) {
   var v = document.getElementById('hero-video');
   var btn = document.getElementById('hero-video-btn');
   if (!v || !btn) return;
-  var label = btn.querySelector('.hero__control-label');
   var userPaused = false;
 
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -675,7 +673,10 @@ document.querySelectorAll('aside input').forEach(function(el) {
   function update() {
     var playing = !v.paused && !v.ended;
     btn.classList.toggle('is-playing', playing);
-    label.textContent = playing ? t('video_pause') : (v.ended ? t('video_replay') : t('video_play'));
+    // Alleen een pictogram; de naam van de knop staat in aria-label (voor screenreaders)
+    var name = playing ? t('video_pause') : (v.ended ? t('video_replay') : t('video_play'));
+    btn.setAttribute('aria-label', name);
+    btn.title = name;
   }
 
   btn.addEventListener('click', function () {

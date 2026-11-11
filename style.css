@@ -2233,15 +2233,15 @@ body.page-overons { background: var(--white); }
 /* Pauze-/afspeelknop in de bannervideo (agenda) */
 .hero__control {
   position: absolute; right: 16px; bottom: 14px; z-index: 3;
-  display: inline-flex; align-items: center; gap: 0.4rem;
-  min-height: 32px; padding: 0.35rem 0.75rem;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; padding: 0;
   background: rgba(17,24,39,0.7); color: var(--white);
   border: 1px solid rgba(255,255,255,0.45); border-radius: 999px;
   font: 600 0.8rem var(--font-head); cursor: pointer;
 }
 .hero__control:hover { background: rgba(17,24,39,0.85); }
 .hero__control:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; }
-.hero__control-icon { width: 14px; height: 14px; fill: currentColor; }
+.hero__control-icon { width: 16px; height: 16px; fill: currentColor; }
 .hero__control-icon--pause { display: none; }
 .hero__control.is-playing .hero__control-icon--pause { display: block; }
 .hero__control.is-playing .hero__control-icon--play { display: none; }
