@@ -2279,3 +2279,7 @@ body.page-overons { background: var(--white); }
 @media (max-width: 640px) {
   .detail-info-grid { grid-template-columns: 1fr; }
 }
+
+/* Evenementpagina: typelabel rechtsboven op de foto (optie B) */
+.event-detail__labels { position: absolute; top: 16px; right: 16px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.event-detail__labels .detail-type-label { margin: 0; }

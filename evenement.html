@@ -111,9 +111,12 @@ function renderEvent(ev, lang) {
     renderBreadcrumbs(name)+
     '<div class="event-detail__hero">'+
       '<img src="'+getEventImage(ev)+'" alt="">'+
-      '<div class="event-detail__hero-overlay">'+
+      // Typelabel(s) rechtsboven op de foto, los van de titel
+      '<div class="event-detail__labels">'+
         '<span class="detail-type-label">'+typeName+'</span>'+
         (ev.type2 ? '<span class="detail-type-label">'+getTypeName(ev.type2, lang)+'</span>' : '')+
+      '</div>'+
+      '<div class="event-detail__hero-overlay">'+
         '<h1 class="event-detail__title">'+softHyphenate(name)+'</h1>'+
       '</div>'+
     '</div>'+
