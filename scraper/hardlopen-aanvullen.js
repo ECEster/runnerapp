@@ -24,6 +24,7 @@ import { collectHardlopenEvents } from './lib/parseHardlopen.js'
 import { persistProvinceCache } from './lib/resolveProvince.js'
 import { namesLikelyMatch } from './lib/nameSimilarity.js'
 import { namesClearlyDifferent, normalize } from './lib/dedupe.js'
+import { fetchPaged } from './lib/fetchPaged.js'
 
 const URL_BASE = (process.env.SUPABASE_URL || '').replace(/\/$/, '')
 const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -57,7 +58,7 @@ async function main() {
   persistProvinceCache()
   console.log(`${items.length} evenementen op hardlopen.nl (zonder trainingslopen)`)
 
-  const res = await fetch(
+  const res = await fetchPaged(
     `${URL_BASE}/rest/v1/events?select=id,name_nl,date,end_date,city,province,price,organizer,atletiekunie,registration_deadline,late_registration,max_participants,kidsrun&date=gte.${today}`,
     { headers: HEADERS },
   )

@@ -25,6 +25,7 @@ try {
 
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { extractPrice, findPriceLinks } from './lib/extractPrice.js'
+import { fetchPaged } from './lib/fetchPaged.js'
 
 const URL_BASE = (process.env.SUPABASE_URL || '').replace(/\/$/, '')
 const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -71,7 +72,7 @@ async function findPrice(url) {
 async function main() {
   if (!URL_BASE || !KEY) throw new Error('SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY ontbreken (zie .env.example)')
   const today = new Date().toISOString().slice(0, 10)
-  const res = await fetch(
+  const res = await fetchPaged(
     `${URL_BASE}/rest/v1/events?select=id,name_nl,date,price,registration_url,price_suggestion,price_suggestion_rejected,price_checked_at&date=gte.${today}&order=date`,
     { headers: HEADERS },
   )

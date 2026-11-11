@@ -132,7 +132,7 @@ export function parseHardlopenDetail(html) {
   const maxN = max !== -1 ? parseInt((lines[max + 1] || '').replace(/\./g, ''), 10) : NaN
   return {
     onderdelen,
-    website: site ? site[1] : null,
+    website: site ? site[1].replace(/&amp;/g, '&') : null,
     maxDeelnemers: maxN > 0 ? maxN : null,
     deadline: sluitDatum && MONTHS[sluitDatum[2].toLowerCase()]
       ? `${sluitDatum[3]}-${String(MONTHS[sluitDatum[2].toLowerCase()]).padStart(2, '0')}-${sluitDatum[1].padStart(2, '0')}`

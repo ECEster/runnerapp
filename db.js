@@ -9,13 +9,25 @@ const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 // (bovenop STATIC_EVENTS uit data.js, niet in plaats daarvan). Een
 // database-event met hetzelfde id als een statisch event overschrijft
 // dat statische event.
+// Supabase geeft per opvraging maximaal 1000 rijen; daarom in porties ophalen
+async function selectAllRows(buildQuery) {
+    const rows = [];
+    for (let from = 0; ; from += 1000) {
+        const { data, error } = await buildQuery().range(from, from + 999);
+        if (error) return { data: null, error };
+        rows.push(...data);
+        if (data.length < 1000) return { data: rows, error: null };
+    }
+}
+
 async function loadEventsFromDB() {
-    const { data, error } = await db
+    const { data, error } = await selectAllRows(() => db
         .from('events')
         .select('*')
         .eq('published', true)
         .order('date', { ascending: true })
-        .order('name_nl', { ascending: true });
+        .order('name_nl', { ascending: true })
+        .order('id', { ascending: true }));
 
     if (error) {
         console.warn('Supabase fout, gebruik lokale data:', error.message);
@@ -122,11 +134,12 @@ async function updateEvent(id, updates) {
 
 // Haal ALLE events op (ook ongepubliceerde) — alleen voor admin
 async function loadAllEventsAdmin() {
-    const { data, error } = await db
+    const { data, error } = await selectAllRows(() => db
         .from('events')
         .select('*')
         .order('date', { ascending: true })
-        .order('name_nl', { ascending: true });
+        .order('name_nl', { ascending: true })
+        .order('id', { ascending: true }));
     if (error) throw error;
     return data;
 }

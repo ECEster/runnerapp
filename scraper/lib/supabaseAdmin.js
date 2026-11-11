@@ -1,3 +1,4 @@
+import { fetchPaged } from './fetchPaged.js'
 // Server-side Supabase-toegang met de service_role key. NOOIT importeren vanuit
 // frontend-/browsercode — deze sleutel negeert Row Level Security volledig.
 //
@@ -34,7 +35,7 @@ const EXISTING_EVENT_FIELDS =
   'id,name_nl,date,city,province,distances,registration_url,source_url,image,type,organizer,kidsrun,serie,editie'
 
 export async function fetchExistingEventKeys() {
-  const res = await fetch(`${baseUrl()}/rest/v1/events?select=${EXISTING_EVENT_FIELDS}`, {
+  const res = await fetchPaged(`${baseUrl()}/rest/v1/events?select=${EXISTING_EVENT_FIELDS}`, {
     headers: headers(),
   })
   if (!res.ok) {
@@ -63,7 +64,7 @@ export async function updateEventFields(id, fields) {
 // serie te berekenen (name_nl, city) en te bepalen of dat al gebeurd is
 // (serie), plus id + date om te updaten en op te groeperen.
 export async function fetchAllEventsForBackfill() {
-  const res = await fetch(`${baseUrl()}/rest/v1/events?select=id,name_nl,city,date,serie`, {
+  const res = await fetchPaged(`${baseUrl()}/rest/v1/events?select=id,name_nl,city,date,serie`, {
     headers: headers(),
   })
   if (!res.ok) {
@@ -76,7 +77,7 @@ export async function fetchAllEventsForBackfill() {
 // kleine letters) — voor check-pending-prices.js, de geplande herinnering
 // om zulke evenementen tegen het einde van het jaar opnieuw te checken.
 export async function fetchEventsWithPendingPrice() {
-  const res = await fetch(
+  const res = await fetchPaged(
     `${baseUrl()}/rest/v1/events?price=ilike.*volgt*&select=id,name_nl,date,registration_url,source_url`,
     { headers: headers() },
   )

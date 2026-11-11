@@ -25,6 +25,7 @@ try {
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { namesLikelyMatch } from './lib/nameSimilarity.js'
 import { namesClearlyDifferent, normalize } from './lib/dedupe.js'
+import { fetchPaged } from './lib/fetchPaged.js'
 
 const URL_BASE = (process.env.SUPABASE_URL || '').replace(/\/$/, '')
 const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -165,7 +166,7 @@ async function main() {
   const races = groupRaces(rows).filter((r) => r.date >= today)
   console.log(`${races.length} komende evenementen met prijs op entryfee.run`)
 
-  const res = await fetch(
+  const res = await fetchPaged(
     `${URL_BASE}/rest/v1/events?select=id,name_nl,date,end_date,city,province,price,price_suggestion,price_suggestion_rejected&date=gte.${today}`,
     { headers: HEADERS },
   )

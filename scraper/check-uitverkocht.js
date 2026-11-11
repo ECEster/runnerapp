@@ -32,6 +32,7 @@ import { htmlToText } from './lib/extractPrice.js'
 import { extractMaxParticipants } from './lib/extractMaxParticipants.js'
 import { detectKidsrunText } from './lib/detectKidsrunText.js'
 import { extractKidsAges } from './lib/extractKidsAges.js'
+import { fetchPaged } from './lib/fetchPaged.js'
 
 const URL_BASE = (process.env.SUPABASE_URL || '').replace(/\/$/, '')
 const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -117,7 +118,7 @@ async function main() {
   if (!URL_BASE || !KEY) throw new Error('SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY ontbreken (zie .env.example)')
   console.log(isLive ? '=== LIVE ===' : '=== DRY RUN (niets wordt opgeslagen) ===')
   const today = new Date().toISOString().slice(0, 10)
-  const res = await fetch(
+  const res = await fetchPaged(
     `${URL_BASE}/rest/v1/events?select=id,name_nl,date,registration_url,sold_out,sold_out_distances,sold_out_suggestion,sold_out_suggestion_rejected,max_participants,kidsrun,kidsrun_suggestion_quote,kidsrun_suggestion_rejected,kids_min_age,kids_max_age&date=gte.${today}&published=eq.true&order=date`,
     { headers: HEADERS },
   )

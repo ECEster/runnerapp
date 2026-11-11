@@ -20,6 +20,7 @@ try {
 }
 
 import { mkdirSync, writeFileSync } from 'node:fs'
+import { fetchPaged } from './lib/fetchPaged.js'
 
 const URL_BASE = (process.env.SUPABASE_URL || '').replace(/\/$/, '')
 const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -156,7 +157,7 @@ async function findOrganizer(ev) {
 async function main() {
   if (!URL_BASE || !KEY) throw new Error('SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY ontbreken (zie .env.example)')
   const today = new Date().toISOString().slice(0, 10)
-  const res = await fetch(`${URL_BASE}/rest/v1/events?select=id,name_nl,date,city,registration_url,organizer&date=gte.${today}&or=(organizer.is.null,organizer.eq.)&order=date`, { headers: HEADERS })
+  const res = await fetchPaged(`${URL_BASE}/rest/v1/events?select=id,name_nl,date,city,registration_url,organizer&date=gte.${today}&or=(organizer.is.null,organizer.eq.)&order=date`, { headers: HEADERS })
   const events = await res.json()
   console.log(isLive ? '=== LIVE ===' : '=== DRY RUN (niets wordt opgeslagen) ===')
   console.log(`${events.length} komende events zonder organisator`)
