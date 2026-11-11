@@ -14,8 +14,8 @@
 <!-- ── NAV ─────────────────────────────────────────────────── -->
 <nav class="nav">
   <div class="nav__inner">
-    <a href="index.html" class="nav__logo">
-      <a href="index.html" class="nav__logo-link"><img src="images/logo.svg" alt="RunningNederland" class="nav__logo-img"></a>
+    <a href="agenda.html" class="nav__logo">
+      <a href="agenda.html" class="nav__logo-link"><img src="images/logo.svg" alt="RunningNederland" class="nav__logo-img"></a>
     </a>
     <div class="nav__links">
       <a href="agenda.html" class="active" data-i18n="nav_agenda">Agenda</a>
@@ -193,8 +193,7 @@ function escapeHtml(str) {
 }
 
 function renderBreadcrumbs(eventName) {
-  var items = '<li><a href="index.html">Home</a></li>'+
-    '<li><a href="agenda.html">'+t('nav_agenda')+'</a></li>';
+  var items = '<li><a href="agenda.html">'+t('nav_agenda')+'</a></li>';
   if (eventName) items += '<li aria-current="page"><span title="'+escapeHtml(eventName)+'">'+escapeHtml(eventName)+'</span></li>';
   return '<nav class="breadcrumbs" aria-label="'+t('breadcrumb_label')+'"><ol>'+items+'</ol></nav>';
 }

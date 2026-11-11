@@ -14,8 +14,8 @@
 <!-- ── NAV ─────────────────────────────────────────────────── -->
 <nav class="nav">
   <div class="nav__inner">
-    <a href="index.html" class="nav__logo">
-      <a href="index.html" class="nav__logo-link"><img src="images/logo.svg" alt="RunningNederland" class="nav__logo-img"></a>
+    <a href="agenda.html" class="nav__logo">
+      <a href="agenda.html" class="nav__logo-link"><img src="images/logo.svg" alt="RunningNederland" class="nav__logo-img"></a>
     </a>
     <div class="nav__links">
       <a href="agenda.html" class="active" data-i18n="nav_agenda">Agenda</a>
@@ -46,9 +46,15 @@
 </nav>
 
 <!-- ── PAGE HEADER ─────────────────────────────────────────── -->
-<div class="page-header page-header--photo page-header--agenda" style="background-image:url('images/agenda-banner.jpg')">
-  <h1 data-i18n="agenda_title">Agenda</h1>
-</div>
+<!-- Bannervideo (stond eerst op de homepagina) -->
+<section class="hero hero--agenda">
+  <video class="hero__video" id="hero-video" autoplay muted playsinline loop preload="auto" poster="images/bannervideo-start.jpg" aria-hidden="true">
+    <source src="videos/bannervideo.mp4" type="video/mp4">
+  </video>
+  <div class="hero__content">
+    <h1 data-i18n="agenda_title">Agenda</h1>
+  </div>
+</section>
 
 <!-- ── REGIO NAV ───────────────────────────────────────────── -->
 <div class="container" style="padding-top:1.5rem;padding-bottom:0;">
@@ -642,6 +648,15 @@ document.querySelectorAll('aside input').forEach(function(el) {
   await loadEventsFromDB().catch(function(){ return false; });
   loadFiltersFromHash();
   applyFilters();
+})();
+</script>
+<script>
+// Bannervideo: bij "minder beweging" blijft de stilstaande foto staan
+(function () {
+  var v = document.getElementById('hero-video');
+  if (v && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    v.removeAttribute('autoplay'); v.pause();
+  }
 })();
 </script>
 </body>

@@ -1,0 +1,4 @@
+# De agenda is de startpagina (de homepagina met uitgelichte evenementen is weg).
+# Het hoofdadres toont de agenda; het oude index.html stuurt door naar het hoofdadres.
+/index.html  /              301!
+/            /agenda.html   200!

@@ -572,7 +572,7 @@ async function updateAuthButtons() {
     if (label) label.textContent = t(user ? 'nav_logout' : 'nav_login');
     btn.onclick = user ? function(e) {
       e.preventDefault();
-      signOut().catch(function() {}).then(function() { window.location.href = 'index.html'; });
+      signOut().catch(function() {}).then(function() { window.location.href = 'agenda.html'; });
     } : null;
   });
 }
