@@ -1163,6 +1163,13 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
 
 /* Results area */
 .agenda-results { min-height: 400px; }
+/* Introzin boven de kalender, onder de regioknoppen */
+.agenda-intro {
+  color: var(--dark3);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
 .results-header {
   display: flex;
   align-items: center;

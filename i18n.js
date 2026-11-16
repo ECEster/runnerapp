@@ -31,6 +31,7 @@ var I18N = {
     // Agenda
     agenda_title: "Hardloopevenementen in heel Nederland",
     agenda_subtitle: "Ontdek alle hardloopevenementen in Nederland",
+    agenda_intro: "Van je eerste 5 km tot ultra en kidsrun: zoek op afstand, regio en datum.",
     filter_title: "Filteren",
     filter_type: "Soort evenement",
     filter_province: "Provincie",
@@ -309,6 +310,7 @@ var I18N = {
     // Agenda
     agenda_title: "Running events across the Netherlands",
     agenda_subtitle: "Discover all running events in the Netherlands",
+    agenda_intro: "From your first 5K to ultras and kids' runs: search by distance, region and date.",
     filter_title: "Filter",
     filter_type: "Event type",
     filter_province: "Province",
