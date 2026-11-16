@@ -417,6 +417,7 @@ p:last-child { margin-bottom: 0; }
 .hero__content h1 .text-accent { color: var(--white); }
 /* Agenda-kop is een hele zin met het lange woord "HARDLOOPEVENEMENTEN":
    op smalle schermen kleiner, zodat dat woord binnen het scherm past */
+.hero--agenda .hero__content { max-width: 900px; }
 .hero--agenda .hero__content h1 {
   font-size: clamp(1.2rem, 6vw, 3.1rem);
   -webkit-hyphens: auto;
@@ -1163,13 +1164,24 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
 
 /* Results area */
 .agenda-results { min-height: 400px; }
-/* Introzin boven de kalender, onder de regioknoppen */
+/* Introzin onder de regioknoppen, op dezelfde rij als de knop "Zoeken" en
+   gecentreerd. De zijmarge houdt de tekst vrij van de knop links. Filters
+   open: zin boven de kalender in de rechterkolom, resultaten een rij lager. */
 .agenda-intro {
   color: var(--dark3);
   font-size: 1.05rem;
   line-height: 1.5;
-  margin-bottom: 1rem;
+  text-align: center;
+  margin: 0;
 }
+.agenda-layout > .agenda-intro {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+  padding-inline: 9rem;
+}
+.agenda-layout.filters-open > .agenda-intro { grid-column: 2; padding-inline: 0; }
+.agenda-layout.filters-open > .agenda-results { grid-row: 2; }
 .results-header {
   display: flex;
   align-items: center;
@@ -2058,7 +2070,12 @@ body.page-overons { background: var(--white); }
   /* Telefoon: alles onder elkaar, knop over de volle breedte */
   .agenda-layout > .filter-toggle,
   .agenda-layout > .filter-panel,
-  .agenda-layout > .agenda-results { grid-column: auto; grid-row: auto; }
+  .agenda-layout > .agenda-results,
+  .agenda-layout > .agenda-intro,
+  .agenda-layout.filters-open > .agenda-intro,
+  .agenda-layout.filters-open > .agenda-results,
+  .agenda-layout:not(.filters-open) > .agenda-results { grid-column: auto; grid-row: auto; }
+  .agenda-layout > .agenda-intro { padding-inline: 0; }
   .agenda-layout > .filter-toggle { width: 100%; justify-self: stretch; }
   .regio-nav-row { grid-template-columns: 1fr; gap: 0; }
   .regio-nav-row > .regio-nav-spacer { display: none; }
