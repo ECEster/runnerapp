@@ -973,7 +973,7 @@ a.event-card__price--ext:hover { color: var(--accent); text-decoration: underlin
   width: 100%;
   padding: 0.75rem 1.1rem;
   background: var(--white);
-  border: 1px solid var(--light);
+  border: 2px solid var(--btn); /* marineblauw, valt meer op dan de grijze rand */
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
   color: var(--dark);
