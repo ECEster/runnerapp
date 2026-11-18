@@ -1006,10 +1006,16 @@ body:not(.filters-open) .regio-nav-spacer { display: none; }
   top: 80px;
   /* Eigen scrollbalk: het filtermenu scrollt los van de eventcards */
   max-height: calc(100vh - 100px);
+  max-height: calc(100dvh - 100px);
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-color: #B8BCC4 transparent; /* Firefox */
   scrollbar-width: thin;
+}
+/* Aanraakschermen (telefoon liggend, tablet) en lage schermen: het filter
+   scrolt gewoon mee met de pagina, zonder eigen scrollbalk */
+@media (hover: none), (pointer: coarse), (max-height: 600px) {
+  .filter-panel { position: static; max-height: none; overflow: visible; overscroll-behavior: auto; }
 }
 /* Chrome, Edge, Safari */
 .filter-panel::-webkit-scrollbar { width: 4px; }
